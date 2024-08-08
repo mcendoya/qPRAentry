@@ -6,6 +6,8 @@
 \alias{qPRAentry-package}
 \title{qPRAentry: Tools to support the entry step of quantitative Pest Risk Assessment}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 The \bold{R} package \bold{qPRAentry} is provided to support risk assessors in performing the entry step of the quantitative pest risk assessments. The method expresses pest entry providing a distribution of the number of potential founder populations that can establish in the risk assessment area as a result of entry. The package encompasses functions for calculating and redistributing the quantity of commodities imported from countries where a pest of interest is present. The package and functions used are based on the work of the European Food Safety Authority (EFSA PLH Panel et al., 2018) \url{https://doi.org/10.2903/J.EFSA.2018.5350}.
 }
 \author{
