@@ -1,0 +1,627 @@
+#' ntrade_data UI Function
+#'
+#' @description A shiny Module.
+#'
+#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#' @noRd
+#'
+#' @importFrom shiny NS tagList
+mod_ntrade_data_ui <- function(id){
+  ns <- NS(id) 
+  tagList(
+    sidebarLayout(
+      sidebarPanel(width=3,
+                   style='background: #ffff;',
+                   div(style = "border-bottom:2px solid grey",
+                       textInput(ns("units"), label = "$N_{trade}$ units:", value = "tons") %>%
+                         bsplus::shinyInput_label_embed(
+                           bsplus::shiny_iconlink("question-circle", class= "help-btn") %>%
+                             bsplus::bs_embed_popover(title = text_units$title, 
+                                                      content = text_units$content,
+                                                      placement = "right",
+                                                      html="true",
+                                                      container ="body")
+                         )
+                   ),
+                   div(style = "border-bottom:2px solid grey",
+                       br(),
+                       strong("Trade data:"),
+                       # ExtraEU
+                       data_input(ns, "ExtraTotal", "Extra-EU import total", extra=TRUE),
+                       br(),
+                       data_input(ns, "ExtraPest",
+                                  HTML("Extra-EU import from countries<br/> where the pest is present"),
+                                  extra=TRUE),
+                       br(),
+                       # IntraEU
+                       data_input(ns, "IntraEU", "Intra-EU import"),
+                       br(),
+                       #Internal production
+                       data_input(ns, "IP", "Internal production", partner=FALSE),
+                       br()
+                   ),
+                   br(),
+                   # Time period
+                   shinyWidgets::pickerInput(
+                     inputId = ns("time_period"),
+                     label = "Time period:",
+                     choices = c("Data must be uploaded"),
+                     selected = c("Data must be uploaded"),
+                     multiple = TRUE,
+                     options = list(`actions-box` = TRUE)
+                   ) %>% 
+                     bsplus::shinyInput_label_embed(
+                       bsplus::shiny_iconlink("question-circle", class= "help-btn") %>%
+                         bsplus::bs_embed_popover(title = text_time$title, 
+                                                  content = text_time$content,
+                                                  placement = "right",
+                                                  html="true",
+                                                  container ="body")
+                     ),
+                   br(),
+                   shinyjs::disabled(actionButton(ns("trade_done"), "See $N_{trade}$ results"))
+      ), #sidebarPanel
+      mainPanel(width=9,
+                sidebarPanel(width = 11,
+                             fluidRow(
+                               column(4, align = "center",
+                                      shinyjs::disabled(actionButton(ns("ExtraTotal_plot"),
+                                                                     HTML("Plot</br>Extra-EU import")))
+                               ),
+                               column(4, align = "center",
+                                      shinyjs::disabled(actionButton(ns("IntraEU_plot"),
+                                                                     HTML("Plot</br> Intra-EU trade")))
+                               ),
+                               column(4, align = "center",
+                                      shinyjs::disabled(actionButton(ns("IP_plot"),
+                                                                     HTML("Plot</br> Internal production")))
+                               )
+                             )
+                ),
+                # help text
+                fluidRow(
+                  column(11,
+                         div(class="warn",
+                             verbatimTextOutput(ns("message"))
+                             ),
+                         uiOutput(ns("help_data")),
+                         br()
+                         )),
+                # Plots
+                fluidRow(
+                  div(class = "dual-plot-container",
+                      div(class = "dual-plot-column-large", ggiraph::girafeOutput(ns("dataPlot"))),
+                      div(class = "dual-plot-column-small", plotOutput(ns("MSplot")))
+                  )
+                )
+      )#mainPanel
+    )#sidebarLayout
+  )#tagList
+}
+
+#' ntrade_data Server Functions
+#'
+#' @noRd
+mod_ntrade_data_server <- function(id){
+  partner <- value <- NULL
+  moduleServer(id, function(input, output, session){
+    ns <- session$ns
+    
+    # data
+    session$userData$ExtraTotal_reactive <- eventReactive(input$ExtraTotal,{
+      output$message <- renderText({NULL})
+      df <- tryCatch({read_file(input$ExtraTotal$datapath)
+      }, error = function(e) {
+        output$message <- renderText({e$message})
+        return(NULL)
+      })
+      return(df)
+    })
+    session$userData$ExtraPest_reactive <- eventReactive(input$ExtraPest,{
+      output$message <- renderText({NULL})
+      df <- tryCatch({read_file(input$ExtraPest$datapath)
+      }, error = function(e) {
+        output$message <- renderText({e$message})
+        return(NULL)
+      })
+      return(df)
+    })
+    session$userData$IntraEU_reactive <- eventReactive(input$IntraEU,{
+      output$message <- renderText({NULL})
+      df <- tryCatch({read_file(input$IntraEU$datapath)
+      }, error = function(e) {
+        output$message <- renderText({e$message})
+        return(NULL)
+      })
+      return(df)
+    })
+    session$userData$IP_reactive <- eventReactive(input$IP,{
+      output$message <- renderText({NULL})
+      df <- tryCatch({read_file(input$IP$datapath)
+      }, error = function(e) {
+        output$message <- renderText({e$message})
+        return(NULL)
+      })
+      return(df)
+    })
+    
+    # Column names
+    observeEvent(session$userData$ExtraTotal_reactive(),{
+      colnames_select(session$userData$ExtraTotal_reactive(), 
+                      "ExtraTotal", partner=TRUE, session=session)
+    })
+    observeEvent(session$userData$ExtraPest_reactive(),{
+      colnames_select(session$userData$ExtraPest_reactive(), 
+                      "ExtraPest", partner=TRUE, session=session)
+    })
+    observeEvent(session$userData$IntraEU_reactive(),{
+      colnames_select(session$userData$IntraEU_reactive(), 
+                      "IntraEU", partner=TRUE, session=session)
+    })
+    observeEvent(session$userData$IP_reactive(),{
+      colnames_select(session$userData$IP_reactive(), 
+                      "IP", partner=FALSE, session=session)
+    })
+    
+    # Extra Partners List
+    observeEvent(input$partner_ExtraTotal,{
+      df <- session$userData$ExtraTotal_reactive()
+      shinyWidgets::updatePickerInput(session = session,
+                                      inputId = "extra_partner_ExtraTotal",
+                                      choices = unique(df[,input$partner_ExtraTotal]))
+    }, ignoreInit = TRUE)
+    
+    observeEvent(input$partner_ExtraPest,{
+      df <- session$userData$ExtraPest_reactive()
+      shinyWidgets::updatePickerInput(session = session,
+                                      inputId = "extra_partner_ExtraPest",
+                                      choices = unique(df[,input$partner_ExtraPest]))
+    }, ignoreInit = TRUE)
+
+
+    # Units
+    output$unitsOutputExtraTotal <- renderText({
+      paste0("= ", input$units)
+    })
+    output$unitsOutputExtraPest <- renderText({
+      paste0("= ", input$units)
+    })
+    output$unitsOutputIntraEU <- renderText({
+      paste0("= ", input$units)
+    })
+    output$unitsOutputIP <- renderText({
+      paste0("= ", input$units)
+    })
+
+    #close dropMenu
+    observeEvent(input$done_ExtraTotal,{
+      shinyWidgets::hideDropMenu("ExtraTotal_menu_dropmenu")
+    })
+    observeEvent(input$done_ExtraPest,{
+      shinyWidgets::hideDropMenu("ExtraPest_menu_dropmenu")
+    })
+    observeEvent(input$done_IntraEU,{
+      shinyWidgets::hideDropMenu("IntraEU_menu_dropmenu")
+    })
+    observeEvent(input$done_IP,{
+      shinyWidgets::hideDropMenu("IP_menu_dropmenu")
+    })
+
+    # fn to rename colnames
+    colnames_rename <- function(df, data_name, partner = TRUE){
+      user_list <- c(reporter = input[[paste0("reporter_", data_name)]],
+                     value = input[[paste0("value_", data_name)]],
+                     time_period = input[[paste0("time_period_", data_name)]])
+      if(partner){
+        user_list <- c(user_list, partner =  input[[paste0("partner_", data_name)]])
+      }
+      default_list <- list(reporter = "reporter",
+                           partner = "partner",
+                           value = "value",
+                           time_period = "time_period")
+      df <- df %>% rename(!!!user_list[names(user_list)%in%default_list])
+      return(df)
+    }
+    
+    # Check for NULL column names
+    columns_null <- function(data_name, partner = TRUE) {
+      reporter_input <- input[[paste0("reporter_", data_name)]]
+      value_input <- input[[paste0("value_", data_name)]]
+      time_period_input <- input[[paste0("time_period_", data_name)]]
+      partner_input <- if (partner) input[[paste0("partner_", data_name)]] else NULL
+      missing_cols <- character(0)  # Initialize as empty character vector
+      if (is.null(reporter_input)) {
+        missing_cols <- c(missing_cols, "reporter")
+      }
+      if (partner && is.null(partner_input)) {
+        missing_cols <- c(missing_cols, "partner")
+      }
+      if (is.null(value_input)) {
+        missing_cols <- c(missing_cols, "value")
+      }
+      if (is.null(time_period_input)) {
+        missing_cols <- c(missing_cols, "time_period")
+      }
+      if (length(missing_cols) > 0) {
+        message <- paste("Error: column names must be selected for", 
+                         paste(missing_cols, collapse = ", "))
+        return(message)
+      } else {
+        return(NULL)
+      }
+    }
+    
+    #data_errors
+    data_message <- function(df, partner=FALSE, extra_partner=FALSE, input_parner=NULL){
+      m <- c()
+      if(!all(df$reporter %in% NUTS_CODES$CNTR_CODE)){
+        m <- c(m, data_errors$reporter)
+      }
+      if(partner && !all(df$partner %in% NUTS_CODES$CNTR_CODE)){
+        m <- c(m, data_errors$partner)
+      }
+      if(!is.numeric(df$value)){
+        m <- c(m, data_errors$values_num)
+      }
+      if(any(df$value[!is.na(df$value)]<0)){
+        m <- c(m, data_errors$values_neg)
+      }
+      if(extra_partner && is.null(input_parner)){
+        m <- c(m, data_errors$extra_partner)
+      }
+      if(length(m)>0){
+        mss <- paste(m, collapse = "\n")
+      }else{
+        mss <- NULL
+      }
+      return(mss)
+    }
+    
+    # read data and rename colnames
+    ExtraTotal_df <- eventReactive(input$done_ExtraTotal,{
+      tryCatch({
+        df <- session$userData$ExtraTotal_reactive()
+        m <- columns_null("ExtraTotal")
+        if (!is.null(m)) { stop(m) }
+        df <- colnames_rename(df, "ExtraTotal") %>% 
+          mutate(reporter = case_when(reporter=="GR"~"EL",
+                                      reporter=="GB"~"UK",
+                                      TRUE~reporter))
+        # data errors
+        m <- data_message(df, extra_partner = TRUE,
+                          input_parner = input$extra_partner_ExtraTotal)
+        if (!is.null(m)) { stop(m) }
+        df <- df %>%
+          filter(partner %in% input$extra_partner_ExtraTotal) %>%
+          mutate(value = value * input$unitsExtraTotal)
+        class(df$time_period) <- class(input$time_period)
+        return(df)
+      }, error = function(e) {
+        output$message <- renderText({e$message})
+        return(NULL)
+      })
+    })
+
+    ExtraPest_df <- eventReactive(input$done_ExtraPest,{
+      tryCatch({
+        df <- session$userData$ExtraPest_reactive()
+        m <- columns_null("ExtraPest")
+        if (!is.null(m)) { stop(m) }
+        df <- colnames_rename(df, "ExtraPest") %>% 
+          mutate(reporter = case_when(reporter=="GR"~"EL",
+                                      reporter=="GB"~"UK",
+                                      TRUE~reporter))
+        # data errors
+        m <- data_message(df, extra_partner = TRUE,
+                          input_parner = input$extra_partner_ExtraPest)
+        if (!is.null(m)) { stop(m) }
+        df <- df %>%
+          filter(partner %in% input$extra_partner_ExtraPest) %>%
+          mutate(value = value * input$unitsExtraPest)
+        class(df$time_period) <- class(input$time_period)
+        return(df)
+      }, error = function(e) {
+        output$message <- renderText({e$message})
+        return(NULL)
+      })
+    })
+
+    IntraEU_df <- eventReactive(input$done_IntraEU,{
+      tryCatch({
+        df <- session$userData$IntraEU_reactive()
+        m <- columns_null("IntraEU")
+        if (!is.null(m)) { stop(m) }
+        df <- colnames_rename(df, "IntraEU") %>% 
+          mutate(reporter = case_when(reporter=="GR"~"EL",
+                                      reporter=="GB"~"UK",
+                                      TRUE~reporter),
+                 partner = case_when(partner=="GR"~"EL",
+                                     partner=="GB"~"UK",
+                                      TRUE~partner))
+        #data errors
+        m <- data_message(df, partner=TRUE)
+        if (!is.null(m)) { stop(m) }
+        df <- df %>%
+          mutate(value = value * input$unitsIntraEU)
+        class(df$time_period) <- class(input$time_period)
+        return(df)
+      }, error = function(e) {
+        output$message <- renderText({e$message})
+        return(NULL)
+      })
+    })
+    
+    IP_df <- eventReactive(input$done_IP,{
+      tryCatch({
+        df <- session$userData$IP_reactive()
+        m <- columns_null("IP", partner = FALSE)
+        if (!is.null(m)) { stop(m) }
+        df <- colnames_rename(df, "IP", partner=FALSE) %>% 
+          mutate(reporter = case_when(reporter=="GR"~"EL",
+                                      reporter=="GB"~"UK",
+                                      TRUE~reporter))
+        #data_errors
+        m <- data_message(df)
+        if (!is.null(m)) { stop(m) }
+        df <- df %>%
+          mutate(value = value * input$unitsIP)
+        class(df$time_period) <- class(input$time_period)
+        return(df)
+      }, error = function(e) {
+        output$message <- renderText({e$message})
+        return(NULL)
+      })
+    })
+    
+    is_initial <- reactiveVal(TRUE)
+    observe({
+      # Update is_initial
+      if (!is.null(ExtraTotal_df())||!is.null(ExtraPest_df())||!is.null(IntraEU_df())||!is.null(IP_df())){
+        is_initial(FALSE)
+      }
+    })
+    output$help_data <- renderUI({
+      if(is_initial()){
+        text_ExtraTotal
+      }else if(is.null(input$ExtraTotal$datapath)||input$done_ExtraTotal==0||is.null(ExtraTotal_df())){
+        text_ExtraTotal
+      }else if(is.null(input$ExtraPest$datapath)||input$done_ExtraPest==0||is.null(ExtraPest_df())){
+        text_ExtraPest
+      }else if(is.null(input$IntraEU$datapath)||input$done_IntraEU==0||is.null(IntraEU_df())){
+        text_IntraEU
+      }else if(is.null(input$IP$datapath)||input$done_IP==0||is.null(IP_df())){
+        text_IP
+      }else{
+        text_dataDone
+      }
+    })
+    
+    # Update time periods from all dataframes
+    all_time_periods <- reactiveValues(data = NULL)
+    update_time_periods <- function(x, session){
+      reactive_function <- get(paste0(x, "_reactive"), envir = session$userData)
+      df <- reactive_function()
+      if(!is.null(input[[paste0("time_period_",x)]])){
+        time_df <- df[, input[[paste0("time_period_",x)]]]
+        if(is.null(all_time_periods$data)){
+          all_time_periods$data <- unique(time_df)
+        }else{
+          all_time_periods$data <- unique(time_df[time_df%in%all_time_periods$data])
+        }
+        updatePickerInput(session = session,
+                          inputId = "time_period",
+                          choices = sort(all_time_periods$data),
+                          selected = sort(all_time_periods$data))
+      }else{NULL}
+      
+    }
+
+    # when Done
+    observeEvent(input$done_ExtraTotal, {
+      df <- ExtraTotal_df()
+      if (is.null(df)) {
+        updateActionButton(session, "ExtraTotal_menu",
+                           label= '<h5><strong style="color:#327FB0;">Extra-EU import total</strong></h5>') #remove check icon
+        return(NULL)  # Do nothing if there is an error
+      } else {
+        updateActionButton(session, "ExtraTotal_menu",
+                           label= '<h5><strong style="color:#327FB0;">Extra-EU import total</strong>&nbsp;&nbsp;
+                       <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></h5>') #check icon
+        output$message <- renderText({NULL})  # Clear message
+        update_time_periods("ExtraTotal", session)
+      }
+    })
+    observeEvent(input$done_ExtraPest, {
+      df <- ExtraPest_df()
+      if (is.null(df)) {
+        updateActionButton(session, "ExtraPest_menu",
+                           label= '<h5><strong style="color:#327FB0;">Extra-EU import from
+                       countries<br/> where the pest is present</strong></h5>')#remove check icon
+        return(NULL)  # Do nothing if there is an error
+      } else {
+        updateActionButton(session, "ExtraPest_menu",
+                           label= '<h5><strong style="color:#327FB0;">Extra-EU import from
+                       countries<br/> where the pest is present</strong>&nbsp;&nbsp;
+                       <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></h5>')#check icon
+        output$message <- renderText({NULL})  # Clear message
+        update_time_periods("ExtraPest", session)
+      }
+    })
+    observeEvent(input$done_IntraEU, {
+      df <- IntraEU_df()
+      if (is.null(df)) {
+        updateActionButton(session, "IntraEU_menu",
+                           label= '<h5><strong style="color:#327FB0;">Intra-EU import</strong></h5>')#remove check icon
+        return(NULL)  # Do nothing if there is an error
+      } else {
+        updateActionButton(session, "IntraEU_menu",
+                           label= '<h5><strong style="color:#327FB0;">Intra-EU import</strong>&nbsp;&nbsp;
+                       <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></h5>')#check icon
+        output$message <- renderText({NULL})  # Clear message
+        update_time_periods("IntraEU", session)
+      }
+    })
+    observeEvent(input$done_IP, {
+      df <- IP_df()
+      if (is.null(df)) {
+        updateActionButton(session, "IP_menu",
+                           label= '<h5><strong style="color:#327FB0;">Internal production</strong></h5>')#remove check icon
+        return(NULL)  # Do nothing if there is an error
+      } else {
+        updateActionButton(session, "IP_menu",
+                           label= '<h5><strong style="color:#327FB0;">Internal production</strong>&nbsp;&nbsp;
+                       <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></h5>')#check icon
+        output$message <- renderText({NULL})  # Clear message
+        update_time_periods("IP", session)
+      }
+    })
+
+    all_btns <- reactiveVal("")
+    observe({
+      if(input$done_ExtraTotal &
+         input$done_ExtraPest &
+         input$done_IntraEU &
+         input$done_IP){
+        all_btns("all")
+      }
+      })
+    # Enable plot buttons
+    observe({
+      if(all_btns()=="all"){
+        shinyjs::enable("ExtraTotal_plot")
+        addClass("ExtraTotal_plot", class="enable")
+
+        shinyjs::enable("IntraEU_plot")
+        addClass("IntraEU_plot", class="enable")
+
+        shinyjs::enable("IP_plot")
+        addClass("IP_plot", class="enable")
+
+        shinyjs::enable("trade_done")
+        addClass("trade_done", class="enable")
+      }
+    })
+    
+    # trade data
+    TradeData <- eventReactive(c(input$done_ExtraTotal, input$done_ExtraPest, 
+                                 input$done_IntraEU, input$done_IP, input$time_period),{
+                                   if(all_btns()=="all"){
+                                     tryCatch({
+                                     withCallingHandlers({
+                                       shinyjs::html("message", "")
+                                       df <- trade_data(extra_total = ExtraTotal_df(),
+                                                  extra_pest = ExtraPest_df(),
+                                                  intra_trade = IntraEU_df(),
+                                                  internal_production = IP_df(),
+                                                  select_period = input$time_period)
+                                     },
+                                     message = function(m) {
+                                       shinyjs::html(id = "message", html = m$message, add = TRUE)
+                                     })
+                                       return(df)
+                                       },error = function(e) {
+                                       output$message <- renderText({e$message})
+                                       return(NULL)
+                                     })
+                                   }
+                                 })
+
+    # Data plot when press buttons
+    data_plot <- reactiveVal()
+
+    observe_plot_event <- function(input_id) {
+      observeEvent(input[[paste0(input_id, "_plot")]], {
+        data_plot(input_id)
+      })
+    }
+
+    # change data_plot reactive
+    observe_plot_event("ExtraTotal")
+    observe_plot_event("IntraEU")
+    observe_plot_event("IP")
+
+    output$dataPlot <- ggiraph::renderGirafe({
+      req(length(data_plot())>0)
+      df <- TradeData()$total_trade
+      timePeriod <- input$time_period
+      yLab <- paste0("Quantity (", input$units, ")")
+      if(data_plot()=="ExtraTotal"){
+        pl <- plot_dataUpload(df = df,
+                              dfName = "ExtraTotal",
+                              timePeriod, yLab,
+                              plotTitle = "Extra-EU import",
+                              legendTitle = "Non-EU countries:")
+      }else if(data_plot()=="IntraEU"){
+        pl <- plot_dataUpload(df = df,
+                              dfName = "IntraEU",
+                              timePeriod, yLab,
+                              plotTitle = "Intra-EU trade",
+                              legendTitle = "Trade:")
+      }else if(data_plot()=="IP"){
+        pl <- plot_dataUpload(df = df,
+                              dfName = "IP",
+                              timePeriod, yLab,
+                              plotTitle = "Internal production")
+      }
+      ggiraph::girafe(ggobj=pl, options = list(
+        opts_hover(css = "stroke-width:1;"),
+        opts_selection(only_shiny = FALSE, type = "single", css = "stroke:white;")
+      ))
+    })
+
+    # reactive to change plot based on selected MS
+    selected_MS <- reactiveVal()
+    observeEvent(input$dataPlot_selected,{
+      selected_MS(input$dataPlot_selected)
+    })
+
+    #event_data
+    observeEvent(input$dataPlot_selected,{
+      output$MSplot <- renderPlot({
+
+        df <- TradeData()$total_trade
+        idx <- selected_MS()
+        yLab <- paste0("Quantity (", input$units, ")")
+        if(data_plot()=="ExtraTotal"){
+          pl <- plot_byCountry(df = df,
+                               dfName = "ExtraTotal",
+                               idx,
+                               yLab,
+                               plotTitle = "Extra-EU import",
+                               legendTitle = "Non-EU countries:")
+        }else if(data_plot()=="IntraEU"){
+          pl <- plot_byCountry(df = df,
+                               dfName = "IntraEU",
+                               idx,
+                               yLab,
+                               plotTitle = "Intra-EU trade",
+                               legendTitle = "Trade:")
+        }else if(data_plot()=="IP"){
+          pl <- plot_byCountry(df = df,
+                               dfName = "IP",
+                               idx,
+                               yLab,
+                               plotTitle = "Internal production")
+        }
+        pl
+      })
+    })
+    
+    return(
+      list(
+        trade_done = reactive(input$trade_done),
+        time_period = reactive(input$time_period),
+        units = reactive(input$units),
+        IntraEU_df = IntraEU_df,
+        TradeData = TradeData
+      )
+    )
+  })
+}
+
+## To be copied in the UI
+# mod_ntrade_data_ui("ntrade_data_1")
+
+## To be copied in the server
+# mod_ntrade_data_server("ntrade_data_1")

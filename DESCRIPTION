@@ -1,0 +1,43 @@
+Package: qPRAentry
+Type: Package
+Title: Tools to support the entry step of quantitative Pest Risk Assessment
+Version: 0.1.0
+Authors@R: c(person("Martina", "Cendoya", email = "cendoya_marmar@gva.es", role = c("aut", "cre"),
+             comment = c(ORCID = "0000-0002-0134-7781")),
+    person("Maria Chiara", "Rosace", email = "mariachiara.rosace@unicatt.it", role = c("aut"),
+           comment = c(ORCID = "0000-0002-7263-8228")))
+Maintainer: The package maintainer <cendoya_marmar@gva.es>
+Description: The \bold{R} package \bold{qPRAentry} is provided to support risk assessors in performing 
+    the entry step of the quantitative pest risk assessments. 
+    The method expresses pest entry providing a distribution of the number of potential 
+    founder populations that can establish in the risk assessment area as a result of entry. 
+    The package encompasses functions for calculating and redistributing the quantity of 
+    commodities imported from countries where a pest of interest is present.
+    The package and functions used are based on the work of the European Food Safety Authority 
+    (EFSA PLH Panel et al., 2018) <https://doi.org/10.2903/J.EFSA.2018.5350>.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Imports: 
+    bsplus,
+    cowplot,
+    dplyr,
+    DT,
+    eurostat (>= 4.0.0),
+    ggiraph,
+    ggplot2,
+    giscoR,
+    purrr,
+    rmarkdown,
+    sf,
+    shiny,
+    shinycssloaders,
+    shinyjs,
+    shinyWidgets,
+    tidyr
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)

@@ -1,0 +1,168 @@
+.container { 
+  width: 100%;
+  margin-bottom: 200px;
+}
+
+.intro{
+  font-size: 16px; 
+}
+
+code{
+  color: blue;
+  
+}
+
+.nav-pills > li > a {
+  min-width: 145px;
+  text-align: center;
+  border-color: #aaa !important;
+  border-style: solid !important;
+  border-width: 1px;
+}
+
+.disabled-tab{
+background-color: #fff !important;
+color: #aaa !important;
+cursor: not-allowed !important;
+border-color: #aaa !important;
+}
+
+.shiny-output-error-validation {
+    color: #D22600;
+    width: 50%;
+}
+
+.ss{
+    border-width: 1px;
+    border-style: solid;
+    border-color: #AF1F00;
+    text-align: center;
+    padding: 1em;
+}
+
+.btn1{
+	margin-top:25px;
+	margin-left:-10px;
+	display: block;
+	position: absolute;
+	padding: 10px;
+	font-size: 90%;
+}
+
+.btn2{
+	margin-top: 80px;
+	margin-left: -48px;
+	display: block;
+	position: absolute;
+	font-size:120%
+}
+
+.inline label{ display: table-cell; 
+  text-align: left; 
+  vertical-align: middle; 
+  padding-left: 25px; 
+  padding-right: 5px; 
+  font-size:100%; 
+  white-space: nowrap; 
+}
+.inline .form-group { display: table-row;}
+.inline .form-control { height: 35px; width:80%}
+
+.unitslab{
+		padding-top:2px;
+		white-space: nowrap;
+                font-size: 90%;
+                font-weight: bold;
+                margin-left:-20px;
+}
+
+.select-input-wide .selectize-input {
+      width: 60px;  /* Ajusta el ancho del selectInput */
+    }
+    
+.enable{font-weight: bold; color: white; background-color: #4698CD; }
+
+.shiny-notification {
+  color:black;
+  border-color: #1E68BA;
+  position:fixed;
+  top: calc(25%);
+  left: calc(37%);
+  width: 300px;
+}
+
+.custom-text{
+  font-size: 15px; 
+  font-family:monospace; 
+  color:#1E68BA;
+}
+
+.warn pre {
+      color: red;
+    }
+
+.help-btn{
+  font-size: 16px; 
+  color: #1E68BA; 
+  background-color: white; 
+  border-color: white;
+}
+
+.plot-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.plot {
+  width: 75%;
+  max-width: 800px; /* Ajusta este valor según tus necesidades */
+  height: auto; /* Ajusta este valor según tus necesidades */
+}
+@media (max-width: 768px) {
+  .plot {
+    width: 90%; /* Ajusta este valor según tus necesidades */
+  }
+}
+
+.dual-plot-container {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px; /* Ajusta este valor según tus necesidades */
+}
+
+.dual-plot-column-large {
+  width: 55%; /* 55% del ancho para el primer plot */
+  height: auto;
+  display: flex;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.dual-plot-column-small {
+  width: 45%; /* 45% del ancho para el segundo plot */
+  height: auto;
+  display: flex;
+  margin-left: 10px;
+  align-items: center; /* Centra verticalmente el contenido */
+}
+
+@media (max-width: 768px) {
+	.dual-plot-container {
+	  flex-direction: column;
+	}
+	.dual-plot-column-large, .dual-plot-column-small {
+	  width: 100%;
+	}
+}
+
+.spinner-container {
+	position: relative;
+	height: 400px; /* Ajusta esta altura según sea necesario */
+}
+   
+.table-container{
+	width:90%;
+	height:600px;
+	overflow-y: scroll;
+	}

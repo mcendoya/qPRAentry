@@ -1,0 +1,384 @@
+#' ntrade_redistribution UI Function
+#'
+#' @description A shiny Module.
+#'
+#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#' @noRd
+#'
+#' @importFrom shiny NS tagList
+mod_ntrade_redistribution_ui <- function(id){
+  ns <- NS(id)
+  tagList(
+    sidebarLayout(
+      sidebarPanel(width=3,
+                   style='background: #ffff;',
+                   radioButtons(ns("output_NUTS2"), "Data for proportional redistribution to NUTS2",
+                                choices=c("Population", "My data"),
+                                selected=character(0),
+                                inline=T),
+                   conditionalPanel(condition="input.output_NUTS2 == 'Population'",
+                                    ns = ns,
+                                    shinyWidgets::pickerInput(ns("population_year"),
+                                                              "Population data year(s)",
+                                                              choices = c(2014:2023),
+                                                              multiple = TRUE,
+                                                              selected = character(0),
+                                                              width ="fit"),
+                                    uiOutput(ns("notification_ui"))
+                   ),
+                   conditionalPanel(condition="input.output_NUTS2 == 'My data'",
+                                    ns = ns,
+                                    fileInput(
+                                      inputId = ns("NUTS2_proportion"),
+                                      HTML('NUTS2 DATA', "<font size='3'>",
+                                           as.character(actionLink(inputId = ns("NUTS2_data"),
+                                                                   label = "",
+                                                                   icon = icon("question-circle"))), "</font>"),
+                                      width = "50%",
+                                      accept = c('.csv')
+                                    ),
+                                    h4("Column names:", style = "color:#327FB0"),
+                                    shinyWidgets::pickerInput(
+                                      inputId = ns("colname_NUTS2"),
+                                      label = "NUTS2:",
+                                      choices = c("Data must be uploaded"),
+                                      multiple = FALSE,
+                                      width ="fit"
+                                    ),
+                                    shinyWidgets::pickerInput(
+                                      inputId = ns("colname_values"),
+                                      label = "Values:",
+                                      choices = c("Data must be uploaded"),
+                                      multiple = FALSE,
+                                      width ="fit"
+                                    )
+                   ),#conditionalPanel
+                   br(),
+                   shinyjs::disabled(actionButton(ns("redistribution_done"), "See $N_{trade}$ redistribution")),
+                   shinyjs::disabled(downloadButton(ns("report"), "Generate report"))
+      ), #sidebarPanel
+      mainPanel(width=9,
+                #help text
+                fluidRow(
+                  column(11,
+                         div(class="warn",
+                             verbatimTextOutput(ns("message"))
+                         ),
+                         br(),
+                         uiOutput(ns("help_data")),
+                         br()
+                  )),
+                uiOutput(ns("NUTS2_results")) %>% 
+                  shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
+      )
+    )#sidebarLayout
+  )
+}
+
+#' ntrade_redistribution Server Functions
+#'
+#' @noRd
+#'
+mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
+  CNTR_NAME <- NUTS2 <- NUTS2_CODE <- NUTS_ID <- Median_NUTS2 <- CNTR_CODE <- NULL
+  moduleServer(id, function(input, output, session){
+    ns <- session$ns
+
+    button_pressed <- reactiveVal(FALSE)
+    observeEvent(input$redistribution_done, {
+      button_pressed(TRUE)
+    })
+    output$help_data <- renderUI({
+      button_state <- button_pressed()
+      if (button_state) {
+        HTML('<p class="custom-text">Note: If you make any changes in redistribution data
+        you must click on <strong>"See N<sub>trade</sub> redistribution"</strong> to apply the changes.</p>')
+      } else {
+        if(is.null(input$output_NUTS2)){
+          text_DataRedistribution
+        }else if(input$output_NUTS2 == "Population"){
+          text_PopulationYear
+        }else if(input$output_NUTS2 == "My data"){
+          text_MyData
+        }
+      }
+    })
+    
+    observeEvent(input$output_NUTS2,{
+      button_pressed(FALSE)
+    })
+
+    all_done <- reactiveVal(FALSE)
+    observe({
+      if(!is.null(input$output_NUTS2)){
+        if(input$output_NUTS2 == "Population" &&
+           !is.null(input$population_year)){
+          all_done(TRUE)
+        }else if(input$output_NUTS2 == "My data" && 
+                 !is.null(input$NUTS2_proportion) &&
+                 !is.null(input$colname_NUTS2) &&
+                 !is.null(input$colname_values)){
+          all_done(TRUE)
+        }
+      }else{
+        all_done(FALSE)
+      }
+    })
+    
+    observeEvent(input$output_NUTS2,{
+      all_done(FALSE)
+    })
+ 
+    observeEvent(all_done(), {
+      if (all_done()) {
+        shinyjs::enable("redistribution_done")
+        addClass("redistribution_done", class = "enable")
+        shinyjs::enable("report")
+        addClass("report", class = "enable")
+      } else {
+        shinyjs::disable("redistribution_done")
+        removeClass("redistribution_done", class = "enable")
+        shinyjs::disable("report")
+        removeClass("report", class = "enable")
+      }
+    }, ignoreInit = TRUE)
+
+    observeEvent(input$output_NUTS2,{
+      if(input$output_NUTS2=="Population"){
+        df <- cached_get_eurostat_data(nuts = 2)
+        shinyWidgets::updatePickerInput(session = session,
+                                        inputId = "population_year",
+                                        choices = sort(unique(df$TIME_PERIOD)),
+                                        selected = character(0))
+      }
+    })
+
+    observeEvent(input$NUTS2_proportion,{
+      df <- read_file(input$NUTS2_proportion$datapath)
+      shinyWidgets::updatePickerInput(session = session,
+                                      inputId = "colname_NUTS2",
+                                      choices = sort(colnames(df)))
+      shinyWidgets::updatePickerInput(session = session,
+                                      inputId = "colname_values",
+                                      choices = sort(colnames(df)))
+    }, ignoreInit = TRUE)
+
+    
+    Nt_redist <- eventReactive(input$redistribution_done,{
+      output$message <- renderText({NULL})
+      Nt <- Nt()
+      if(input$output_NUTS2=="Population"){
+        prop_data  <-  NULL
+        prop_nuts_column <- NULL
+        prop_values_column <- NULL
+        tp <- input$population_year
+      }else if(input$output_NUTS2=="My data"){
+        prop_data <- read_file(input$NUTS2_proportion$datapath)
+        prop_nuts_column <- input$colname_NUTS2
+        prop_values_column <- input$colname_values
+        tp <- NULL
+      }
+      if(length(time_period())>1){
+        nt_values <- c("Q0.05", "Median", "Q0.95")
+      }else{
+        nt_values <- paste0("Ntrade_",time_period())
+      }
+      tryCatch({
+        Nt_r <- ntrade_redist(
+          ntrade_data = Nt,
+          nuts_column = "NUTS0",
+          values_column = nt_values,
+          to_nuts = 2,
+          prop_data = prop_data,
+          prop_nuts_column = prop_nuts_column,
+          prop_values_column = prop_values_column,
+          time_period = tp
+        )
+        Nt_r <- Nt_r %>% 
+          left_join(select(Nt, NUTS0, CNTR_NAME), by="NUTS0") %>% 
+          relocate(NUTS2, NUTS0, CNTR_NAME)
+        return(Nt_r)
+      },error = function(e) {
+        output$message <- renderText({e$message})
+        return(NULL)
+      })
+    })
+
+    observeEvent(input$redistribution_done,{
+      output$NUTS2_results <- renderUI({
+        tagList(
+          shinyWidgets::radioGroupButtons(
+            inputId = ns("NUTS2_btn"),
+            label = HTML('<p"><br>View Ntrade results in table or map format<br></p>'),
+            choices = c("Table", "Map"),
+            justified = TRUE,
+            selected = "Table",
+            width = "90%"
+          ),
+          uiOutput(ns("NUTS2_content"))
+        )
+      })
+    })
+    
+    # EU NUTS2 map (from giscoR pkg)
+    EU02 <- eventReactive(input$redistribution_done,{
+      NUTS2map <- cached_get_EUmap(nuts=2) %>% 
+            left_join(select(NUTS_CODES, NUTS2_CODE, CNTR_NAME), 
+                      by=join_by(NUTS_ID==NUTS2_CODE))
+      NUTS2map
+    })
+    
+    # Results redistribution
+     observeEvent(input$NUTS2_btn,{
+      req(input$NUTS2_btn)
+      if(input$NUTS2_btn=="Table"){
+        output$NUTS2_content <- renderUI({
+          fluidRow(
+            div(class="table-container",
+                downloadButton(ns("downloadTable2"), "Download"),
+                  DT::dataTableOutput(ns("NUTS2_table")) %>% 
+                  shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
+            )
+          )
+        })
+      }else if(input$NUTS2_btn=="Map"){
+        output$NUTS2_content <- renderUI({
+          tagList(
+            HTML('<p class="custom-text">Move the cursor over the map to view the values. 
+               Click on a country to zoom in.<br></p>'),
+            br(),
+          fluidRow(
+            div(class = "dual-plot-container",
+                div(class = "dual-plot-column-large", 
+                      ggiraph::girafeOutput(ns("NUTS2map"))
+                    ),
+                div(class = "dual-plot-column-small", 
+                    ggiraph::girafeOutput(ns("NUTS2map_zoom"))
+                    )
+            )
+          )#fluidRow
+          )
+        })
+      }
+    })
+
+    output$NUTS2_table <- DT::renderDataTable({
+      numeric_columns <- names(Nt_redist())[which(sapply(Nt_redist(), is.numeric))]
+      DT::datatable(Nt_redist(), options = list(dom = 'ft', pageLength = -1)) %>%
+        DT::formatRound(columns = numeric_columns, digits=2) %>%
+        DT::formatStyle(columns = "NUTS2", target = "cell", backgroundColor = "#F7080880") %>%
+        DT::formatStyle(columns = numeric_columns, target = "cell", backgroundColor = "#F7080820")
+    })
+
+    EU02_dataplot <- eventReactive(input$redistribution_done,{
+      Nt2 <- Nt_redist()
+      EU02 <- EU02() %>%
+        left_join(select(Nt2, !CNTR_NAME), by=join_by(NUTS_ID==NUTS2))
+    })
+
+    output$NUTS2map <- ggiraph::renderGirafe({
+      EU02 <- EU02_dataplot()
+      if(length(time_period())==1){
+        EU02 <- EU02 %>% 
+          rename(Ntrade_NUTS2 = !!paste0("Ntrade_",time_period(), "_NUTS2"))
+        tooltip <- paste0(EU02$NUTS_ID, 
+                          "\nNtrade: ", round(EU02$Ntrade_NUTS2,2))
+        title <- bquote(paste(N[trade], " ","NUTS2 ", .(time_period())))
+      }else{
+        EU02 <- EU02 %>% 
+          rename(Ntrade_NUTS2 = Median_NUTS2)
+        tooltip <- paste0(EU02$NUTS_ID, 
+                          "\nQ0.05: ", round(EU02$Q0.05_NUTS2,2),
+                          "\nMedian: ", round(EU02$Ntrade_NUTS2,2),
+                          "\nQ0.95: ", round(EU02$Q0.95_NUTS2,2))
+        title <- expression(paste(N[trade], " ", "NUTS2 - Median"))
+      }
+    limits <- c(min(EU02$Ntrade_NUTS2, na.rm=T), max(EU02$Ntrade_NUTS2, na.rm=T))
+    ggiraph_plot(data = EU02, value = "Ntrade_NUTS2",
+                 name = units(), 
+                 title = title,
+                 limits = limits,
+                 tooltip = tooltip,
+                 data_id=EU02$CNTR_CODE)
+    })
+
+    # reactive to change plot based on selected countries
+    selected_NUTS0 <- reactiveVal()
+    observeEvent(input$NUTS2map_selected,{
+      selected_NUTS0(input$NUTS2map_selected)
+    })
+
+    #event_data
+    observeEvent(input$NUTS2map_selected,{
+      output$NUTS2map_zoom <- ggiraph::renderGirafe({
+        idx <- selected_NUTS0()
+        country <- EU02_dataplot() %>%
+          filter(CNTR_CODE %in% idx)
+        c_name <- unique(country$CNTR_NAME)
+        EU02 <- EU02_dataplot()
+        if(length(time_period())==1){
+          country <- country %>% 
+            rename(Ntrade_NUTS2 = !!paste0("Ntrade_",time_period(), "_NUTS2"))
+          tooltip <- paste0(country$NUTS_ID, 
+                            "\nNtrade: ", round(country$Ntrade_NUTS2,2))
+        }else{
+          country <- country %>% 
+            rename(Ntrade_NUTS2 = Median_NUTS2)
+          tooltip <- paste0(country$NUTS_ID,
+                            "\nQ0.05: ", round(country$Q0.05_NUTS2,2),
+                            "\nMedian: ", round(country$Ntrade_NUTS2,2),
+                            "\nQ0.95: ", round(country$Q0.95_NUTS2,2))
+        }
+        limits <- c(min(country$Ntrade_NUTS2, na.rm=T), max(country$Ntrade_NUTS2, na.rm=T))
+        ggiraph_plot(data = country, value = "Ntrade_NUTS2",
+                     name = units(), 
+                     title = bquote(paste(N[trade]," ", .(idx)," "," - ", .(c_name))),
+                     limits = limits,
+                     tooltip = tooltip,
+                     ii=5)
+      })
+    })
+
+    # Download
+    output$downloadTable2 <- downloadHandler(
+      filename = function(){"Ntrade_redistribution.csv"},
+      content = function(fname){
+        write.csv(Nt_redist(), fname, row.names=FALSE)
+      }
+    )
+    
+    output$report <- downloadHandler(
+      # For PDF output, change this to "report.pdf"
+      filename = "Ntrade_report.pdf",
+      content = function(file) {
+        # Copy the report file to a temporary directory before processing it, in
+        # case we don't have write permissions to the current working dir (which
+        # can happen when deployed).
+        tempReport <- file.path(tempdir(), "Ntrade_report.Rmd")
+        file.copy(system.file("ShinyFiles", "Ntrade_report.Rmd",
+                              package = "qPRAentry"),
+                  tempReport, overwrite = TRUE)
+        
+        # Set up parameters to pass to Rmd document
+        params <- list(Nt_redist = Nt_redist())
+        
+        # Knit the document, passing in the `params` list, and eval it in a
+        # child of the global environment (this isolates the code in the document
+        # from the code in this app).
+        rmarkdown::render(tempReport, output_file = file,
+                          params = params,
+                          envir = new.env(parent = globalenv())
+        )
+      }
+    )
+        
+        
+  })
+}
+
+## To be copied in the UI
+# mod_ntrade_redistribution_ui("ntrade_redistribution_1")
+
+## To be copied in the server
+# mod_ntrade_redistribution_server("ntrade_redistribution_1")
