@@ -5,9 +5,8 @@ Version: 0.1.0
 Authors@R: c(
     person("Martina", "Cendoya", email = "cendoya_marmar@gva.es", role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-0134-7781")),
-    person("Maria Chiara", "Rosace", email = "mariachiara.rosace@unicatt.it", role = c("aut"),
+    person("Maria Chiara", "Rosace", email = "mariachiara.rosace@unicatt.it", role = c("aut", "ths"),
            comment = c(ORCID = "0000-0002-7263-8228")))
-Maintainer: The package maintainer <cendoya_marmar@gva.es>
 Description: Tools to support risk  assessors in performing the entry step of 
     the quantitative pest risk assessments.
     The package and functions used are based on the work of the European Food 

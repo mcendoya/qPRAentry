@@ -15,7 +15,7 @@ Tools to support risk assessors in performing the entry step of the quantitative
 
 Authors:
 \itemize{
-  \item Maria Chiara Rosace \email{mariachiara.rosace@unicatt.it} (\href{https://orcid.org/0000-0002-7263-8228}{ORCID})
+  \item Maria Chiara Rosace \email{mariachiara.rosace@unicatt.it} (\href{https://orcid.org/0000-0002-7263-8228}{ORCID}) [thesis advisor]
 }
 
 }
