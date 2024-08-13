@@ -12,13 +12,14 @@ text_ntrade_data <- HTML('<p class="custom-text">
           </ul>
           </p>')
 text_pathwaymodel <- HTML('<p class="custom-text">Select parameters and press <strong>Done</strong></p>')
+text_model_done <- HTML('<p class="custom-text">Note: If you make any changes in trade data
+        (new data, columns) or in the pathway model, you must press <strong>Done</strong> again
+        to apply the changes.<br></p>')
 
 # data errors
-data_ntrade_errors <- list(reporter = paste0("Error: The selected column for 'Reporter' does not contain NUTS Country codes. ",
-                                      "Please choose a different column with valid NUTS codes (2-letter code country level)."),
-                    partner = paste0("Error: The selected column for 'Partner' does not contain NUTS Country codes. ",
-                                     "Please choose a different column with valid NUTS codes (2-letter code country level)."),
-                    values_num = paste0("Error: The selected column for 'Values' does not contain numerical data. ",
-                                        "Please choose a different column containing numbers."),
-                    values_neg = paste0("Error: Invalid values detected. The 'Values' variable contains negative values, ",
-                                        "which are not interpretable as quantities. Please review and correct these values."))
+data_ntrade_errors <- list(
+  nuts = "Error: The column selected for 'NUTS CODES' must contain NUTS0 codes (country level) or NUTS2 codes.",
+  values_num = paste0("Error: The selected column for 'Ntrade Values' does not contain numerical data. ",
+                      "Please choose a different column containing numbers."),
+  values_neg = paste0("Error: Invalid values detected. The 'Ntrade Values' variable contains negative values, ",
+                      "which are not interpretable as quantities. Please review and correct these values."))

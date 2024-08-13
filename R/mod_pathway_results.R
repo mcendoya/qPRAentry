@@ -35,6 +35,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
   NUTS_ID <- value <- CNTR_CODE <- NULL
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
     model_solve <- eventReactive(dist_done(),{
       n_iter <- n_iter()
       equation <- model_def()
@@ -64,6 +65,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
       n_iter <- n_iter()
       res_samp <- model_solve()
       Nt_df <- ntrade_df()
+      print(head(Nt_df))
       fns <- c(mean,
                sd,
                partial(quantile, probs = 0.05, na.rm=TRUE),
@@ -84,6 +86,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         pmap_dfr(apply_functions) %>%
         bind_cols(select(Nt_df, NUTS_ID)) %>%
         relocate(NUTS_ID)
+      res_df
     })
 
     Ninf_samples <- eventReactive(dist_done(),{
@@ -103,6 +106,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         bind_cols() %>%
         bind_cols(select(Nt_df, NUTS_ID)) %>%
         relocate(NUTS_ID)
+      res_df
     })
 
     Ninf_EU <- eventReactive(dist_done(),{
@@ -126,7 +130,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
       }
       return(nuts_level)
     })
-    
+
     # EU NUTS0 map (from giscoR pkg)
     EU00 <- eventReactive(dist_done(),{
       map <- suppressWarnings(
@@ -138,7 +142,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
     })
 
 
-    
+
     observe({
       if(input$Ninf_btn=="Table"){
         output$Ninf_results <- renderUI({
@@ -196,14 +200,14 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
                     options = list(dom = 't', pageLength = -1)) %>%
         DT::formatRound(columns = 1:length(Ninf_EU()), digits=2)
     })
-    
+
     output$NUTSmap <- ggiraph::renderGirafe({
       Ninf <- Ninf_solve()
       limits <- c(min(Ninf$Mean, na.rm=T), max(Ninf$Mean, na.rm=T))
       EU00 <- EU00() %>%
         left_join(Ninf, by=join_by(NUTS_ID==NUTS_ID))
-      ggiraph_plot(data = EU00, value = "Mean", 
-                   name = expression(N[inf]), 
+      ggiraph_plot(data = EU00, value = "Mean",
+                   name = expression(N[inf]),
                    title = expression(paste(N[inf], " ", "Mean")),
                    limits = limits,
                    tooltip = paste(EU00$NUTS_ID,
@@ -211,7 +215,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
                                    "\nSD: ", round(EU00$SD, 2)),
                    data_id=EU00$CNTR_CODE)
     })
-    
+
     observeEvent(Ninf_solve(),{
       if(length(Ninf_solve())>0){
         output$ClickOnMap <- renderText({
@@ -232,22 +236,22 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         idx <- selected_NUTS0()
         Ninf <- Ninf_solve()
         country <- EU00() %>%
-          left_join(Ninf, by=join_by(NUTS_ID==NUTS_ID)) %>% 
+          left_join(Ninf, by=join_by(NUTS_ID==NUTS_ID)) %>%
           filter(CNTR_CODE %in% idx)
 
         limits <- c(min(country$Mean, na.rm=T), max(country$Mean, na.rm=T))
-        
+
         ggiraph_plot(data = country, value = "Mean",
-                     name = expression(N[inf]), 
+                     name = expression(N[inf]),
                      title = bquote(paste(.(idx)," ", "- ", N[inf])),
                      limits = limits,
-                     tooltip = paste0(country$NUTS_ID, 
+                     tooltip = paste0(country$NUTS_ID,
                                       "\nMean: ", round(country$Mean,2),
                                       "\nSD: ", round(country$SD, 2)))
       })
     })
-    
-    
+
+
     ## Download
     output$downloadTable <- downloadHandler(
       filename = function(){"Ninf.csv"},
@@ -262,6 +266,32 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         write.csv(Ninf_samples(), fname, row.names=FALSE)
       }
     )
+
+    output$report <- downloadHandler(
+      # For PDF output, change this to "report.pdf"
+      filename = "pathway_report.pdf",
+      content = function(file) {
+        # Copy the report file to a temporary directory before processing it, in
+        # case we don't have write permissions to the current working dir (which
+        # can happen when deployed).
+        tempReport <- file.path(tempdir(), "pathway_report.Rmd")
+        file.copy(system.file("ShinyFiles", "pathway_report.Rmd",
+                              package = "qPRAentry"),
+                  tempReport, overwrite = TRUE)
+
+        # Set up parameters to pass to Rmd document
+         params <- list(Ninf = Ninf_solve())
+
+        # Knit the document, passing in the `params` list, and eval it in a
+        # child of the global environment (this isolates the code in the document
+        # from the code in this app).
+        rmarkdown::render(tempReport, output_file = file,
+                          params = params,
+                          envir = new.env(parent = globalenv())
+        )
+      }
+    )
+
   })
 }
 

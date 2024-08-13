@@ -361,7 +361,10 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
                   tempReport, overwrite = TRUE)
         
         # Set up parameters to pass to Rmd document
-        params <- list(Nt_redist = Nt_redist())
+        params <- list(time_period = time_period(),
+                       units = units(),
+                       Nt_result = Nt(), 
+                       Nt_redist = Nt_redist())
         
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document

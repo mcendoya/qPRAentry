@@ -31,13 +31,11 @@ mod_ntrade_results_ui <- function(id){
 #' ntrade_results Server Functions
 #'
 #' @noRd
-mod_ntrade_results_server <- function(id, trade_done, time_period, units,
-                                      IntraEU_df, TradeData){
+mod_ntrade_results_server <- function(id, trade_done, time_period, units, TradeData){
   IDs <- q0.05 <- q0.95 <- CNTR_CODE <- CNTR_NAME <- NUTS_ID <- Median <- NULL
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     Nt <- eventReactive(trade_done(),{
-      intra <- IntraEU_df()
       trade <- TradeData()
       if(length(time_period())>1){
         res <- ntrade(trade = trade,
@@ -143,7 +141,7 @@ mod_ntrade_results_server <- function(id, trade_done, time_period, units,
         write.csv(Nt(), fname, row.names=FALSE)
       }
     )
-    return(Nt)
+    
   })
 }
 

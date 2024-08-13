@@ -29,6 +29,10 @@ pathwayapp_server <- function(input, output, session) {
     shinyjs::runjs("document.querySelector('a[data-value=\"tab2\"]').classList.remove('disabled-tab');")
   })
   
+  observeEvent(model$go_parameters(),{
+    updateTabsetPanel(session, "pathway_tabs", selected = "tab2" )
+  })
+  
   observeEvent(parameters$dist_done(),{
     shinyjs::enable(selector = 'a[data-value="tab3"]')
     shinyjs::runjs("document.querySelector('a[data-value=\"tab3\"]').classList.remove('disabled-tab');")

@@ -107,15 +107,16 @@ text_time <- list(title = "Trade data time periods",
                                  time periods will be loaded. Select the ones to be 
                                  included in the N<sub>trade</sub> calculation.</p>"))
 # data errors
-data_errors <- list(reporter = paste0("Error: The selected column for 'Reporter' does not contain NUTS Country codes. ",
-                                      "Please choose a different column with valid NUTS codes (2-letter code country level)."),
-                    partner = paste0("Error: The selected column for 'Partner' does not contain NUTS Country codes. ",
-                                     "Please choose a different column with valid NUTS codes (2-letter code country level)."),
-                    values_num = paste0("Error: The selected column for 'Values' does not contain numerical data. ",
-                                        "Please choose a different column containing numbers."),
-                    values_neg = paste0("Error: Invalid values detected. The 'Values' variable contains negative values, ",
-                                        "which are not interpretable as quantities. Please review and correct these values."),
-                    extra_partner = paste0("Error: You must select at least one partner for extra trade."))
+data_errors <- list(
+  reporter = paste0("Error: The selected column for 'Reporter' does not contain NUTS Country codes. ",
+                    "Please choose a different column with valid NUTS codes (2-letter code country level)."),
+  partner = paste0("Error: The selected column for 'Partner' does not contain NUTS Country codes. ",
+                   "Please choose a different column with valid NUTS codes (2-letter code country level)."),
+  values_num = paste0("Error: The selected column for 'Values' does not contain numerical data. ",
+                      "Please choose a different column containing numbers."),
+  values_neg = paste0("Error: Invalid values detected. The 'Values' variable contains negative values, ",
+                      "which are not interpretable as quantities. Please review and correct these values."),
+  extra_partner = paste0("Error: You must select at least one partner for extra trade."))
 
 # Redistribution tab
 text_NtradeValue <- HTML('<p class="custom-text">Select the N<sub>trade</sub> value for redistribution.</p>')

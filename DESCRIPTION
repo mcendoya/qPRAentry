@@ -21,7 +21,6 @@ LazyData: true
 RoxygenNote: 7.3.2
 Imports: 
     bsplus,
-    cowplot,
     dplyr,
     DT,
     eurostat (>= 4.0.0),

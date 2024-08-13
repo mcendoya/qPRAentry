@@ -1,10 +1,9 @@
 #' @import dplyr
-#' @import purrr
 #' @import tidyr
+#' @import purrr
 #' @import DT
 #' @import ggplot2
 #' @import ggiraph
-#' @import cowplot
 #' @import sf
 #' @import rmarkdown
 #' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))

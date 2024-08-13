@@ -10,7 +10,6 @@ ntradeapp_server <- function(input, output, session) {
                                          trade_done = data_vals$trade_done,
                                          time_period = data_vals$time_period,
                                          units = data_vals$units,
-                                         IntraEU_df = data_vals$IntraEU_df,
                                          TradeData = data_vals$TradeData)
   mod_ntrade_redistribution_server("ntrade_redistribution",
                                    Nt = Nt_result,

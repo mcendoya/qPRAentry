@@ -67,16 +67,6 @@ mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values, model_d
       parameter_samples
     })
 
-    dist_result_dw <- eventReactive(input$dist_done,{
-      parameter_samples <- dist_result()
-      names(parameter_samples) <- gsub("\\$", "", names(parameter_samples))
-      df <- data.frame(parameter_samples)
-      df <- df %>%
-        mutate(n_iter=1:nrow(df)) %>%
-        relocate(n_iter)
-      df
-    })
-
     observeEvent(input$dist_done,{
       parameter_samples <- dist_result()
       n <- length(parameter_samples)

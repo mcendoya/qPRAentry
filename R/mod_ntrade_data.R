@@ -511,10 +511,10 @@ mod_ntrade_data_server <- function(id){
                                      withCallingHandlers({
                                        shinyjs::html("message", "")
                                        df <- trade_data(extra_total = ExtraTotal_df(),
-                                                  extra_pest = ExtraPest_df(),
-                                                  intra_trade = IntraEU_df(),
-                                                  internal_production = IP_df(),
-                                                  select_period = input$time_period)
+                                                        extra_pest = ExtraPest_df(),
+                                                        intra_trade = IntraEU_df(),
+                                                        internal_production = IP_df(),
+                                                        select_period = input$time_period)
                                      },
                                      message = function(m) {
                                        shinyjs::html(id = "message", html = m$message, add = TRUE)
@@ -613,7 +613,6 @@ mod_ntrade_data_server <- function(id){
         trade_done = reactive(input$trade_done),
         time_period = reactive(input$time_period),
         units = reactive(input$units),
-        IntraEU_df = IntraEU_df,
         TradeData = TradeData
       )
     )

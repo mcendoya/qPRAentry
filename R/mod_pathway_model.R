@@ -176,34 +176,31 @@ mod_pathway_model_server <- function(id){
       if(data_complete()){
         shinyjs::enable("model_done")
         addClass("model_done", class="enable")
-        shinyjs::enable("go_parameters")
-        addClass("go_parameters", class="enable")
       }
     })
     
     #data_errors
     data_message <- function(df){
       m <- c()
-      nuts <- unique(nchar(df$NUTS0))
-      if(length(nuts)>1){
-        "Error"
-      }
-      if(nuts==2){
-        if(!all(df$NUTS_ID %in% NUTS_CODES$CNTR_CODE)){
-          "Error"
-        }
-      }else if(nuts == 4){
-        if(!all(df$NUTS_ID %in% NUTS_CODES$NUTS2_CODE)){
-          "Error"
-        }
+      nuts <- unique(nchar(df$NUTS_ID))
+      if((length(nuts) > 1 || (nuts != 2 && nuts != 4))){
+        m <- c(m, data_ntrade_errors$nuts)
       }else{
-        "Error"
+        if(nuts==2){
+          if(!all(df$NUTS_ID %in% NUTS_CODES$CNTR_CODE)){
+            m <- c(m, data_ntrade_errors$nuts)
+          }
+        }else if(nuts == 4){
+          if(!all(df$NUTS_ID %in% NUTS_CODES$NUTS2_CODE)){
+            m <- c(m, data_ntrade_errors$nuts)
+          }
+        } 
       }
       if(!is.numeric(df$value)){
-        m <- c(m, data_errors$values_num)
+        m <- c(m, data_ntrade_errors$values_num)
       }
       if(any(df$value[!is.na(df$value)]<0)){
-        m <- c(m, data_errors$values_neg)
+        m <- c(m, data_ntrade_errors$values_neg)
       }
       if(length(m)>0){
         mss <- paste(m, collapse = "\n")
@@ -213,8 +210,8 @@ mod_pathway_model_server <- function(id){
       return(mss)
     }
     
-    # read data and rename colnames
-    ntrade_df <- eventReactive(c(session$userData$ntrade_reactive(),input$nuts,input$values),{
+    ntrade_df <- eventReactive(input$model_done,{
+      output$message <- renderText({NULL})
       if(data_complete()){
         tryCatch({
       df <- session$userData$ntrade_reactive()
@@ -223,7 +220,7 @@ mod_pathway_model_server <- function(id){
       df <- df %>%
         select(c(input$nuts, input$values)) %>%
         rename(all_of(user_list))
-      #data_errors
+      # data_errors
       m <- data_message(df)
       if (!is.null(m)) { stop(m) }
       df <- df %>%
@@ -237,14 +234,23 @@ mod_pathway_model_server <- function(id){
       }
     })
     
+    observeEvent(input$model_done,{
+      if(is.null(ntrade_df())){
+        runjs("window.scrollTo({ top: 0, behavior: 'smooth' });")
+        }else{
+        shinyjs::enable("go_parameters")
+        addClass("go_parameters", class="enable")
+      }
+    })
+
     output$help_data <- renderUI({
       if(!data_complete()){
         text_ntrade_data
       }else if(input$model_done==0){
         text_pathwaymodel
-      }else{HTML('<p class="custom-text">Note: If you make any changes in trade data
-        (new data, columns) or in the pathway model, you must press <strong>Done</strong> again
-        to apply the changes.<br></p>')}
+      }else{
+        text_model_done
+      }
     })
     
     output$data_table <- DT::renderDataTable({
@@ -356,6 +362,7 @@ mod_pathway_model_server <- function(id){
         nuts = reactive(input$nuts),
         values = reactive(input$values),
         model_done = reactive(input$model_done),
+        go_parameters = reactive(input$go_parameters),
         parameters = get_parameters,
         model_def = model_def,
         ntrade_df = ntrade_df
