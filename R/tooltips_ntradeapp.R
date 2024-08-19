@@ -1,27 +1,24 @@
 # Help text ntrade model
 # Data tab
-text_ExtraTotal <- HTML('<p class="custom-text">Click on 
-          <strong>Extra-EU import total</strong>
+text_ExtraTotal <- HTML('<p class="custom-text">To start, click on 
+          <strong>Extra-EU Import Total</strong> and follow these steps:
           <ul class="custom-text" style="margin-right:10px;">
-          <li>Upload the data (CSV format file) </li>
-          <li>Check units conversion: the value column is multiplied by the value entered 
-          to transform the units</br>
-          (e.g., if the values are in kg and tons is defined as the final unit, 
-          0.001 must be entered).</li>
-          <li>Select the corresponding column names:</br>
+          <li>Upload your data file in CSV format.</li>
+          <li>Verify unit conversion: The values in the "Values" column will be 
+          multiplied by the conversion factor you provide to match the required units.</br>
+          (For example, if your data is in kilograms and you need the final values in tons, 
+          enter 0.001 as the conversion factor).</li>
+          <li>Assign the appropriate columns from your dataset:</br>
           <ul style="margin-right:20px;">
-          <li> Reporter: Column with the NUTS codes (2-letter code) of the EU countries of interest 
-          importing the commodity</li>
-          <li> Partner: Column with the IDs of the third countries (non-EU) exporting 
-          the commodity.</br>
-          It is not required to identify each of these countries, they can be aggregated 
-          into a single ID (e.g., "total").</li>
-          <li> Values: Column with the quantity of imported commodity</li>
-          <li> Time period: Column with the identifier for the time (year, month, season, ...) 
-          corresponding to each row of the data</li>
+          <li><strong>Reporter:</strong> Select the column containing the NUTS codes (2-letter code) of the EU countries that are importing the commodity.</li>
+          <li><strong>Partner:</strong> Select the column containing the IDs of the third countries (non-EU) exporting the commodity.</br>
+          Note: It is not necessary to list each exporting country individually; they can be grouped under a single ID (e.g., "total").</li>
+          <li><strong>Values:</strong> Select the column that contains the quantity of the imported commodity.</li>
+          <li><strong>Time Period:</strong> Select the column that identifies the time period (e.g., year, month, season) for each entry.</li>
           </ul>
-          <li>Select the partner countries: values found in the column Partner</li>
-          <li>Click on <strong>Done</strong>!</li>
+          </li>
+          <li>Choose the partner countries from the values available in the "Partner" column.</li>
+          <li>Finally, click on <strong>Done</strong> to complete the process.</li>
           </ul>
           </p>')
 text_ExtraPest <- HTML('<p class="custom-text"">Click on 

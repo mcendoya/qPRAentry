@@ -21,7 +21,7 @@ The calculation of $N_{trade}$ for European countries ([NUTS - Nomenclature of t
 - Candidate countries and potential candidates
 
 
-### For Non-European countries
+### For non-European countries
 For countries outside Europe, the calculation of $N_{trade}$ can be performed using the `ntrade` function from the `qPRAentry` package in R.
 In order to use the `ntrade` function, install the `qPRAentry` package.
 
