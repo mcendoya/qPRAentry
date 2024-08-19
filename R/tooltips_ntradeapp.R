@@ -21,73 +21,59 @@ text_ExtraTotal <- HTML('<p class="custom-text">To start, click on
           <li>Finally, click on <strong>Done</strong> to complete the process.</li>
           </ul>
           </p>')
-text_ExtraPest <- HTML('<p class="custom-text"">Click on 
-          <strong>Extra-EU import from countries where the pest is present</strong>
+text_ExtraPest <- HTML('<p class="custom-text">Click on <strong>Extra-EU Import from Countries Where the Pest Is Present</strong>, and follow these steps:
           <ul class="custom-text" style="margin-right:10px;">
-          <li>Upload the data (CSV format file) </li>
-          <li>Check units conversion: the value column is multiplied by the value entered 
-          to transform the units</br>
-          (e.g., if the values are in kg and tons is defined as the final unit, 
-          0.001 must be entered).</li>
-          <li>Select the corresponding column names:</br>
+          <li>Upload your data file in CSV format.</li>
+          <li>Check unit conversion: The values in the "Values" column will be multiplied by the conversion factor you provide to match the required units.<br>
+          (For example, if the values are in kilograms and the final unit is tons, enter 0.001 as the conversion factor).</li>
+          <li>Select the corresponding column names from your dataset:<br>
           <ul style="margin-right:20px;">
-          <li> Reporter: Column with the NUTS codes (2-letter code) of the EU countries of interest 
-          importing the commodity</li>
-          <li> Partner: Column with the IDs of the third countries (non-EU) where the pest 
-          is present exporting the commodity.</br>
-          It is not required to identify each of these countries, they can be aggregated 
-          into a single ID (e.g., "extra_pest").</li>
-          <li> Values: Column with the quantity of imported commodity.</li>
-          <li> Time period: Column with the identifier for the time (year, month, season, ...) 
-          corresponding to each row of the data</li>
+          <li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) for the EU countries importing the commodity.</li>
+          <li><strong>Partner:</strong> Column with the IDs of the third countries (non-EU) where the pest is present. You do not need to identify each country individually; you can aggregate them into a single ID (e.g., "extra_pest").</li>
+          <li><strong>Values:</strong> Column with the quantity of the imported commodity.</li>
+          <li><strong>Time Period:</strong> Column with the time identifier (e.g., year, month, season) for each row of the data.</li>
           </ul>
-          <li>Select the partner countries: values found in the column Partner</li>
-          <li>Click on <strong>Done</strong>!</li>
-          </ul></p>')
-text_IntraEU <- HTML('<p class="custom-text">Click on 
-          <strong>Intra-EU import</strong>
-          <ul class="custom-text" style="margin-right:10px;">
-          <li>Upload the data (CSV format file) </li>
-          <li>Check units conversion: the value column is multiplied by the value entered 
-          to transform the units</br>
-          (e.g., if the values are in kg and tons is defined as the final unit, 
-          0.001 must be entered).</li>
-          <li>Select the corresponding column names:</br>
-          <ul style="margin-right:20px;">
-          <li> Reporter: Column with the NUTS codes (2-letter code) of the EU countries of interest 
-          importing the commodity</li>
-          <li> Partner: Column with the NUTS codes (2-letter code) of the EU countries of interest 
-          exporting the commodity</li>
-          <li> Values: Column with the quantity of imported commodity</li>
-          <li> Time period: Column with the identifier for the time (year, month, season, ...) 
-          corresponding to each row of the data</li>
-          </ul>
-          <li>Click on <strong>Done</strong>!</li>
+          </li>
+          <li>Select the partner countries from the values found in the "Partner" column.</li>
+          <li>Click on <strong>Done</strong> to apply the changes!</li>
           </ul>
           </p>')
-text_IP <- HTML('<p class="custom-text">Click on 
-          <strong>Internal production</strong>
+text_IntraEU <- HTML('<p class="custom-text">Click on <strong>Intra-EU Import</strong>, and follow these steps:
           <ul class="custom-text" style="margin-right:10px;">
-          <li>Upload the data (CSV format file) </li>
-          <li>Check units conversion: the value column is multiplied by the value entered 
-          to transform the units</br>
-          (e.g., if the values are in kg and tons is defined as the final unit, 
-          0.001 must be entered).</li>
-          <li>Select the corresponding column names:</br>
+          <li>Upload your data file in CSV format.</li>
+          <li>Check unit conversion: The values in the "Values" column will be multiplied by the conversion factor you provide to match the required units.<br>
+          (For example, if the values are in kilograms and the final unit is tons, enter 0.001 as the conversion factor).</li>
+          <li>Select the corresponding column names from your dataset:<br>
           <ul style="margin-right:20px;">
-          <li> Reporter: Column with the NUTS codes (2-letter code) of the EU countries of interest 
-          producing the commodity</li>
-          <li> Values: Column with the quantity of commodity produced</li>
-          <li> Time period: Column with the identifier for the time (year, month, season, ...) 
-          corresponding to each row of the data</li>
+          <li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) for the EU countries importing the commodity.</li>
+          <li><strong>Partner:</strong> Column with the NUTS codes (2-letter code) for the EU countries exporting the commodity.</li>
+          <li><strong>Values:</strong> Column with the quantity of the imported commodity.</li>
+          <li><strong>Time Period:</strong> Column with the time identifier (e.g., year, month, season) for each row of the data.</li>
           </ul>
-          <li>Click on <strong>Done</strong>!</li>
+          </li>
+          <li>Click on <strong>Done</strong> to apply the changes!</li>
           </ul>
           </p>')
-text_dataDone <- HTML('<p class="custom-text">Note: If you make any changes in trade data
-        (new data, columns, units, partner), you must press <strong>Done</strong> again
-        to apply the changes.<br>Click on buttons to change the trade data visualization.
-        Click on bars to plot each country at the different time periods.<br></p>')
+text_IP <- HTML('<p class="custom-text">To get started with <strong>Internal Production</strong>, follow these steps:
+          <ul class="custom-text" style="margin-right:10px;">
+          <li>Upload your data file in CSV format.</li>
+          <li>Verify unit conversion: The values in the "Values" column will be multiplied by the conversion factor you provide to match the required units.</br>
+          (For instance, if the data is in kilograms and you need the final values in tons, enter 0.001 as the conversion factor).</li>
+          <li>Select the appropriate column names from your dataset:</br>
+          <ul style="margin-right:20px;">
+          <li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) for the EU countries that are producing the commodity.</li>
+          <li><strong>Values:</strong> Column with the quantity of the commodity produced.</li>
+          <li><strong>Time Period:</strong> Column with the time identifier (e.g., year, month, season) for each row of data.</li>
+          </ul>
+          </li>
+          <li>Click on <strong>Done</strong> to apply the changes.</li>
+          </ul>
+          </p>')
+text_dataDone <- HTML('<p class="custom-text">Note: If you make any changes to the trade data 
+        (such as updating data, selecting different columns, adjusting units, or modifying partners), 
+        please press <strong>Done</strong> again to apply the changes.<br>
+        Use the buttons <strong>"Plot Extra-EU Import"</strong>, <strong>"Plot Intra-EU Trade"</strong>, or <strong>"Plot Internal Production"</strong> 
+        to change the trade data visualization. You can also click on the bars to view the data for each country across different time periods.<br></p>')
 
 # units info
 text_units <- list(title = HTML('<p>Units (weight) for N<sub>trade</sub></p>'),
