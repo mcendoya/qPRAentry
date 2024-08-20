@@ -92,8 +92,8 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
     output$help_data <- renderUI({
       button_state <- button_pressed()
       if (button_state) {
-        HTML('<p class="custom-text">Note: If you make any changes in redistribution data
-        you must click on <strong>"See N<sub>trade</sub> redistribution"</strong> to apply the changes.</p>')
+        HTML('<p class="custom-text">Note: If you make any changes to the redistribution data,
+        please, press on <strong>"See N<sub>trade</sub> redistribution"</strong> to apply the changes.</p>')
       } else {
         if(is.null(input$output_NUTS2)){
           text_DataRedistribution
@@ -245,8 +245,8 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
       }else if(input$NUTS2_btn=="Map"){
         output$NUTS2_content <- renderUI({
           tagList(
-            HTML('<p class="custom-text">Move the cursor over the map to view the values. 
-               Click on a country to zoom in.<br></p>'),
+            HTML('<p class="custom-text">Hover over the map to display values. 
+                 Click on a country to zoom in for a closer view.<br></p>'),
             br(),
           fluidRow(
             div(class = "dual-plot-container",

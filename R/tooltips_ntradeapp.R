@@ -73,7 +73,7 @@ text_dataDone <- HTML('<p class="custom-text">Note: If you make any changes to t
         (such as updating data, selecting different columns, adjusting units, or modifying partners), 
         please press <strong>Done</strong> again to apply the changes.<br>
         Use the buttons <strong>"Plot Extra-EU Import"</strong>, <strong>"Plot Intra-EU Trade"</strong>, or <strong>"Plot Internal Production"</strong> 
-        to change the trade data visualization. You can also click on the bars to view the data for each country across different time periods.<br></p>')
+        to change the trade data visualization. You can also click on the bars to view mean and standard deviation for each country.<br></p>')
 
 # units info
 text_units <- list(title = HTML('<p>Units (weight) for N<sub>trade</sub></p>'),
@@ -103,19 +103,17 @@ data_errors <- list(
 
 # Redistribution tab
 text_NtradeValue <- HTML('<p class="custom-text">Select the N<sub>trade</sub> value for redistribution.</p>')
-text_DataRedistribution <- HTML('<p class="custom-text">Select the data to proportionally 
-                        redistribute N<sub>trade</sub> to NUTS2.
+text_DataRedistribution <- HTML('<p class="custom-text">Select the dataset for proportional redistribution of 
+                        N<sub>trade</sub> to NUTS2 regions:
                         <ul class="custom-text" style="margin-right:10px;">
-                          <li>Population: Eurostat population data</li>
-                          <li>My data: requires uploading your own database for redistribution 
-                          (e.g. consumption data at NUTS2 level).</li>
+                          <li><strong>Population (Eurostat):</strong> Utilizes Eurostat population data for redistribution based on population size.</li>
+                          <li><strong>Custom Data:</strong> Allows you to upload your own dataset for redistribution, such as consumption data at the NUTS2 level.</li>
                         </ul></p>')
 
-text_PopulationYear <- HTML('<p class="custom-text">Select the year(s) of population data. 
-                    If more than one year is selected, the redistribution will be made according 
-                    to the average population of the selected years.
+text_PopulationYear <- HTML('<p class="custom-text">Select one or more years of population data for redistribution. 
+                    If multiple years are selected, the redistribution will be based on the average population across those years.
                     <ul class="custom-text" style="margin-right:10px;">
-                      <li>Click on <strong>"See N<sub>trade</sub> redistribution"</strong></li>
+                      <li>Once the years are selected, click on <strong>"See N<sub>trade</sub> Redistribution"</strong> to proceed.</li>
                     </ul></p>')
 
 text_MyData <- HTML('<p class="custom-text">Upload the data (CSV format file)

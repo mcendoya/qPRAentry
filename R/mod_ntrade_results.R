@@ -87,7 +87,7 @@ mod_ntrade_results_server <- function(id, trade_done, time_period, units, TradeD
             fluidRow(
               div(class = "plot-container",
                   div(class = "plot",
-                     p("Move the cursor over the map to view the values", class="custom-text"),
+                     p("Place your cursor over the map to display the values", class="custom-text"),
                      br(),
                        ggiraph::girafeOutput(ns("NUTS0_map")) %>% 
                          shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
