@@ -5,7 +5,7 @@ output:
 ---
 
 # Overview of $N_{trade}$ Shiny application
-============================================
+==================================================
 
 $N_{trade}$ is defined as the total quantity of commodities (infested by a pest or not) imported by a country (e.g., an EU country) from other third-countries where the pest is present. This application is meant to calculate $N_{trade}$ and redistribute the data into the countries considered.
 

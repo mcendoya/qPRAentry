@@ -5,7 +5,7 @@ output:
 ---
 
 # Overview of the Pathway model Shiny application
-=======================
+=====================================================================
 
 The Pathway model application is designed to estimate the number of potential founder populations of a pest in different regions, using $N_{trade}$ data combined with additional user-defined parameters.
 

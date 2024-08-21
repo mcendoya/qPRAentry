@@ -120,8 +120,8 @@ text_MyData <- HTML('<p class="custom-text">Upload the data (CSV format file)
           <ul class="custom-text" style="margin-right:10px;">
           <li>Select the corresponding column names:</br>
           <ul style="margin-right:20px;">
-          <li> NUTS2: Column with the NUTS2 codes</li>
-          <li> Values: Column with values to proportionally redistribute N<sub>trade</sub></li>
+          <li> NUTS2: Column containing the NUTS2 codes</li>
+          <li> Values: Column containing the values to be used for the proportional redistribution of N<sub>trade</sub></li>
           </ul>
           <li>Click on <strong>"See N<sub>trade</sub> redistribution"</strong></li>
           </ul>
