@@ -5,7 +5,7 @@ output:
 ---
 
 # Overview of $N_{trade}$ Shiny application
-=======================
+============================================
 
 $N_{trade}$ is defined as the total quantity of commodities (infested by a pest or not) imported by a country (e.g., an EU country) from other third-countries where the pest is present. This application is meant to calculate $N_{trade}$ and redistribute the data into the countries considered.
 
@@ -76,4 +76,6 @@ Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
    - **How It works:** Users upload a file containing the NUTS2 codes along with corresponding values that represent the desired proportion of $N_{trade}$ to be allocated to each region. The application will then use this custom dataset to redistribute the $N_{trade}$ quantities accordingly.
 
 
+## $N_{trade}$ report
 
+Upon completion of the analysis, the user will have the option to download a comprehensive report summarising the results. This report will include key tables and data visualizations.
