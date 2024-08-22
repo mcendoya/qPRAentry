@@ -1,6 +1,8 @@
 ---
 title: "Ntrade report"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 params:
   time_period: NA
   units: NA
@@ -26,9 +28,38 @@ Nt_redist<- params$Nt_redist
 
 #Introduction
 
-This report presents the results of the $N_{trade}$ analysis using the Shiny application. Data was processed using the *qPRAentry* package.
+This report presents the results of the $N_{trade}$ analysis using the Shiny application. Data were processed using the *qPRAentry* package.
 
 $N_{trade}$ is defined as the total quantity of commodities (infested by a pest or not) imported by a country (e.g., an EU country) from other third-countries where the pest is present. This application is meant to calculate $N_{trade}$ and redistribute the data into the countries considered.
+
+
+### Calculation of $N_{trade}$
+
+For a given country $i$, $N_{trade}$ is calculated as follows:
+
+$$
+N_{trade_i} = ExtraPest_i - ExtraPest_i \sum_{j \neq i} R_{ij} + \sum_{j \neq i} ExtraPest_j R_{ji},
+$$
+
+Where:
+
+- **$ExtraPest_i$**: Quantity of non-EU commodity imported by country $i$ from countries where the pest is present.
+- **$ExtraPest_j$**: Quantity of non-EU commodity imported by country $j$ from countries where the pest is present.
+- **$R_{ij}$**: The proportion of $ExtraPest_i$ reexported from country $i$ to country $j$. This is calculated as:
+  $$
+  R_{ij} = \frac{IntraExp_{ij}}{Total_i}
+  $$
+  where $IntraExp_{ij}$ is the quantity of commodity exported from country $i$ to country $j$, and $Total_i$ is the total quantity of commodity available in country $i$, given by:
+  $$
+  Total_i = IP_i + ExtraTotal_i
+  $$
+  Here, $IP_i$ represents the internal production in country $i$, and $ExtraTotal_i$ is the total quantity of non-EU commodity imported by country $i$.
+- **$R_{ji}$**: The proportion of $ExtraPest_j$ reexported from country $j$ to country $i$. This is calculated as:
+  $$
+  R_{ji} = \frac{IntraExp_{ji}}{Total_j}
+  $$
+  where $IntraExp_{ji}$ is the quantity of commodity exported from country $j$ to country $i$, and $Total_j$ is the total quantity of commodity available in country $j$.
+
 
 
 ```{r}
@@ -66,9 +97,30 @@ plot_countries(Nt, "NUTS0", "Median", title = "Ntrade Median") +
 Figure 1: Median $N_{trade}$ values by country at the NUTS0 level.
 
 
-## $N_{trade}$ redistribution results
+## $N_{trade}$ redistribution
 
-The $N_{trade}$ values can  be redistributed proportionally to NUTS2 regions based on population data or user-defined data.
+### Redistribution to NUTS2
+
+After calculating $N_{trade}$ at the national level (NUTS0), the next step involves redistributing these quantities to NUTS2 regions. 
+
+Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
+
+1. **Population-based redistribution using Eurostat data**: This option allows users to redistribute $N_{trade}$ data to NUTS2 regions proportionally based on population data. The population data is sourced from Eurostat and is already integrated into the application.
+
+
+2. **Custom redistribution using user-uploaded data**: This option provides users with the flexibility to perform a personalised redistribution based on custom data. Users can upload their own dataset containing specific values for each NUTS2 region.
+   
 Below, the $N_{trade}$ redistribution results are displayed in both tabular and map formats.
 The map shows the median $N_{trade}$ values by regions (NUTS2 level).
+
+```{r}
+#summary_table <- TBA
+
+# Display the table
+
+
+#plot_countries(TBA)
+
+```
+Figure 2: $N_{trade}$ values redistributed at the NUTS2 level.
 
