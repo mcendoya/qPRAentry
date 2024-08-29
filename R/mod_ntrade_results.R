@@ -142,6 +142,7 @@ mod_ntrade_results_server <- function(id, trade_done, time_period, units, TradeD
       }
     )
     
+    return(Nt)
   })
 }
 
