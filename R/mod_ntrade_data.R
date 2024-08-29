@@ -210,17 +210,23 @@ mod_ntrade_data_server <- function(id){
 
     # fn to rename colnames
     colnames_rename <- function(df, data_name, partner = TRUE){
+      user_colnames <- c(input[[paste0("reporter_", data_name)]],
+                         input[[paste0("value_", data_name)]],
+                         input[[paste0("time_period_", data_name)]])
       user_list <- c(reporter = input[[paste0("reporter_", data_name)]],
                      value = input[[paste0("value_", data_name)]],
                      time_period = input[[paste0("time_period_", data_name)]])
       if(partner){
+        user_colnames <- c(user_colnames, input[[paste0("partner_", data_name)]])
         user_list <- c(user_list, partner =  input[[paste0("partner_", data_name)]])
       }
       default_list <- list(reporter = "reporter",
                            partner = "partner",
                            value = "value",
                            time_period = "time_period")
-      df <- df %>% rename(!!!user_list[names(user_list)%in%default_list])
+      df <- df %>% 
+        select(all_of(user_colnames)) %>% 
+        rename(!!!user_list[names(user_list)%in%default_list])
       return(df)
     }
     
@@ -285,9 +291,15 @@ mod_ntrade_data_server <- function(id){
         m <- columns_null("ExtraTotal")
         if (!is.null(m)) { stop(m) }
         df <- colnames_rename(df, "ExtraTotal") %>% 
-          mutate(reporter = case_when(reporter=="GR"~"EL",
-                                      reporter=="GB"~"UK",
-                                      TRUE~reporter))
+          {if(any(.$reporter %in% NUTS_CODES$CNTR_CODE)) {
+            mutate(., reporter = case_when(
+              reporter == "GR" ~ "EL",
+              reporter == "GB" ~ "UK",
+              TRUE ~ reporter
+            ))
+          } else {
+            .
+          }}
         # data errors
         m <- data_message(df, extra_partner = TRUE,
                           input_parner = input$extra_partner_ExtraTotal)
@@ -309,9 +321,15 @@ mod_ntrade_data_server <- function(id){
         m <- columns_null("ExtraPest")
         if (!is.null(m)) { stop(m) }
         df <- colnames_rename(df, "ExtraPest") %>% 
-          mutate(reporter = case_when(reporter=="GR"~"EL",
-                                      reporter=="GB"~"UK",
-                                      TRUE~reporter))
+          {if(any(.$reporter %in% NUTS_CODES$CNTR_CODE)) {
+            mutate(., reporter = case_when(
+              reporter == "GR" ~ "EL",
+              reporter == "GB" ~ "UK",
+              TRUE ~ reporter
+            ))
+          } else {
+            .
+          }}
         # data errors
         m <- data_message(df, extra_partner = TRUE,
                           input_parner = input$extra_partner_ExtraPest)
@@ -333,12 +351,25 @@ mod_ntrade_data_server <- function(id){
         m <- columns_null("IntraEU")
         if (!is.null(m)) { stop(m) }
         df <- colnames_rename(df, "IntraEU") %>% 
-          mutate(reporter = case_when(reporter=="GR"~"EL",
-                                      reporter=="GB"~"UK",
-                                      TRUE~reporter),
-                 partner = case_when(partner=="GR"~"EL",
-                                     partner=="GB"~"UK",
-                                      TRUE~partner))
+          {if(any(.$reporter %in% NUTS_CODES$CNTR_CODE)) {
+            mutate(., reporter = case_when(
+              reporter == "GR" ~ "EL",
+              reporter == "GB" ~ "UK",
+              TRUE ~ reporter
+            ))
+          } else {
+            .
+          }} %>% 
+          {if(any(.$partner %in% NUTS_CODES$CNTR_CODE)) {
+            mutate(., partner = case_when(
+              partner == "GR" ~ "EL",
+              partner == "GB" ~ "UK",
+              TRUE ~ partner
+            ))
+          } else {
+            .
+          }}
+
         #data errors
         m <- data_message(df, partner=TRUE)
         if (!is.null(m)) { stop(m) }
@@ -358,9 +389,15 @@ mod_ntrade_data_server <- function(id){
         m <- columns_null("IP", partner = FALSE)
         if (!is.null(m)) { stop(m) }
         df <- colnames_rename(df, "IP", partner=FALSE) %>% 
-          mutate(reporter = case_when(reporter=="GR"~"EL",
-                                      reporter=="GB"~"UK",
-                                      TRUE~reporter))
+          {if(any(.$reporter %in% NUTS_CODES$CNTR_CODE)) {
+            mutate(., reporter = case_when(
+              reporter == "GR" ~ "EL",
+              reporter == "GB" ~ "UK",
+              TRUE ~ reporter
+            ))
+          } else {
+            .
+          }}
         #data_errors
         m <- data_message(df)
         if (!is.null(m)) { stop(m) }
