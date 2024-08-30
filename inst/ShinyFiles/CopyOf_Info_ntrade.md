@@ -6,29 +6,27 @@ output:
 
 # Overview of $N_{trade}$ Shiny application
 
-<hr style="border:1px solid #1E68BA">
-<br>
+==============================================================================================
 
-$N_{trade}$ is defined as the total quantity of commodities (infested by a pest or not) imported by a country (e.g., an EU country) from other third-countries where the pest is present. 
+$N_{trade}$ is defined as the total quantity of commodities (infested by a pest or not) imported by a country (e.g., an EU country) from other third-countries where the pest is present. This application is meant to calculate $N_{trade}$ and redistribute the data into the countries considered.
 
-This application is meant to calculate $N_{trade}$ for European countries ([NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts)), including European Union Member States, EFTA countries, and candidate countries and potential candidates. Note that it is not necessary to consider all countries included in this list.
+## Regional applications of $N_{trade}$
 
-For countries outside Europe, the calculation of $N_{trade}$ can be performed using the `ntrade` function from the `qPRAentry` package.
+### For European countries
 
-For the use of this application, trade data of the commodities of interest, i.e., potential carriers of the target pests, are required. The trade data required are: 
+The calculation of $N_{trade}$ for European countries ([NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts)) is facilitated by the Shiny application, which is specifically designed to handle data from:
 
-- Total quantity of non-EU commodity imported by EU countries.
-- Quantity of commodities from non-EU countries where the pest is present imported by EU countries.
-- Quantity of commodity imported between EU countries.
-- Quantity of commodity produced in the EU countries.
+- European Union Member States
+- EFTA countries
+- Candidate countries and potential candidates
 
-**Suggestion Eurostat**
 
-<br>
+### For non-European countries
+For countries outside Europe, the calculation of $N_{trade}$ can be performed using the `ntrade` function from the `qPRAentry` package in R.
+In order to use the `ntrade` function, install the `qPRAentry` package.
 
-## Calculation of $N_{trade}$
 
-<br>
+### Calculation of $N_{trade}$
 
 For a given country $i$, $N_{trade}$ is calculated as follows:
 
@@ -55,11 +53,10 @@ Where:
   $$
   where $IntraExp_{ji}$ is the quantity of commodity exported from country $j$ to country $i$, and $Total_j$ is the total quantity of commodity available in country $j$.
 
-<br>
 
-## $N_{trade}$ redistribution to NUTS2
+## $N_{trade}$ redistribution
 
-<br>
+### Redistribution to NUTS2
 
 After calculating $N_{trade}$ at the national level (NUTS0), the next step involves redistributing these quantities to NUTS2 regions. 
 
@@ -78,14 +75,7 @@ Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
    
    - **How It works:** Users upload a file containing the NUTS2 codes along with corresponding values that represent the desired proportion of $N_{trade}$ to be allocated to each region. The application will then use this custom dataset to redistribute the $N_{trade}$ quantities accordingly.
 
-<br>
 
-## $N_{trade}$ results
+## $N_{trade}$ report
 
-<br>
-
-Once the analysis is completed, the user will have the option to download a ZIP file containing:
-
-- A full PDF report summarizing the results
-- $N_{trade}$ results table in CSV format
-- $N_{trade}$ redistribution results table in CSV format
+Upon completion of the analysis, the user will have the option to download a comprehensive report summarising the results. This report will include key tables and data visualizations.

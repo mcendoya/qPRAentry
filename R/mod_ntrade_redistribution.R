@@ -14,28 +14,25 @@ mod_ntrade_redistribution_ui <- function(id){
       sidebarPanel(width=3,
                    style='background: #ffff;',
                    radioButtons(ns("output_NUTS2"), "Data for proportional redistribution to NUTS2",
-                                choices=c("Population", "My data"),
+                                choices=c("Population", "Custom Data"),
                                 selected=character(0),
                                 inline=T),
                    conditionalPanel(condition="input.output_NUTS2 == 'Population'",
                                     ns = ns,
                                     shinyWidgets::pickerInput(ns("population_year"),
                                                               "Population data year(s)",
-                                                              choices = c(2014:2023),
+                                                              choices = c("Downloading population data..."),
                                                               multiple = TRUE,
                                                               selected = character(0),
                                                               width ="fit"),
                                     uiOutput(ns("notification_ui"))
                    ),
-                   conditionalPanel(condition="input.output_NUTS2 == 'My data'",
+                   conditionalPanel(condition="input.output_NUTS2 == 'Custom Data'",
                                     ns = ns,
                                     fileInput(
                                       inputId = ns("NUTS2_proportion"),
-                                      HTML('NUTS2 DATA', "<font size='3'>",
-                                           as.character(actionLink(inputId = ns("NUTS2_data"),
-                                                                   label = "",
-                                                                   icon = icon("question-circle"))), "</font>"),
-                                      width = "50%",
+                                      label = NULL,
+                                      width = "70%",
                                       accept = c('.csv')
                                     ),
                                     h4("Column names:", style = "color:#327FB0"),
@@ -56,7 +53,7 @@ mod_ntrade_redistribution_ui <- function(id){
                    ),#conditionalPanel
                    br(),
                    shinyjs::disabled(actionButton(ns("redistribution_done"), "See $N_{trade}$ redistribution")),
-                   shinyjs::disabled(downloadButton(ns("report"), "Generate report"))
+                   shinyjs::disabled(downloadButton(ns("downloadAll"), "Download results"))
       ), #sidebarPanel
       mainPanel(width=9,
                 #help text
@@ -99,7 +96,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
           text_DataRedistribution
         }else if(input$output_NUTS2 == "Population"){
           text_PopulationYear
-        }else if(input$output_NUTS2 == "My data"){
+        }else if(input$output_NUTS2 == "Custom Data"){
           text_MyData
         }
       }
@@ -115,7 +112,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         if(input$output_NUTS2 == "Population" &&
            !is.null(input$population_year)){
           all_done(TRUE)
-        }else if(input$output_NUTS2 == "My data" && 
+        }else if(input$output_NUTS2 == "Custom Data" && 
                  !is.null(input$NUTS2_proportion) &&
                  !is.null(input$colname_NUTS2) &&
                  !is.null(input$colname_values)){
@@ -134,13 +131,13 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
       if (all_done()) {
         shinyjs::enable("redistribution_done")
         addClass("redistribution_done", class = "enable")
-        shinyjs::enable("report")
-        addClass("report", class = "enable")
+        shinyjs::enable("downloadAll")
+        addClass("downloadAll", class = "enable")
       } else {
         shinyjs::disable("redistribution_done")
         removeClass("redistribution_done", class = "enable")
-        shinyjs::disable("report")
-        removeClass("report", class = "enable")
+        shinyjs::disable("downloadAll")
+        removeClass("downloadAll", class = "enable")
       }
     }, ignoreInit = TRUE)
 
@@ -173,7 +170,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         prop_nuts_column <- NULL
         prop_values_column <- NULL
         tp <- input$population_year
-      }else if(input$output_NUTS2=="My data"){
+      }else if(input$output_NUTS2=="Custom Data"){
         prop_data <- read_file(input$NUTS2_proportion$datapath)
         prop_nuts_column <- input$colname_NUTS2
         prop_values_column <- input$colname_values
@@ -236,7 +233,6 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         output$NUTS2_content <- renderUI({
           fluidRow(
             div(class="table-container",
-                downloadButton(ns("downloadTable2"), "Download"),
                   DT::dataTableOutput(ns("NUTS2_table")) %>% 
                   shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
             )
@@ -340,43 +336,90 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
       })
     })
 
-    # Download
-    output$downloadTable2 <- downloadHandler(
-      filename = function(){"Ntrade_redistribution.csv"},
-      content = function(fname){
-        write.csv(Nt_redist(), fname, row.names=FALSE)
-      }
-    )
+    # Download report and results files
+    # output$downloadAll <- downloadHandler(
+    #   filename = function() {
+    #     paste("Ntrade_results", Sys.Date(), ".zip", sep = "")
+    #   },
+    #   content = function(file) {
+    #     # temporary directory before processing
+    #     tempDir <- tempdir()
+    #     # PDF report
+    #     tempReport <- file.path(tempDir, "Ntrade_report.pdf")
+    #     rmdPath <- system.file("ShinyFiles", "Ntrade_report.Rmd", package = "qPRAentry")
+    #     file.copy(rmdPath, tempReport, overwrite = TRUE)
+    #     # Set up parameters to pass to Rmd document
+    #     params <- list(time_period = time_period(),
+    #                    units = units(),
+    #                    Nt_result = Nt(),
+    #                    Nt_redist = Nt_redist())
+    # 
+    #     # Knit the document, passing in the `params` list, and eval it in a
+    #     # child of the global environment (this isolates the code in the document
+    #     # from the code in this app).
+    #     rmarkdown::render(input = rmdPath,
+    #                       output_file = tempReport,
+    #                       params = params,
+    #                       envir = new.env(parent = globalenv()))
+    # 
+    #     # CSV files
+    #     tempCsv <- file.path(tempDir, "Ntrade.csv")
+    #     write.csv(Nt(), tempCsv, row.names = FALSE)
+    # 
+    #     tempCsv2 <- file.path(tempDir, "Ntrade_redistribution.csv")
+    #     write.csv(Nt_redist(), tempCsv2, row.names = FALSE)
+    # 
+    #     # Create ZIP file
+    #     zipfile <- file.path(tempDir, "Ntrade_results.zip")
+    #     utils::zip(zipfile,
+    #                files = c(tempReport, tempCsv, tempCsv2),
+    #                flags = "-j")
+    # 
+    #     # Copy the ZIP file to the download path
+    #     file.copy(zipfile, file)
+    #   }
+    # )
     
-    output$report <- downloadHandler(
-      # For PDF output, change this to "report.pdf"
-      filename = "Ntrade_report.pdf",
-      content = function(file) {
-        # Copy the report file to a temporary directory before processing it, in
-        # case we don't have write permissions to the current working dir (which
-        # can happen when deployed).
-        tempReport <- file.path(tempdir(), "Ntrade_report.Rmd")
-        file.copy(system.file("ShinyFiles", "Ntrade_report.Rmd",
-                              package = "qPRAentry"),
-                  tempReport, overwrite = TRUE)
-        
+    output$downloadAll <- downloadHandler(
+      filename = function() {
+        paste("Ntrade_results", Sys.Date(), ".zip", sep = "")
+      },
+      content = function(fname) {
+        # temporary directory before processing
+        tempDir <- tempdir()
+        setwd(tempDir)
+        # PDF report
+        tempReport <- file.path(tempDir, "Ntrade_report.pdf")
+        rmdPath <- system.file("ShinyFiles", "Ntrade_report.Rmd", package = "qPRAentry")
+        file.copy(rmdPath, tempReport, overwrite = TRUE)
         # Set up parameters to pass to Rmd document
         params <- list(time_period = time_period(),
                        units = units(),
-                       Nt_result = Nt(), 
+                       Nt_result = Nt(),
                        Nt_redist = Nt_redist())
         
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document
         # from the code in this app).
-        rmarkdown::render(tempReport, output_file = file,
+        rmarkdown::render(input = rmdPath,
+                          output_file = tempReport,
                           params = params,
-                          envir = new.env(parent = globalenv())
-        )
-      }
+                          envir = new.env(parent = globalenv()))
+        
+        # CSV files
+        tempCsv <- file.path(tempDir, "Ntrade.csv")
+        write.csv(Nt(), tempCsv, row.names = FALSE)
+        
+        tempCsv2 <- file.path(tempDir, "Ntrade_redistribution.csv")
+        write.csv(Nt_redist(), tempCsv2, row.names = FALSE)
+        
+        # Create ZIP file
+        fs <- c("Ntrade_report.pdf", "Ntrade.csv", "Ntrade_redistribution.csv")
+        utils::zip(zipfile = fname, files = fs)
+      },
+      contentType = "application/zip"
     )
-        
-        
+
   })
 }
 

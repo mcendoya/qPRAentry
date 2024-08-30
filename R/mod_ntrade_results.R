@@ -15,7 +15,7 @@ mod_ntrade_results_ui <- function(id){
       column(10,
              shinyWidgets::radioGroupButtons(
                inputId = ns("NUTS0_btn"),
-               label = HTML('<p><br>View Ntrade results in table or map format<br></p>'),
+               label = HTML('<p><br>View N<sub>trade</sub> results in table or map format<br></p>'),
                choices = c("Table", "Map"),
                justified = TRUE,
                selected = "Table",
@@ -76,7 +76,6 @@ mod_ntrade_results_server <- function(id, trade_done, time_period, units, TradeD
         output$NUTS0_results <- renderUI({
           fluidRow(
             div(class="table-container",
-                downloadButton(ns("downloadTable"), "Download"),
                   DT::dataTableOutput(ns("trade_table")) %>% 
                   shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
             )
@@ -133,15 +132,6 @@ mod_ntrade_results_server <- function(id, trade_done, time_period, units, TradeD
                    tooltip = tooltip)
     })
 
-    ## Download
-
-    output$downloadTable <- downloadHandler(
-      filename = function(){"Ntrade.csv"},
-      content = function(fname){
-        write.csv(Nt(), fname, row.names=FALSE)
-      }
-    )
-    
     return(Nt)
   })
 }

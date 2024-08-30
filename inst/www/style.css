@@ -5,6 +5,15 @@
 
 .intro{
   font-size: 16px; 
+  margin: 0 20px;
+}
+
+.intro h1 {
+  color: #1E68BA !important;
+}
+
+.intro h2 {
+  color: #1E68BA !important;
 }
 
 code{

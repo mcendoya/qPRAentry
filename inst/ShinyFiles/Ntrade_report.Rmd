@@ -1,8 +1,6 @@
 ---
 title: "Ntrade report"
-output:
-  html_document:
-    df_print: paged
+output: pdf_document
 params:
   time_period: NA
   units: NA
@@ -26,7 +24,7 @@ Nt_redist<- params$Nt_redist
 ```
 
 
-#Introduction
+# Introduction
 
 This report presents the results of the $N_{trade}$ analysis using the Shiny application. Data were processed using the *qPRAentry* package.
 
@@ -60,36 +58,31 @@ Where:
   $$
   where $IntraExp_{ji}$ is the quantity of commodity exported from country $j$ to country $i$, and $Total_j$ is the total quantity of commodity available in country $j$.
 
-
-
-```{r}
-time_period <- params$time_period
-units <- params$units
-Nt <- params$Nt_result
-Nt_redist<- params$Nt_redist
-```
-
 *$N_{trade}$ reuslts*
 
 Below, the $N_{trade}$ results are displayed in both tabular and map formats.
 The map shows the median $N_{trade}$ values by country at the NUTS0 level.
 
 ```{r}
-summary_table <- Nt %>%
-  group_by(NUTS0) %>%
-  summarize(
-    Mean = mean(Median, na.rm = TRUE),
-    SD = sd(Median, na.rm = TRUE),
-    Min = min(Median, na.rm = TRUE),
-    Max = max(Median, na.rm = TRUE)
-  )
+# Are you doing the mean of the median?
+# The Nt data are already summarized, so mean, minimum and maximum give the same result and SD is NA. 
+
+# summary_table <- Nt %>%
+#   group_by(NUTS0) %>%
+#   summarize(
+#     Mean = mean(Median, na.rm = TRUE),
+#     SD = sd(Median, na.rm = TRUE),
+#     Min = min(Median, na.rm = TRUE),
+#     Max = max(Median, na.rm = TRUE)
+#   )
 
 # Display the table
-kable(summary_table, caption = "$N_{trade}$ results by Country") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+knitr::kable(Nt, caption = "$N_{trade}$ results by Country", digits = 2) 
+# %>%
+#   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
 
-plot_countries(Nt, "NUTS0", "Median", title = "Ntrade Median") +
+plot_countries(Nt, "NUTS0", "Median", title = bquote(N[trade] ~ " Median")) +
    xlim(-20, 40) + ylim(35,70) +
    theme_bw()
 

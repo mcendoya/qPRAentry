@@ -14,7 +14,7 @@ text_ExtraTotal <- HTML('<p class="custom-text">To start, click on
           <li><strong>Partner:</strong> Select the column containing the IDs of the third countries (non-EU) exporting the commodity.</br>
           Note: It is not necessary to list each exporting country individually; they can be grouped under a single ID (e.g., "total").</li>
           <li><strong>Values:</strong> Select the column that contains the quantity of the imported commodity.</li>
-          <li><strong>Time Period:</strong> Select the column that identifies the time period (e.g., year, month, season) for each entry.</li>
+          <li><strong>Time period:</strong> Select the column that identifies the time period (e.g., year, month, season) for each entry.</li>
           </ul>
           </li>
           <li>Choose the partner countries from the values available in the "Partner" column.</li>
@@ -31,7 +31,7 @@ text_ExtraPest <- HTML('<p class="custom-text">Click on <strong>Extra-EU Import 
           <li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) for the EU countries importing the commodity.</li>
           <li><strong>Partner:</strong> Column with the IDs of the third countries (non-EU) where the pest is present. You do not need to identify each country individually; you can aggregate them into a single ID (e.g., "extra_pest").</li>
           <li><strong>Values:</strong> Column with the quantity of the imported commodity.</li>
-          <li><strong>Time Period:</strong> Column with the time identifier (e.g., year, month, season) for each row of the data.</li>
+          <li><strong>Time period:</strong> Column with the time identifier (e.g., year, month, season) for each row of the data.</li>
           </ul>
           </li>
           <li>Select the partner countries from the values found in the "Partner" column.</li>
@@ -48,7 +48,7 @@ text_IntraEU <- HTML('<p class="custom-text">Click on <strong>Intra-EU Import</s
           <li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) for the EU countries importing the commodity.</li>
           <li><strong>Partner:</strong> Column with the NUTS codes (2-letter code) for the EU countries exporting the commodity.</li>
           <li><strong>Values:</strong> Column with the quantity of the imported commodity.</li>
-          <li><strong>Time Period:</strong> Column with the time identifier (e.g., year, month, season) for each row of the data.</li>
+          <li><strong>Time period:</strong> Column with the time identifier (e.g., year, month, season) for each row of the data.</li>
           </ul>
           </li>
           <li>Click on <strong>Done</strong> to apply the changes!</li>
@@ -63,7 +63,7 @@ text_IP <- HTML('<p class="custom-text">To get started with <strong>Internal Pro
           <ul style="margin-right:20px;">
           <li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) for the EU countries that are producing the commodity.</li>
           <li><strong>Values:</strong> Column with the quantity of the commodity produced.</li>
-          <li><strong>Time Period:</strong> Column with the time identifier (e.g., year, month, season) for each row of data.</li>
+          <li><strong>Time period:</strong> Column with the time identifier (e.g., year, month, season) for each row of data.</li>
           </ul>
           </li>
           <li>Click on <strong>Done</strong> to apply the changes.</li>
