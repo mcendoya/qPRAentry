@@ -33,35 +33,12 @@ The model requires the following inputs:
 - **$N_{trade}$ data**: This represents the total quantity of commodities imported by a country or region from third countries where the pest is present.The use of the $N_{trade}$ Shiny application is recommended for the calculation of $N_{trade}$ data at the national level (NUTS0) or the regional level (NUTS2).
 
 - **User-defined parameters**: The model uses additional parameters to estimate the number of founder populations in each country/region. These parameters can either be:
-  - **default parameters**: The application comes pre-loaded with commonly used parameters based on the [EFSA 2018 guidelines](https://doi.org/10.2903/j.efsa.2018.5350).
+  - **Default parameters**: The application comes pre-loaded with commonly used parameters based on the [EFSA 2018 guidelines](https://doi.org/10.2903/j.efsa.2018.5350).
   - **Custom Parameters**: Users have the flexibility to input their own parameter distributions.
 
 
 ### Model execution and outputs
 
-- **random sampling**: For each parameter, the model generates random values (as many as the specified number of iterations) based on the given distributions. 
+- **Random sampling**: For each parameter, the model generates random values (as many as the specified number of iterations) based on the given distributions. 
 
-- **statistical summary**: Once the model has completed its iterations, the application generates a detailed statistical summary of the results. This summary includes the estimated number of potential founder populations for each individual country or region, as well as an aggregate total for all the included areas.
-
-
-
-
-Info Pathway model (BELOW - TO BE DELETED)
-=======================
-
-* For European countries at country (NUTS0) or region (NUTS2) level 
-([NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts))
-(European Union Member States, EFTA countries, candidate countries and potential candidates)
-* Uses $N_{trade}$ data and additional user-defined parameters to estimate the number 
-of founder populations in each country/region
-* The use of `ntrade_app` is recommended for the calculation of $N_{trade}$ at NUTS0 or NUTS2 level
-* The parameters commonly used in the pathway model ([EFSA 2018](https://doi.org/10.2903/j.efsa.2018.5350)) 
-are provided by default, however the model can be completely user-defined
-* Requires $N_{trade}$ data and parameter distributions. Random values (as many as the 
-specified number of iterations) for the model parameters are generated from the given 
-distribution for each one.
-* As a result, the statistical summary of the iterations of the number of potential 
-founder populations for each country/region and the total for all the included countries/regions.
-
-* For other countries of the world see the `pathway_model` function included in the 
-`qPRAentry` package
+- **Statistical summary**: Once the model has completed its iterations, the application generates a detailed statistical summary of the results. This summary includes the estimated number of potential founder populations for each individual country or region, as well as an aggregate total for all the included areas.

@@ -26,9 +26,9 @@ Nt_redist<- params$Nt_redist
 
 # Introduction
 
-This report presents the results of the $N_{trade}$ analysis using the Shiny application. Data were processed using the *qPRAentry* package.
+This report details the results of the $N_{trade}$ analysis perdormed using the $N_{trade}$ Shiny application. Data were processed employing the *qPRAentry* package.
 
-$N_{trade}$ is defined as the total quantity of commodities (infested by a pest or not) imported by a country (e.g., an EU country) from other third-countries where the pest is present. This application is meant to calculate $N_{trade}$ and redistribute the data into the countries considered.
+$N_{trade}$ is defined as the potentially infected quantity of commodities imported by a country (e.g., an EU country) from other third-countries where the pest is present. This application is meant to calculate $N_{trade}$ and redistribute the data into the countries considered.
 
 
 ### Calculation of $N_{trade}$
@@ -58,7 +58,7 @@ Where:
   $$
   where $IntraExp_{ji}$ is the quantity of commodity exported from country $j$ to country $i$, and $Total_j$ is the total quantity of commodity available in country $j$.
 
-*$N_{trade}$ reuslts*
+### $N_{trade}$ reuslts
 
 Below, the $N_{trade}$ results are displayed in both tabular and map formats.
 The map shows the median $N_{trade}$ values by country at the NUTS0 level.
@@ -84,13 +84,17 @@ knitr::kable(Nt, caption = "$N_{trade}$ results by Country", digits = 2)
 
 plot_countries(Nt, "NUTS0", "Median", title = bquote(N[trade] ~ " Median")) +
    xlim(-20, 40) + ylim(35,70) +
-   theme_bw()
+   theme_bw()+
+   theme(
+     plot.title = element_text(size = 14),
+     legend.title = element_text(size = 12)
+   )
 
 ```
 Figure 1: Median $N_{trade}$ values by country at the NUTS0 level.
 
 
-## $N_{trade}$ redistribution
+# $N_{trade}$ redistribution
 
 ### Redistribution to NUTS2
 

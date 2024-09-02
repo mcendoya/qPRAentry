@@ -116,13 +116,13 @@ text_PopulationYear <- HTML('<p class="custom-text">Select one or more years of 
                       <li>Once the years are selected, click on <strong>"See N<sub>trade</sub> Redistribution"</strong> to proceed.</li>
                     </ul></p>')
 
-text_MyData <- HTML('<p class="custom-text">Upload the data (CSV format file)
+text_MyData <- HTML('<p class="custom-text">Upload the data in CSV format by following these steps:
           <ul class="custom-text" style="margin-right:10px;">
-          <li>Select the corresponding column names:</br>
+          <li>Select the appropriate column names:</li>
           <ul style="margin-right:20px;">
-          <li> NUTS2: Column containing the NUTS2 codes</li>
-          <li> Values: Column containing the values to be used for the proportional redistribution of N<sub>trade</sub></li>
+          <li><strong>NUTS2:</strong> Column containing the NUTS2 codes for regions</li>
+          <li><strong>Values:</strong> Column containing the values for proportional redistribution of $N_{trade}$</li>
           </ul>
-          <li>Click on <strong>"See N<sub>trade</sub> redistribution"</strong></li>
+          <li>Click on <strong>"See $N_{trade}$ redistribution"</strong> to proceed.</li>
           </ul>
           </p>')

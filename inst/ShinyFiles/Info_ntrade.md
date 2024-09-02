@@ -22,7 +22,8 @@ For the use of this application, trade data of the commodities of interest, i.e.
 - Quantity of commodity imported between EU countries.
 - Quantity of commodity produced in the EU countries.
 
-**Suggestion Eurostat**
+
+**Suggestion: It is suggested to download these trade data from Eurostat.**
 
 <br>
 
@@ -84,8 +85,8 @@ Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
 
 <br>
 
-Once the analysis is completed, the user will have the option to download a ZIP file containing:
+Upon completion of the analysis, the user will have the option to download a ZIP file containing:
 
-- A full PDF report summarizing the results
-- $N_{trade}$ results table in CSV format
-- $N_{trade}$ redistribution results table in CSV format
+- A comprehensive PDF report summarising the analysis results
+- A CSV file with the $N_{trade}$ table results
+- A CSV file with the $N_{trade}$ table redistribution results
