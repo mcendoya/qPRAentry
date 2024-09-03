@@ -13,9 +13,13 @@ mod_ntrade_results_ui <- function(id){
     fluidRow(
       column(1),
       column(10,
+             HTML('<p class="custom-text"><br>View <i>N<sub>trade</sub></i> results in table or map format.<br><br> 
+  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> The <i>N<sub>trade</sub></i> redistribution from NUTS0 
+                  to NUTS2 level is available in the "Redistribution" tab.<br>
+                  You can also return to the "Data" tab to review or change trade data.<br></p>'),
              shinyWidgets::radioGroupButtons(
                inputId = ns("NUTS0_btn"),
-               label = HTML('<p><br>View N<sub>trade</sub> results in table or map format<br></p>'),
+               label = NULL,
                choices = c("Table", "Map"),
                justified = TRUE,
                selected = "Table",

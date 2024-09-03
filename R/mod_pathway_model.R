@@ -35,7 +35,7 @@ mod_pathway_model_ui <- function(id){
                             column(6,
                                    shinyWidgets::pickerInput(
                                      inputId = ns("nuts"),
-                                     label = "NUTS CODES:",
+                                     label = "NUTS codes:",
                                      choices = c("Data must be uploaded"),
                                      multiple = FALSE,
                                      width ="fit")
@@ -43,7 +43,7 @@ mod_pathway_model_ui <- function(id){
                             column(6,
                                    shinyWidgets::pickerInput(
                                      inputId = ns("values"),
-                                     label = "Ntrade Values:",
+                                     label = "Values:",
                                      choices = c("Data must be uploaded"),
                                      multiple = FALSE,
                                      width ="fit")
@@ -102,7 +102,7 @@ mod_pathway_model_ui <- function(id){
                           fluidRow(class="inline",
                                    numericInput(ns("extra_parameters"),
                                                 label = "Number of parameters to add:",
-                                                value = 0)
+                                                value = 0, min = 0, step = 1)
                           ),
                           br(),
                           uiOutput(ns("par_dynamic"))
@@ -315,7 +315,7 @@ mod_pathway_model_server <- function(id){
         for(i in 1:input$extra_parameters){
           par_names <- input[[paste0("p_eq", i)]]
           symbol_p <- input[[paste0("symbol_p_", i)]]
-          model <- paste0(model, " ", symbol, " ", par_names)
+          model <- paste0(model, " ", symbol_p, " ", par_names)
         }
       }
       return(model)

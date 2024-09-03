@@ -90,7 +90,9 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
       button_state <- button_pressed()
       if (button_state) {
         HTML('<p class="custom-text">Note: If you make any changes to the redistribution data,
-        please, press on <strong>"See N<sub>trade</sub> redistribution"</strong> to apply the changes.</p>')
+        please, press on <strong>"See <i>N<sub>trade</sub></i> redistribution"</strong> to apply the changes.<br><br> 
+  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the <strong>"Download results"</strong> button to proceed to download 
+             the <i>N<sub>trade</sub></i> data at NUTS0 and NUTS2 level and the final report.</p>')
       } else {
         if(is.null(input$output_NUTS2)){
           text_DataRedistribution
@@ -205,9 +207,11 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
     observeEvent(input$redistribution_done,{
       output$NUTS2_results <- renderUI({
         tagList(
+          HTML('<p class="custom-text"><br>View <i>N<sub>trade</sub></i> redistribution 
+               results in table or map format.<br></p>'),
           shinyWidgets::radioGroupButtons(
             inputId = ns("NUTS2_btn"),
-            label = HTML('<p"><br>View Ntrade results in table or map format<br></p>'),
+            label = NULL,
             choices = c("Table", "Map"),
             justified = TRUE,
             selected = "Table",
@@ -337,49 +341,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
     })
 
     # Download report and results files
-    # output$downloadAll <- downloadHandler(
-    #   filename = function() {
-    #     paste("Ntrade_results", Sys.Date(), ".zip", sep = "")
-    #   },
-    #   content = function(file) {
-    #     # temporary directory before processing
-    #     tempDir <- tempdir()
-    #     # PDF report
-    #     tempReport <- file.path(tempDir, "Ntrade_report.pdf")
-    #     rmdPath <- system.file("ShinyFiles", "Ntrade_report.Rmd", package = "qPRAentry")
-    #     file.copy(rmdPath, tempReport, overwrite = TRUE)
-    #     # Set up parameters to pass to Rmd document
-    #     params <- list(time_period = time_period(),
-    #                    units = units(),
-    #                    Nt_result = Nt(),
-    #                    Nt_redist = Nt_redist())
-    # 
-    #     # Knit the document, passing in the `params` list, and eval it in a
-    #     # child of the global environment (this isolates the code in the document
-    #     # from the code in this app).
-    #     rmarkdown::render(input = rmdPath,
-    #                       output_file = tempReport,
-    #                       params = params,
-    #                       envir = new.env(parent = globalenv()))
-    # 
-    #     # CSV files
-    #     tempCsv <- file.path(tempDir, "Ntrade.csv")
-    #     write.csv(Nt(), tempCsv, row.names = FALSE)
-    # 
-    #     tempCsv2 <- file.path(tempDir, "Ntrade_redistribution.csv")
-    #     write.csv(Nt_redist(), tempCsv2, row.names = FALSE)
-    # 
-    #     # Create ZIP file
-    #     zipfile <- file.path(tempDir, "Ntrade_results.zip")
-    #     utils::zip(zipfile,
-    #                files = c(tempReport, tempCsv, tempCsv2),
-    #                flags = "-j")
-    # 
-    #     # Copy the ZIP file to the download path
-    #     file.copy(zipfile, file)
-    #   }
-    # )
-    
+ 
     output$downloadAll <- downloadHandler(
       filename = function() {
         paste("Ntrade_results", Sys.Date(), ".zip", sep = "")
@@ -407,14 +369,14 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
                           envir = new.env(parent = globalenv()))
         
         # CSV files
-        tempCsv <- file.path(tempDir, "Ntrade.csv")
+        tempCsv <- file.path(tempDir, "Ntrade_NUTS0.csv")
         write.csv(Nt(), tempCsv, row.names = FALSE)
         
-        tempCsv2 <- file.path(tempDir, "Ntrade_redistribution.csv")
+        tempCsv2 <- file.path(tempDir, "Ntrade_NUTS2.csv")
         write.csv(Nt_redist(), tempCsv2, row.names = FALSE)
         
         # Create ZIP file
-        fs <- c("Ntrade_report.pdf", "Ntrade.csv", "Ntrade_redistribution.csv")
+        fs <- c("Ntrade_report.pdf", "Ntrade_NUTS0.csv", "Ntrade_NUTS2.csv")
         utils::zip(zipfile = fname, files = fs)
       },
       contentType = "application/zip"

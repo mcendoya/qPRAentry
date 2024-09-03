@@ -63,22 +63,22 @@ mod_ntrade_data_ui <- function(id){
                    shinyjs::disabled(actionButton(ns("trade_done"), "See $N_{trade}$ results"))
       ), #sidebarPanel
       mainPanel(width=9,
-                sidebarPanel(width = 11,
-                             fluidRow(
-                               column(4, align = "center",
-                                      shinyjs::disabled(actionButton(ns("ExtraTotal_plot"),
-                                                                     HTML("Plot</br>Extra-EU import")))
-                               ),
-                               column(4, align = "center",
-                                      shinyjs::disabled(actionButton(ns("IntraEU_plot"),
-                                                                     HTML("Plot</br> Intra-EU trade")))
-                               ),
-                               column(4, align = "center",
-                                      shinyjs::disabled(actionButton(ns("IP_plot"),
-                                                                     HTML("Plot</br> Internal production")))
-                               )
-                             )
-                ),
+                # sidebarPanel(width = 11,
+                #              fluidRow(
+                #                column(4, align = "center",
+                #                       shinyjs::disabled(actionButton(ns("ExtraTotal_plot"),
+                #                                                      HTML("Plot</br>Extra-EU Import")))
+                #                ),
+                #                column(4, align = "center",
+                #                       shinyjs::disabled(actionButton(ns("IntraEU_plot"),
+                #                                                      HTML("Plot</br> Intra-EU Trade")))
+                #                ),
+                #                column(4, align = "center",
+                #                       shinyjs::disabled(actionButton(ns("IP_plot"),
+                #                                                      HTML("Plot</br> Internal Production")))
+                #                )
+                #              )
+                # ),
                 # help text
                 fluidRow(
                   column(11,
@@ -88,6 +88,8 @@ mod_ntrade_data_ui <- function(id){
                          uiOutput(ns("help_data")),
                          br()
                          )),
+                # Plot buttons
+                uiOutput(ns("plot_buttons")),
                 # Plots
                 fluidRow(
                   div(class = "dual-plot-container",
@@ -420,15 +422,15 @@ mod_ntrade_data_server <- function(id){
     })
     output$help_data <- renderUI({
       if(is_initial()){
-        text_ExtraTotal
+        text_trade_data("ExtraTotal")
       }else if(is.null(input$ExtraTotal$datapath)||input$done_ExtraTotal==0||is.null(ExtraTotal_df())){
-        text_ExtraTotal
+        text_trade_data("ExtraTotal")
       }else if(is.null(input$ExtraPest$datapath)||input$done_ExtraPest==0||is.null(ExtraPest_df())){
-        text_ExtraPest
+        text_trade_data("ExtraPest")
       }else if(is.null(input$IntraEU$datapath)||input$done_IntraEU==0||is.null(IntraEU_df())){
-        text_IntraEU
+        text_trade_data("IntraEU", partner=FALSE)
       }else if(is.null(input$IP$datapath)||input$done_IP==0||is.null(IP_df())){
-        text_IP
+        text_trade_data("IP", partner=FALSE)
       }else{
         text_dataDone
       }
@@ -526,17 +528,46 @@ mod_ntrade_data_server <- function(id){
     # Enable plot buttons
     observe({
       if(all_btns()=="all"){
-        shinyjs::enable("ExtraTotal_plot")
-        addClass("ExtraTotal_plot", class="enable")
-
-        shinyjs::enable("IntraEU_plot")
-        addClass("IntraEU_plot", class="enable")
-
-        shinyjs::enable("IP_plot")
-        addClass("IP_plot", class="enable")
+        # shinyjs::enable("ExtraTotal_plot")
+        # addClass("ExtraTotal_plot", class="enable")
+        # 
+        # shinyjs::enable("IntraEU_plot")
+        # addClass("IntraEU_plot", class="enable")
+        # 
+        # shinyjs::enable("IP_plot")
+        # addClass("IP_plot", class="enable")
 
         shinyjs::enable("trade_done")
         addClass("trade_done", class="enable")
+        
+        output$plot_buttons <- renderUI({
+          sidebarPanel(width = 11,
+                       HTML('<p class="custom-text">Use the buttons <strong>"Plot Extra-EU Import"</strong>, 
+                       <strong>"Plot Intra-EU Trade"</strong>, or <strong>"Plot Internal Production"</strong> 
+                       to change the trade data visualization.<br> 
+                       Place your cursor over the bars to to view mean 
+                       and standard deviation for each country.<br>
+                       Click on the bars to view the values for each country over time.<br></p>'),
+                       fluidRow(
+                         column(4, align = "center",
+                                actionButton(ns("ExtraTotal_plot"),
+                                             HTML("Plot</br>Extra-EU Import"),
+                                             class="enable")
+                         ),
+                         column(4, align = "center",
+                                actionButton(ns("IntraEU_plot"),
+                                             HTML("Plot</br> Intra-EU Trade"),
+                                             class="enable")
+                         ),
+                         column(4, align = "center",
+                                actionButton(ns("IP_plot"),
+                                             HTML("Plot</br> Internal Production"),
+                                             class="enable")
+                         )
+                       )
+          )
+        })
+ 
       }
     })
     
