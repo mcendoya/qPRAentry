@@ -146,7 +146,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
 
     observeEvent(input$output_NUTS2,{
       if(input$output_NUTS2=="Population"){
-        df <- cached_get_eurostat_data(nuts = 2) %>% 
+        df <- cached_get_eurostat_data(nuts = 2) 
           
         shinyWidgets::updatePickerInput(session = session,
                                         inputId = "population_year",
@@ -360,8 +360,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         params <- list(time_period = time_period(),
                        units = units(),
                        Nt_result = Nt(),
-                       Nt_redist = Nt_redist(),
-                       data_redist = input$output_NUTS2)
+                       Nt_redist = Nt_redist())
         
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document
