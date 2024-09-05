@@ -1,5 +1,6 @@
 ---
-title: "Ntrade report"
+title: "$N_{trade}$ report"
+date: `r Sys.Date()`
 output: pdf_document
 params:
   time_period: NA
@@ -17,10 +18,13 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE,
 ```
 
 ```{r}
+#Available variables
+
 time_period <- params$time_period
 units <- params$units
 Nt <- params$Nt_result
 Nt_redist<- params$Nt_redist
+
 ```
 
 
@@ -64,17 +68,6 @@ Below, the $N_{trade}$ results are displayed in both tabular and map formats.
 The map shows the median $N_{trade}$ values by country at the NUTS0 level.
 
 ```{r}
-# Are you doing the mean of the median?
-# The Nt data are already summarized, so mean, minimum and maximum give the same result and SD is NA. 
-
-# summary_table <- Nt %>%
-#   group_by(NUTS0) %>%
-#   summarize(
-#     Mean = mean(Median, na.rm = TRUE),
-#     SD = sd(Median, na.rm = TRUE),
-#     Min = min(Median, na.rm = TRUE),
-#     Max = max(Median, na.rm = TRUE)
-#   )
 
 # Display the table
 knitr::kable(Nt, caption = "$N_{trade}$ results by Country", digits = 2) 
@@ -100,24 +93,39 @@ Figure 1: Median $N_{trade}$ values by country at the NUTS0 level.
 
 After calculating $N_{trade}$ at the national level (NUTS0), the next step involves redistributing these quantities to NUTS2 regions. 
 
-Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
+$N_{trade}$ redistribution to NUTS2 regions was performed depending on data selected by the user:  
 
-1. **Population-based redistribution using Eurostat data**: This option allows users to redistribute $N_{trade}$ data to NUTS2 regions proportionally based on population data. The population data is sourced from Eurostat and is already integrated into the application.
+```{r}
 
 
-2. **Custom redistribution using user-uploaded data**: This option provides users with the flexibility to perform a personalised redistribution based on custom data. Users can upload their own dataset containing specific values for each NUTS2 region.
-   
-Below, the $N_{trade}$ redistribution results are displayed in both tabular and map formats.
+```
+
+The selected years for population data are: `r time_period`
+
+Below, the $N_{trade}$ redistribution results are displayed in map format. The table is available in the downloaded Ntrade_results20XX-XX-XX.zip folder.
 The map shows the median $N_{trade}$ values by regions (NUTS2 level).
 
 ```{r}
-#summary_table <- TBA
 
-# Display the table
+#Vedere come si utilizza nell'esempio inviato da Martina
 
+plot_nuts2(Nt_redist, "NUTS2", "Median", title = bquote(N[trade] ~ " Median")) +
+   xlim(-20, 40) + ylim(35,70) +
+   theme_bw()+
+   theme(
+     plot.title = element_text(size = 14),
+     legend.title = element_text(size = 12)
+   )
 
-#plot_countries(TBA)
 
 ```
 Figure 2: $N_{trade}$ values redistributed at the NUTS2 level.
+
+
+
+
+`r units` 
+`r Nt` 
+`r Nt_redist` 
+
 
