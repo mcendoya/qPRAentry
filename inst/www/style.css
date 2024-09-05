@@ -102,18 +102,6 @@ border-color: #aaa !important;
 
 .custom-text{
   font-size: 15px; 
-  font-family:monospace; 
-  color:#1E68BA;
-}
-
-.custom-text2{
-  font-size: 15px; 
-  font-family:monospace; 
-}
-
-.custom-text3{
-  font-size: 15px; 
-  color:#1E68BA;
 }
 
 .warn pre {
