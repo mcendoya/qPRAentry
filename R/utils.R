@@ -141,13 +141,18 @@ missing_intra <- function(data, IDs) {
 get_population_data <- function(nuts) {
   sex <- age <- NULL
   length_nuts <- nuts + 2 # NUTS characters
-  eurostat::get_eurostat("demo_r_pjangrp3", time_format = "num") %>%
+  df <- eurostat::get_eurostat("demo_r_pjangrp3", time_format = "num") %>%
     filter(
       sex == "T" &
-        unit == "NR" &
-        age == "TOTAL" &
-        nchar(geo) == length_nuts
+      unit == "NR" &
+      age == "TOTAL" &
+      nchar(geo) == length_nuts
     )
+  if(nuts == 2){
+    df <- df %>% 
+      filter(geo %in% NUTS_CODES$NUTS2_CODE)
+  }
+  return(df)
 }
 
 #' Cached function to memoize the retrieval of Eurostat data.

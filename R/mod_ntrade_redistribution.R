@@ -90,9 +90,10 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
       button_state <- button_pressed()
       if (button_state) {
         HTML('<p class="custom-text">Note: If you make any changes to the redistribution data,
-        please, press on <strong>"See <i>N<sub>trade</sub></i> redistribution"</strong> to apply the changes.<br><br> 
-  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the <strong>"Download results"</strong> button to proceed to download 
-             the <i>N<sub>trade</sub></i> data at NUTS0 and NUTS2 level and the final report.</p>')
+        please, press on <strong>"See <i>N<sub>trade</sub></i> redistribution"</strong> 
+        to apply the changes.<br><br>
+        <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the <strong>"Download results"</strong> 
+        button to proceed to download the <i>N<sub>trade</sub></i> data at NUTS0 and NUTS2 level and the final report.</p>')
       } else {
         if(is.null(input$output_NUTS2)){
           text_DataRedistribution
@@ -145,7 +146,8 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
 
     observeEvent(input$output_NUTS2,{
       if(input$output_NUTS2=="Population"){
-        df <- cached_get_eurostat_data(nuts = 2)
+        df <- cached_get_eurostat_data(nuts = 2) %>% 
+          
         shinyWidgets::updatePickerInput(session = session,
                                         inputId = "population_year",
                                         choices = sort(unique(df$TIME_PERIOD)),
@@ -358,7 +360,8 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         params <- list(time_period = time_period(),
                        units = units(),
                        Nt_result = Nt(),
-                       Nt_redist = Nt_redist())
+                       Nt_redist = Nt_redist(),
+                       data_redist = input$output_NUTS2)
         
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document
