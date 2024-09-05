@@ -1,11 +1,13 @@
 ---
-title: "Ntrade report"
+title: "$N_{trade}$ report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
 params:
   time_period: NA
   units: NA
   Nt_result: NA
   Nt_redist: NA
+  data_redistribution: NA
 ---
 
 ```{r setup, include=FALSE}
@@ -23,7 +25,7 @@ time_period <- params$time_period
 units <- params$units
 Nt <- params$Nt_result
 Nt_redist<- params$Nt_redist
-
+data_redistribution <- params$data_redistribution
 ```
 
 
@@ -125,5 +127,16 @@ Figure 2: $N_{trade}$ values redistributed at the NUTS2 level.
 
 `r units` 
 
+`r data_redistribution`
 
+```{r}
+# EXAMPLE:
+if(data_redistribution=="Population"){
+  data_text <- "population data from Eurostat"
+}else{
+  data_text <- "user custom data"
+}
 
+```
+
+$N_{trade}$ data were redistributed from NUTS0 to NUTS2 level proportionally to `r data_text`.

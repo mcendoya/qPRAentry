@@ -350,6 +350,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
       },
       content = function(fname) {
         # temporary directory before processing
+        userDir <- getwd()
         tempDir <- tempdir()
         setwd(tempDir)
         # PDF report
@@ -360,7 +361,8 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         params <- list(time_period = time_period(),
                        units = units(),
                        Nt_result = Nt(),
-                       Nt_redist = Nt_redist())
+                       Nt_redist = Nt_redist(),
+                       data_redistribution = input$output_NUTS2)
         
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document
@@ -380,6 +382,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         # Create ZIP file
         fs <- c("Ntrade_report.pdf", "Ntrade_NUTS0.csv", "Ntrade_NUTS2.csv")
         utils::zip(zipfile = fname, files = fs)
+        setwd(userDir)
       },
       contentType = "application/zip"
     )
