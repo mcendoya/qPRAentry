@@ -90,3 +90,5 @@ Upon completion of the analysis, the user will have the option to download a ZIP
 - A comprehensive PDF report summarising the analysis results
 - A CSV file with the $N_{trade}$ table results
 - A CSV file with the $N_{trade}$ table redistribution results
+
+To proceed with the analysis, navigate to the $N_{trade}$ tab at the top of the page.
