@@ -13,7 +13,8 @@ utils::globalVariables(c("TIME_PERIOD", "geo", "values", "NUTS0",
 #' imported from third countries where the pest is present. It can be calculated
 #' using \code{\link{ntrade}} function.
 #' @param nuts_column Column name in \code{ntrade_data} with the NUTS0 codes.
-#' @param values_column Column name in \code{ntrade_data} with the \eqn{N_{trade}} values
+#' @param values_column Column name, or vector with the name of multiple columns, 
+#' in \code{ntrade_data} with the \eqn{N_{trade}} values
 #' (quantity of potentially infested commodity imports) to be redistributed.
 #' @param to_nuts Numeric. NUTS level for redistribution (1, 2 or 3).
 #' @param prop_data Data frame to proportionally distribute \eqn{N_{trade}}.
@@ -94,9 +95,6 @@ ntrade_redist <- function(ntrade_data, nuts_column, values_column,
     }
   }
 
-
-  n0 <- unique(ntrade_data[[nuts_column]])
-  
   if (is.null(prop_data)) {
     prop_df <- cached_get_eurostat_data(to_nuts) %>%
       filter(TIME_PERIOD %in% time_period)
@@ -118,7 +116,7 @@ ntrade_redist <- function(ntrade_data, nuts_column, values_column,
 
   prop_df <- prop_df %>%
     mutate(NUTS0 = substr(geo, 1, 2)) %>%
-    filter(NUTS0 %in% n0) %>%
+    filter(NUTS0 %in% unique(ntrade_data[[nuts_column]])) %>%
     group_by(NUTS0) %>%
     mutate(proportion = values_redistribution / sum(values_redistribution)) %>% # Proportion per NUTS0
     ungroup(NUTS0)
@@ -127,11 +125,12 @@ ntrade_redist <- function(ntrade_data, nuts_column, values_column,
     left_join(select(ntrade_data, !!nuts_column, !!values_column),
               by = c("NUTS0"=nuts_column)) %>%
     mutate(across(all_of(values_column),
-                  .fns = list(NUTS2 = ~. * proportion),
-                  .names = !!paste0("{col}_NUTS", to_nuts))) %>%
+                  .fns = list(redist = ~. * proportion))) %>%
     rename(!!paste0("NUTS", to_nuts) := geo) %>%
-    select(!!paste0("NUTS", to_nuts), NUTS0,
-           ends_with(paste0("_NUTS", to_nuts)))
+    select(!!paste0("NUTS", to_nuts), 
+           proportion,
+           ends_with("redist")) %>% 
+    rename_with(~ sub("_redist$", "", .), ends_with("redist"))
   
   return(df)
 }

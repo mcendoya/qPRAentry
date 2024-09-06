@@ -148,10 +148,8 @@ get_population_data <- function(nuts) {
       age == "TOTAL" &
       nchar(geo) == length_nuts
     )
-  if(nuts == 2){
-    df <- df %>% 
-      filter(geo %in% NUTS_CODES$NUTS2_CODE)
-  }
+  filter_nuts <- giscoR::gisco_get_nuts(nuts_level=nuts)$NUTS_ID
+  df <- df %>% filter(geo %in% filter_nuts)
   return(df)
 }
 

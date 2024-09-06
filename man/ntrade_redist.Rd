@@ -22,7 +22,8 @@ using \code{\link{ntrade}} function.}
 
 \item{nuts_column}{Column name in \code{ntrade_data} with the NUTS0 codes.}
 
-\item{values_column}{Column name in \code{ntrade_data} with the \eqn{N_{trade}} values
+\item{values_column}{Column name, or vector with the name of multiple columns, 
+in \code{ntrade_data} with the \eqn{N_{trade}} values
 (quantity of potentially infested commodity imports) to be redistributed.}
 
 \item{to_nuts}{Numeric. NUTS level for redistribution (1, 2 or 3).}

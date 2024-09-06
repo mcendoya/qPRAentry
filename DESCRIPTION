@@ -24,6 +24,7 @@ Imports:
     ggiraph,
     ggplot2,
     giscoR,
+    knitr,
     purrr,
     rmarkdown,
     sf,

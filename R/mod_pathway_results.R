@@ -13,9 +13,14 @@ mod_pathway_results_ui <- function(id){
     fluidRow(
       column(1),
       column(10,
+             HTML('<p class="custom-text"><br>View <i>N<sub>trade</sub></i> results in table or map format.<br><br> 
+ <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the <strong>"Download results"</strong> 
+        button to proceed to download the ... and the final report.<br>
+                  You can also return to the "Pathway model" or "Parameters" tabs to review or 
+                  change the input data.<br></p>'),
              shinyWidgets::radioGroupButtons(
                inputId = ns("Ninf_btn"),
-               label = "Visualize:",
+               label = NULL,
                choices = c("Table", "Map"),
                justified = TRUE,
                selected = "Table"
@@ -65,7 +70,6 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
       n_iter <- n_iter()
       res_samp <- model_solve()
       Nt_df <- ntrade_df()
-      print(head(Nt_df))
       fns <- c(mean,
                sd,
                partial(quantile, probs = 0.05, na.rm=TRUE),
@@ -141,8 +145,6 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
       return(map)
     })
 
-
-
     observe({
       if(input$Ninf_btn=="Table"){
         output$Ninf_results <- renderUI({
@@ -165,7 +167,8 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
           if(nuts_level()==2){
             fluidRow(
               column(6,
-                     p("Move the cursor over the map to view the values", style="color:grey;"),
+                     HTML('<p class="custom-text">Hover over the map to display values. 
+                 Click on a country to zoom in for a closer view.<br></p>'),
                      br(),
                      ggiraph::girafeOutput(ns("NUTSmap")) %>%
                        shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
@@ -178,7 +181,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
             )
           }else{
             fluidRow(width = 11,
-                     p("Move the cursor over the map to view the values", style="color:grey;"),
+                     HTML('<p class="custom-text">Hover over the map to display values.<br></p>'),
                      br(),
                      ggiraph::girafeOutput(ns("NUTSmap")) %>%
                        shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)

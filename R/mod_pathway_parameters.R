@@ -11,6 +11,12 @@ mod_pathway_parameters_ui <- function(id){
   ns <- NS(id)
   tagList(
     mainPanel(
+      fluidRow(
+        column(11,
+               br(),
+               uiOutput(ns("help_data"))
+        )),
+      br(),
       sidebarPanel(width=12,
                    numericInput(ns("n_iter"), "Number of iterations",
                                 value=1000,
@@ -32,7 +38,7 @@ mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values, model_d
   n_iter <- NULL
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-
+    
     output$pars <- renderUI({
       pn <- parameters()
       n <- length(pn)
@@ -80,15 +86,27 @@ mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values, model_d
         })
       })
     })
-
+    
+    go_results_state <- reactiveValues(is_enabled = FALSE)
+    
     observeEvent(input$dist_done,{
       shinyjs::enable("go_results")
       addClass("go_results", class="enable")
+      go_results_state$is_enabled <- TRUE
     })
 
     observeEvent(c(ntrade_data(), nuts(), values(), model_done()),{
       shinyjs::disable("go_results")
       removeClass("go_results", class="enable")
+      go_results_state$is_enabled <- FALSE
+    })
+    
+    output$help_data <- renderUI({
+      if(go_results_state$is_enabled){
+        text_parametersDone
+      }else{
+        text_parameters
+      }
     })
 
     return(

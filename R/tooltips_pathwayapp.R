@@ -37,3 +37,23 @@ data_ntrade_errors <- list(
                       "any negative values to ensure accurate data interpretation and processing."
   ))
 
+# Parameters tab
+
+text_parameters <- HTML('<p class="custom-text">
+          <ul class="custom-text">
+          <li><strong>Number of iterations:</strong> Set the number of iterations for ...</li>
+          <li><strong>Parameters distribution:</strong> Distribution ...</li>
+          <li>Click on  <strong>Done</strong></li>
+            </ul>
+          </li>
+          </ul>
+          </p>')
+
+text_parametersDone <- HTML(
+  '<p class="custom-text">Note: If you make any changes to the If you make any changes 
+  to the number of iterations or the parameter distribution, 
+  please press <strong>Done</strong> again to apply the changes.<br><br> 
+  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on <strong>"See Pathway results"</strong> to go to the Results tab.<br></p>'
+)
+
+# Results tab

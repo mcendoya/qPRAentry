@@ -6,7 +6,8 @@
 pathwayapp_ui <- function(request){
   tags$div(class="container",
            navbarPage(
-             "Pathway model",
+             HTML('<strong style="color:#1E68BA;">Pathway model application</strong>'), 
+             windowTitle = "Pathway model application",
              header = tags$div(
                includeCSS(system.file("www/style.css", package = "qPRAentry")),
                bsplus::use_bs_popover(),

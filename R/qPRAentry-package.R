@@ -6,6 +6,7 @@
 #' @import ggiraph
 #' @import sf
 #' @import rmarkdown
+#' @import knitr
 #' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
 #' @rawNamespace import(shinyjs, except = c(alert, runExample))
 #' @import shinyWidgets

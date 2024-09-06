@@ -6,7 +6,8 @@
 ntradeapp_ui <- function(request){
   tags$div(class="container",
   navbarPage(
-    "$N_{trade}$ calculation", 
+    HTML('<strong style="color:#1E68BA;"><i>N<sub>trade</sub></i> application</strong>'), 
+    windowTitle = "Ntrade application",
     header = tags$div(
       includeCSS(system.file("www/style.css", package = "qPRAentry")),
       bsplus::use_bs_popover(),
