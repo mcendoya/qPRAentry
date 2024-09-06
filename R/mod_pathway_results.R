@@ -15,7 +15,7 @@ mod_pathway_results_ui <- function(id){
       column(10,
              HTML('<p class="custom-text"><br>View <i>N<sub>trade</sub></i> results in table or map format.<br><br> 
  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the <strong>"Download results"</strong> 
-        button to proceed to download the ... and the final report.<br>
+        button to proceed to download the ... and the final report.<br><br>
                   You can also return to the "Pathway model" or "Parameters" tabs to review or 
                   change the input data.<br></p>'),
              shinyWidgets::radioGroupButtons(

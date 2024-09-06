@@ -362,7 +362,8 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
                        units = units(),
                        Nt_result = Nt(),
                        Nt_redist = Nt_redist(),
-                       data_redistribution = input$output_NUTS2)
+                       data_redistribution = input$output_NUTS2,
+                       population_year = input$population_year)
         
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document

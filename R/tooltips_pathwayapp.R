@@ -1,5 +1,5 @@
 # Help text pathway app
-# Data tab
+# pathway model tab
 text_ntrade_data <- HTML('<p class="custom-text">
           <ul class="custom-text">
           <li><strong>Upload data file:</strong> Please upload your data file in CSV format.</li>
@@ -53,7 +53,5 @@ text_parametersDone <- HTML(
   '<p class="custom-text">Note: If you make any changes to the If you make any changes 
   to the number of iterations or the parameter distribution, 
   please press <strong>Done</strong> again to apply the changes.<br><br> 
-  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on <strong>"See Pathway results"</strong> to go to the Results tab.<br></p>'
+  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on <strong>"Results"</strong> to go to the Results tab.<br></p>'
 )
-
-# Results tab

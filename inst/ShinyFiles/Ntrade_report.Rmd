@@ -8,6 +8,7 @@ params:
   Nt_result: NA
   Nt_redist: NA
   data_redistribution: NA
+  population_year: NA
 ---
 
 ```{r setup, include=FALSE}
@@ -26,7 +27,7 @@ units <- params$units
 Nt <- params$Nt_result
 Nt_redist<- params$Nt_redist
 data_redistribution <- params$data_redistribution
-
+population_year <- params$population_year
 ```
 
 
@@ -108,7 +109,17 @@ $N_{trade}$ redistribution to NUTS2 regions was performed depending on data sele
 ```
 
 
-The selected years for population data are: `r time_period`
+```{r}
+# population year/s:
+if(length(population_year)==1){
+  population_year_text <- paste0("year for population data is ", population_year)
+  }else{
+  population_year_text <- paste0("years for population data are the average of the ", population_year, " years")
+}
+
+```
+
+The selected `r population_year_text`.
 
 Below, the $N_{trade}$ redistribution results are displayed in map format. The table is available in the downloaded Ntrade_results20XX-XX-XX.zip folder.
 The map shows the median $N_{trade}$ values by regions (NUTS2 level).
