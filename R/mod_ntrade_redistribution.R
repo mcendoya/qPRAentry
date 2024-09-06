@@ -247,7 +247,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
       }else if(input$NUTS2_btn=="Map"){
         output$NUTS2_content <- renderUI({
           tagList(
-            HTML('<p class="custom-text">Hover over the map to display values. 
+            HTML('<p class="custom-text">Place your cursor over the map to display the values 
                  Click on a country to zoom in for a closer view.<br></p>'),
             br(),
           fluidRow(

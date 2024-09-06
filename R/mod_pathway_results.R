@@ -167,7 +167,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
           if(nuts_level()==2){
             fluidRow(
               column(6,
-                     HTML('<p class="custom-text">Hover over the map to display values. 
+                     HTML('<p class="custom-text">Place your cursor over the map to display the values. 
                  Click on a country to zoom in for a closer view.<br></p>'),
                      br(),
                      ggiraph::girafeOutput(ns("NUTSmap")) %>%
@@ -181,7 +181,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
             )
           }else{
             fluidRow(width = 11,
-                     HTML('<p class="custom-text">Hover over the map to display values.<br></p>'),
+                     HTML('<p class="custom-text">Place your cursor over the map to display the values.<br></p>'),
                      br(),
                      ggiraph::girafeOutput(ns("NUTSmap")) %>%
                        shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)

@@ -58,15 +58,24 @@ Where:
   $$
   Total_i = IP_i + ExtraTotal_i
   $$
-  Here, $IP_i$ represents the internal production in country $i$, and $ExtraTotal_i$ is the total quantity of non-EU commodity imported by country $i$.
+  Here, $IP_i$ represents the internal production in country $i$, and $ExtraTotal_i$ is the total quantity of non-EU commodity imported by country $i$. It includes $ExtraPest_i$.
 - **$R_{ji}$**: The proportion of $ExtraPest_j$ reexported from country $j$ to country $i$. This is calculated as:
   $$
   R_{ji} = \frac{IntraExp_{ji}}{Total_j}
   $$
   where $IntraExp_{ji}$ is the quantity of commodity exported from country $j$ to country $i$, and $Total_j$ is the total quantity of commodity available in country $j$.
   
+```{r}
+# time year/s:
+if(length(time_period)==1){
+  time_year_text <- paste0("year ", time_period)
+  }else{
+  time_year_text <- paste0("following years: ", time_period)
+}  
   
-When uploading the datasets to calculate $N_{trade}$, the selected unit was: `r units` 
+```
+  
+When uploading the datasets to calculate $N_{trade}$, the selected unit was `r units`, while the selected time-period included the `r time_year_text` 
 
 
 ### $N_{trade}$ results
@@ -100,21 +109,25 @@ Figure 1: Median $N_{trade}$ values by country at the NUTS0 level.
 
 After calculating $N_{trade}$ at the national level (NUTS0), the next step involves redistributing these quantities to NUTS2 regions. 
 
-$N_{trade}$ redistribution to NUTS2 regions was performed depending on data selected by the user:  
-
 ```{r}
 
-
+if(data_redistribution=="Population"){
+  data_text <- "population data from Eurostat"
+}else{
+  data_text <- "user custom data"
+}
 
 ```
 
+For this analysis, $N_{trade}$ data were redistributed from NUTS0 to NUTS2 level proportionally to `r data_text`.
 
 ```{r}
+
 # population year/s:
 if(length(population_year)==1){
   population_year_text <- paste0("year for population data is ", population_year)
   }else{
-  population_year_text <- paste0("years for population data are the average of the ", population_year, " years")
+  population_year_text <- paste0("years, for which the average population will be used as the basis for redistribution, are: ", population_year)
 }
 
 ```
@@ -126,30 +139,13 @@ The map shows the median $N_{trade}$ values by regions (NUTS2 level).
 
 ```{r}
 
-#Vedere come si utilizza nell'esempio inviato da Martina
-#Please, remove "#" once the column names of the dataset have been revised
-
-#plot_nuts2(Nt_redist, "NUTS2", "Median", title = bquote(N[trade] ~ " Median")) +
-#   xlim(-20, 40) + ylim(35,70) +
-#   theme_bw()+
-#   theme(
-#     plot.title = element_text(size = 14),
-#     legend.title = element_text(size = 12)
-#   )
-#
+plot_nuts2(Nt_redist, "NUTS2", "Median", title = bquote(N[trade] ~ " Median")) +
+   xlim(-20, 40) + ylim(35,70) +
+   theme_bw()+
+   theme(
+     plot.title = element_text(size = 14),
+     legend.title = element_text(size = 12)
+   )
 
 ```
 Figure 2: $N_{trade}$ values redistributed at the NUTS2 level.
-
-
-```{r}
-# EXAMPLE:
-if(data_redistribution=="Population"){
-  data_text <- "population data from Eurostat"
-}else{
-  data_text <- "user custom data"
-}
-
-```
-
-$N_{trade}$ data were redistributed from NUTS0 to NUTS2 level proportionally to `r data_text`.
