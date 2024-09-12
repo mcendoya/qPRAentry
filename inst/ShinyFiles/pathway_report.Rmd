@@ -1,7 +1,14 @@
 ---
 title: "Pathway model report"
 output: pdf_document
+bibliography: references.bib
 params:
+  ntrade: NA
+  model_def: NA
+  param_names: NA
+  par_settings: NA
+  n_iter: NA
+  dist_result: NA
   Ninf: NA
 ---
 
@@ -13,15 +20,75 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE,
                       fig.width = 4)
 ```
 
-<!-- # Introduction -->
+```{r}
+ntrade <- params$ntrade # Ntrade data
+model_def <- params$model_def # model equation
+param_names <- params$param_names # parameter names
+n_iter <- params$n_iter # number of iterations
+par_settings <- params$par_settings # Parameter distributions
+dist_result <- params$dist_result # random values generated from the distributions
+Ninf <- params$Ninf # Ninf results
+```
 
-<!-- This report presents the results of the pathway model analysis conducted using the Pathway model Shiny application. Data were processed employing the *qPRAentry* package. -->
 
-<!-- The pathway model provides an estimation of the number of pest individuals, spores, or propagules entering a risk assessment area through various trade pathways. -->
+### $N_{trade}$ data
 
-<!-- EFSA (European Food Safety Authority) utilises pathway models to evaluate the risk of pests entering the EU territories. The complexity of the pathway model can vary based on factors such as the specific pest under consideration and the availability of detailed data. -->
+```{r}
+head(ntrade)
+```
 
-<!-- The pathway model essentially multiplies trade flow by several factors that account for pest prevalence in the traded products and the effectiveness of entry processes in mitigating pest introduction, from the source country of origin to the EU【EFSA PLH Panel, 2018. -->
+### Pathway model
+
+`r paste0("$$", model_def, "$$")`
+
+### Parameter distributions
+
+`r n_iter` iterations for the random generation of the parameter values from the given distribution.
+
+
+```{r, results='asis'}
+param_names <- sapply(param_names, function(x) {
+  if (!grepl("^\\$", x)) x <- paste0("$", x)
+  if (!grepl("\\$$", x)) x <- paste0(x, "$")
+  return(x)
+})
+
+for (i in seq_along(param_names)) {
+  # Parameter name
+  cat(paste0(param_names[i], "\n\n"))
+  
+  # Histogram
+  plot.new()
+  hist(dist_result[[i]], 
+       main = par_settings[i], 
+       xlab = "", 
+       prob = TRUE,
+       cex.main = 0.8, 
+       cex.lab = 0.8)
+  
+  # space
+  cat("\n\n")
+}
+```
+
+
+## $N_{inf}$ result
+
+```{r}
+head(Ninf)
+```
+
+
+
+# Introduction
+
+This report presents the results of the pathway model analysis conducted using the Pathway model Shiny application. Data were processed employing the *qPRAentry* package.
+
+The pathway model provides an estimation of the number of pest individuals, spores, or propagules entering a risk assessment area through various trade pathways.
+
+EFSA (European Food Safety Authority) utilises pathway models to evaluate the risk of pests entering the EU territories. The complexity of the pathway model can vary based on factors such as the specific pest under consideration and the availability of detailed data.
+
+The pathway model essentially multiplies trade flow by several factors that account for pest prevalence in the traded products and the effectiveness of entry processes in mitigating pest introduction, from the source country of origin to the EU [@efsa2018guidance].
 
 <!-- (CHECK WITH MARTINA HOW TO ADD REFERENCES - I also think we can remove the part I added below) -->
 
@@ -79,6 +146,6 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE,
 
 
 
-
+# References
 
 

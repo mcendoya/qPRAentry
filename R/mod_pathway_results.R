@@ -39,7 +39,8 @@ mod_pathway_results_ui <- function(id){
 #'
 #' @noRd
 mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
-                                       dist_result, ntrade_df){
+                                       param_names, par_settings, dist_result, 
+                                       ntrade_df){
   NUTS_ID <- value <- CNTR_CODE <- NULL
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -271,7 +272,13 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         rmdPath <- system.file("ShinyFiles", "pathway_report.Rmd", package = "qPRAentry")
         file.copy(rmdPath, tempReport, overwrite = TRUE)
         # Set up parameters to pass to Rmd document
-        params <- list(Ninf = Ninf_solve())
+        params <- list(ntrade = ntrade_df(),
+                       model_def = model_def(),
+                       param_names = param_names(),
+                       n_iter = n_iter(),
+                       par_settings = par_settings(),
+                       dist_result = dist_result(),
+                       Ninf = Ninf_solve())
         
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document
@@ -285,11 +292,8 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         tempCsv <- file.path(tempDir, "Ninf.csv")
         write.csv(Ninf_solve(), tempCsv, row.names = FALSE)
         
-        tempCsv2 <- file.path(tempDir, "parameter_samples.csv")
-        write.csv(Ninf_samples(), tempCsv2, row.names = FALSE)
-        
         # Create ZIP file
-        fs <- c("pathway_report.pdf", "Ninf.csv", "parameter_samples.csv")
+        fs <- c("pathway_report.pdf", "Ninf.csv")
         utils::zip(zipfile = fname, files = fs)
         setwd(userDir)
       },

@@ -33,8 +33,8 @@ mod_pathway_parameters_ui <- function(id){
 #' pathway_parameters Server Functions
 #'
 #' @noRd
-mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values, model_done,
-                                          parameters){
+mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values, 
+                                          model_done, parameters){
   n_iter <- NULL
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -108,12 +108,23 @@ mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values, model_d
         text_parameters
       }
     })
-
+    
+    par_settings <- eventReactive(input$dist_done,{
+      distrib <- c()
+      for(i in seq_along(dist_result())){
+        d <- input[[paste0("dist",i)]]
+        pars <- as.character(input[[paste0("par_",d,"_",i)]])
+        distrib[i] <-  paste0(d,"(",pars,")")
+      }
+      return(distrib)
+    })
+    
     return(
       list(
         dist_done = reactive(input$dist_done),
         n_iter = reactive(input$n_iter),
         go_results = reactive(input$go_results),
+        par_settings = par_settings,
         dist_result = dist_result
       )
     )

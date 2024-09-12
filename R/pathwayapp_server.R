@@ -16,6 +16,8 @@ pathwayapp_server <- function(input, output, session) {
                              dist_done = parameters$dist_done, 
                              n_iter = parameters$n_iter,
                              model_def = model$model_def,
+                             param_names = model$parameters,
+                             par_settings = parameters$par_settings,
                              dist_result = parameters$dist_result,
                              ntrade_df = model$ntrade_df)
 
