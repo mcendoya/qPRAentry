@@ -1,5 +1,6 @@
 ---
 title: "Pathway model report"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
 bibliography: references.bib
 params:
@@ -31,6 +32,17 @@ Ninf <- params$Ninf # Ninf results
 ```
 
 
+# Introduction
+
+This report presents the results of the pathway model analysis conducted using the Pathway model Shiny application. Data were processed employing the *qPRAentry* package.
+
+The pathway model provides an estimation of the number of pest individuals, spores, or propagules entering a risk assessment area through various trade pathways.
+
+EFSA (European Food Safety Authority) utilises pathway models to evaluate the risk of pests entering the EU territories. The complexity of the pathway model can vary based on factors such as the specific pest under consideration and the availability of detailed data.
+
+The pathway model essentially multiplies trade flow by several factors that account for pest prevalence in the traded products and the effectiveness of entry processes in mitigating pest introduction, from the source country of origin to the EU [@efsa2018guidance].
+
+
 ### $N_{trade}$ data
 
 ```{r}
@@ -38,6 +50,8 @@ head(ntrade)
 ```
 
 ### Pathway model
+
+The pathway model you have constructed, along with the corresponding parameters, can be found below:
 
 `r paste0("$$", model_def, "$$")`
 
@@ -80,15 +94,6 @@ head(Ninf)
 
 
 
-# Introduction
-
-This report presents the results of the pathway model analysis conducted using the Pathway model Shiny application. Data were processed employing the *qPRAentry* package.
-
-The pathway model provides an estimation of the number of pest individuals, spores, or propagules entering a risk assessment area through various trade pathways.
-
-EFSA (European Food Safety Authority) utilises pathway models to evaluate the risk of pests entering the EU territories. The complexity of the pathway model can vary based on factors such as the specific pest under consideration and the availability of detailed data.
-
-The pathway model essentially multiplies trade flow by several factors that account for pest prevalence in the traded products and the effectiveness of entry processes in mitigating pest introduction, from the source country of origin to the EU [@efsa2018guidance].
 
 <!-- (CHECK WITH MARTINA HOW TO ADD REFERENCES - I also think we can remove the part I added below) -->
 
@@ -111,21 +116,11 @@ The pathway model essentially multiplies trade flow by several factors that acco
 <!-- Due to the challenges in obtaining precise data for each stage of a pest risk assessment, Expert Knowledge Elicitation (EKE) is often employed to estimate the values of the pathway model parameters【EFSAPLHPanel2018†source】. EKE is a structured process that gathers and utilizes expert knowledge to make informed decisions, especially when empirical data is limited【EFSA2014†source. -->
 
 
-<!-- # Pathway model -->
 
-<!-- The pathway model you have constructed, along with the corresponding parameters, can be found below: -->
+# Downloading Results
 
+The pathway model results are available in the downloaded Pathway_results20XX-XX-XX.zip folder.
 
-<!-- $$ -->
-
-<!-- #Add automatically the model that will be built using the pathway app -->
-
-<!-- N_{inf} = N_{trade} * p_{prevalence} * (1 - p_{sorting}) * d * p_{transfer} -->
-
-<!-- $$ -->
-
-
-<!-- #Visualising and downloading Results -->
 
 <!-- The results of the pathway model are displayed in both tabular and map formats. -->
 <!-- The map shows the mean $N_{inf}$ values by country at the NUTS0 level. -->
