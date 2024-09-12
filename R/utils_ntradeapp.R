@@ -74,21 +74,25 @@ data_input <- function(ns, data_name, title_data, partner = TRUE, extra=FALSE){
 colnames_select <- function(df, data_name, partner=TRUE, session = session){
   updatePickerInput(session = session,
                     inputId = paste0("reporter_", data_name),
-                    selected = character(0),
+                    # selected = character(0),
+                    selected = "reporter",
                     choices = sort(colnames(df)))
   if(partner){
     updatePickerInput(session = session,
                       inputId = paste0("partner_", data_name),
-                      selected = character(0),
+                      # selected = character(0),
+                      selected = "partner",
                       choices = sort(colnames(df)))
   }
   updatePickerInput(session = session,
                     inputId = paste0("value_", data_name),
-                    selected = character(0),
+                    # selected = character(0),
+                    selected = "OBS_VALUE",
                     choices = sort(colnames(df)))
   updatePickerInput(session = session,
                     inputId = paste0("time_period_", data_name),
-                    selected = character(0),
+                    # selected = character(0),
+                    selected = "TIME_PERIOD",
                     choices = sort(colnames(df)))
 }
 

@@ -18,6 +18,9 @@ mod_pathway_results_ui <- function(id){
         button to proceed to download the ... and the final report.<br><br>
                   You can also return to the "Pathway model" or "Parameters" tabs to review or 
                   change the input data.<br></p>'),
+             br(),
+             downloadButton(ns("downloadAll"), "Download results", class="enable"),
+             br(),br(),
              shinyWidgets::radioGroupButtons(
                inputId = ns("Ninf_btn"),
                label = NULL,
@@ -150,14 +153,12 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         output$Ninf_results <- renderUI({
           fluidRow(width = 11,
                    column(12, align="center", style='height:400px; overflow-y: scroll;',
-                          downloadButton(ns("downloadTable"), "Download"),
                           DT::dataTableOutput(ns("Ninf_table")) %>%
                             shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
                    ),
                    column(12, style='margin-top:10em;',
                           p("Total EU:", style="font-weight: bold;"),
                           DT::dataTableOutput(ns("NinfEU_table")),
-                          downloadButton(ns("downloadSamples"), "Download")
                    )
           )
         })
@@ -254,47 +255,47 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
       })
     })
 
-
-    ## Download
-    output$downloadTable <- downloadHandler(
-      filename = function(){"Ninf.csv"},
-      content = function(fname){
-        write.csv(Ninf_solve(), fname, row.names=FALSE)
-      }
-    )
-
-    output$downloadSamples <- downloadHandler(
-      filename = function(){"Ninf.csv"},
-      content = function(fname){
-        write.csv(Ninf_samples(), fname, row.names=FALSE)
-      }
-    )
-
-    output$report <- downloadHandler(
-      # For PDF output, change this to "report.pdf"
-      filename = "pathway_report.pdf",
-      content = function(file) {
-        # Copy the report file to a temporary directory before processing it, in
-        # case we don't have write permissions to the current working dir (which
-        # can happen when deployed).
-        tempReport <- file.path(tempdir(), "pathway_report.Rmd")
-        file.copy(system.file("ShinyFiles", "pathway_report.Rmd",
-                              package = "qPRAentry"),
-                  tempReport, overwrite = TRUE)
-
+    # Download report and results files
+    
+    output$downloadAll <- downloadHandler(
+      filename = function() {
+        paste("Pathway_results", Sys.Date(), ".zip", sep = "")
+      },
+      content = function(fname) {
+        # temporary directory before processing
+        userDir <- getwd()
+        tempDir <- tempdir()
+        setwd(tempDir)
+        # PDF report
+        tempReport <- file.path(tempDir, "pathway_report.pdf")
+        rmdPath <- system.file("ShinyFiles", "pathway_report.Rmd", package = "qPRAentry")
+        file.copy(rmdPath, tempReport, overwrite = TRUE)
         # Set up parameters to pass to Rmd document
-         params <- list(Ninf = Ninf_solve())
-
+        params <- list(Ninf = Ninf_solve())
+        
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document
         # from the code in this app).
-        rmarkdown::render(tempReport, output_file = file,
+        rmarkdown::render(input = rmdPath,
+                          output_file = tempReport,
                           params = params,
-                          envir = new.env(parent = globalenv())
-        )
-      }
+                          envir = new.env(parent = globalenv()))
+        
+        # CSV files
+        tempCsv <- file.path(tempDir, "Ninf.csv")
+        write.csv(Ninf_solve(), tempCsv, row.names = FALSE)
+        
+        tempCsv2 <- file.path(tempDir, "parameter_samples.csv")
+        write.csv(Ninf_samples(), tempCsv2, row.names = FALSE)
+        
+        # Create ZIP file
+        fs <- c("pathway_report.pdf", "Ninf.csv", "parameter_samples.csv")
+        utils::zip(zipfile = fname, files = fs)
+        setwd(userDir)
+      },
+      contentType = "application/zip"
     )
-
+    
   })
 }
 

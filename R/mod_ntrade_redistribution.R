@@ -198,7 +198,8 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         )
         Nt_r <- Nt_r %>% 
           left_join(select(Nt, NUTS0, CNTR_NAME), by="NUTS0") %>% 
-          relocate(NUTS2, NUTS0, CNTR_NAME)
+          select(!NUTS0) %>% 
+          relocate(NUTS2, CNTR_NAME)
         return(Nt_r)
       },error = function(e) {
         output$message <- renderText({e$message})
@@ -283,17 +284,17 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
       EU02 <- EU02_dataplot()
       if(length(time_period())==1){
         EU02 <- EU02 %>% 
-          rename(Ntrade_NUTS2 = !!paste0("Ntrade_",time_period(), "_NUTS2"))
+          rename(Ntrade_NUTS2 = !!paste0("Ntrade_",time_period()))
         tooltip <- paste0(EU02$NUTS_ID, 
                           "\nNtrade: ", round(EU02$Ntrade_NUTS2,2))
         title <- bquote(paste(N[trade], " ","NUTS2 ", .(time_period())))
       }else{
         EU02 <- EU02 %>% 
-          rename(Ntrade_NUTS2 = Median_NUTS2)
+          rename(Ntrade_NUTS2 = Median)
         tooltip <- paste0(EU02$NUTS_ID, 
-                          "\nQ0.05: ", round(EU02$Q0.05_NUTS2,2),
+                          "\nQ0.05: ", round(EU02$Q0.05,2),
                           "\nMedian: ", round(EU02$Ntrade_NUTS2,2),
-                          "\nQ0.95: ", round(EU02$Q0.95_NUTS2,2))
+                          "\nQ0.95: ", round(EU02$Q0.95,2))
         title <- expression(paste(N[trade], " ", "NUTS2 - Median"))
       }
     limits <- c(min(EU02$Ntrade_NUTS2, na.rm=T), max(EU02$Ntrade_NUTS2, na.rm=T))
@@ -321,16 +322,16 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         EU02 <- EU02_dataplot()
         if(length(time_period())==1){
           country <- country %>% 
-            rename(Ntrade_NUTS2 = !!paste0("Ntrade_",time_period(), "_NUTS2"))
+            rename(Ntrade_NUTS2 = !!paste0("Ntrade_",time_period()))
           tooltip <- paste0(country$NUTS_ID, 
                             "\nNtrade: ", round(country$Ntrade_NUTS2,2))
         }else{
           country <- country %>% 
-            rename(Ntrade_NUTS2 = Median_NUTS2)
+            rename(Ntrade_NUTS2 = Median)
           tooltip <- paste0(country$NUTS_ID,
-                            "\nQ0.05: ", round(country$Q0.05_NUTS2,2),
+                            "\nQ0.05: ", round(country$Q0.05,2),
                             "\nMedian: ", round(country$Ntrade_NUTS2,2),
-                            "\nQ0.95: ", round(country$Q0.95_NUTS2,2))
+                            "\nQ0.95: ", round(country$Q0.95,2))
         }
         limits <- c(min(country$Ntrade_NUTS2, na.rm=T), max(country$Ntrade_NUTS2, na.rm=T))
         ggiraph_plot(data = country, value = "Ntrade_NUTS2",

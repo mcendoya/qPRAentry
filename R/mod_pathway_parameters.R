@@ -72,7 +72,7 @@ mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values, model_d
       names(parameter_samples) <- pn
       parameter_samples
     })
-
+    
     observeEvent(input$dist_done,{
       parameter_samples <- dist_result()
       n <- length(parameter_samples)

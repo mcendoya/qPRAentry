@@ -13,69 +13,69 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE,
                       fig.width = 4)
 ```
 
-# Introduction
+<!-- # Introduction -->
 
-This report presents the results of the pathway model analysis conducted using the Pathway model Shiny application. Data were processed employing the *qPRAentry* package.
+<!-- This report presents the results of the pathway model analysis conducted using the Pathway model Shiny application. Data were processed employing the *qPRAentry* package. -->
 
-The pathway model provides an estimation of the number of pest individuals, spores, or propagules entering a risk assessment area through various trade pathways.
+<!-- The pathway model provides an estimation of the number of pest individuals, spores, or propagules entering a risk assessment area through various trade pathways. -->
 
-EFSA (European Food Safety Authority) utilises pathway models to evaluate the risk of pests entering the EU territories. The complexity of the pathway model can vary based on factors such as the specific pest under consideration and the availability of detailed data.
+<!-- EFSA (European Food Safety Authority) utilises pathway models to evaluate the risk of pests entering the EU territories. The complexity of the pathway model can vary based on factors such as the specific pest under consideration and the availability of detailed data. -->
 
-The pathway model essentially multiplies trade flow by several factors that account for pest prevalence in the traded products and the effectiveness of entry processes in mitigating pest introduction, from the source country of origin to the EU【EFSA PLH Panel, 2018.
+<!-- The pathway model essentially multiplies trade flow by several factors that account for pest prevalence in the traded products and the effectiveness of entry processes in mitigating pest introduction, from the source country of origin to the EU【EFSA PLH Panel, 2018. -->
 
-(CHECK WITH MARTINA HOW TO ADD REFERENCES - I also think we can remove the part I added below)
+<!-- (CHECK WITH MARTINA HOW TO ADD REFERENCES - I also think we can remove the part I added below) -->
 
-In recent pest risk assessments【efsa2023a】【efsa2023b】【efsa2023c】, the pathway models have included the following parameters:
-
-
-$$
-N_{inf} = N_{trade} * p_{prevalence} * (1 - p_{sorting}) * (1 - RROs_{effectiveness}) * d * p_{transfer}
-$$
-where:
-
-- **$N_{inf}$**: Number of founder populations of the pest.
-- **$N_{trade}$**: Total quantity of commodities (infested or not) imported by the EU from countries where the pest is present.
-- **$p_{prevalence}$**: Proportion of infested commodity at the origin.
-- **$p_{sorting}$**: Proportion of infested commodity removed before entry into the EU.
-- **$RRO_{effectiveness}$**: Reduction in infested commodity through postharvest treatment.
-- **$d$**: Disaggregation factor, reflecting the distribution of the infested commodity to several locations within the risk assessment area.
-- **$p_{transfer}$**: Probability that the pest in one disaggregated batch is transferred to suitable hosts, leading to a founder population.
-
-Due to the challenges in obtaining precise data for each stage of a pest risk assessment, Expert Knowledge Elicitation (EKE) is often employed to estimate the values of the pathway model parameters【EFSAPLHPanel2018†source】. EKE is a structured process that gathers and utilizes expert knowledge to make informed decisions, especially when empirical data is limited【EFSA2014†source.
+<!-- In recent pest risk assessments【efsa2023a】【efsa2023b】【efsa2023c】, the pathway models have included the following parameters: -->
 
 
-# Pathway model
+<!-- $$ -->
+<!-- N_{inf} = N_{trade} * p_{prevalence} * (1 - p_{sorting}) * (1 - RROs_{effectiveness}) * d * p_{transfer} -->
+<!-- $$ -->
+<!-- where: -->
 
-The pathway model you have constructed, along with the corresponding parameters, can be found below:
+<!-- - **$N_{inf}$**: Number of founder populations of the pest. -->
+<!-- - **$N_{trade}$**: Total quantity of commodities (infested or not) imported by the EU from countries where the pest is present. -->
+<!-- - **$p_{prevalence}$**: Proportion of infested commodity at the origin. -->
+<!-- - **$p_{sorting}$**: Proportion of infested commodity removed before entry into the EU. -->
+<!-- - **$RRO_{effectiveness}$**: Reduction in infested commodity through postharvest treatment. -->
+<!-- - **$d$**: Disaggregation factor, reflecting the distribution of the infested commodity to several locations within the risk assessment area. -->
+<!-- - **$p_{transfer}$**: Probability that the pest in one disaggregated batch is transferred to suitable hosts, leading to a founder population. -->
 
-
-$$
-
-#Add automatically the model that will be built using the pathway app
-
-N_{inf} = N_{trade} * p_{prevalence} * (1 - p_{sorting}) * d * p_{transfer}
-
-$$
-
-
-#Visualising and downloading Results
-
-The results of the pathway model are displayed in both tabular and map formats.
-The map shows the mean $N_{inf}$ values by country at the NUTS0 level.
+<!-- Due to the challenges in obtaining precise data for each stage of a pest risk assessment, Expert Knowledge Elicitation (EKE) is often employed to estimate the values of the pathway model parameters【EFSAPLHPanel2018†source】. EKE is a structured process that gathers and utilizes expert knowledge to make informed decisions, especially when empirical data is limited【EFSA2014†source. -->
 
 
+<!-- # Pathway model -->
 
-```{r}
+<!-- The pathway model you have constructed, along with the corresponding parameters, can be found below: -->
 
 
+<!-- $$ -->
+
+<!-- #Add automatically the model that will be built using the pathway app -->
+
+<!-- N_{inf} = N_{trade} * p_{prevalence} * (1 - p_{sorting}) * d * p_{transfer} -->
+
+<!-- $$ -->
+
+
+<!-- #Visualising and downloading Results -->
+
+<!-- The results of the pathway model are displayed in both tabular and map formats. -->
+<!-- The map shows the mean $N_{inf}$ values by country at the NUTS0 level. -->
+
+
+
+<!-- ```{r} -->
 
 
 
 
 
 
-```
-Figure 1: Mean $N_{inf}$ values by country at the NUTS0 level.
+
+
+<!-- ``` -->
+<!-- Figure 1: Mean $N_{inf}$ values by country at the NUTS0 level. -->
 
 
 

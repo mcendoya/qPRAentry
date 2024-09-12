@@ -42,6 +42,12 @@ utils::globalVariables(c("TIME_PERIOD", "geo", "values", "NUTS0",
 #' to_nuts = 2
 #' )
 #' }
+# ntrade_redist <- function(ntrade, ntrade_nuts, ntrade_values,
+#                           to_nuts = 2,
+#                           redist = NULL,
+#                           redist_nuts = NULL,
+#                           redist_values = NULL,
+#                           population_yr = NULL)
 ntrade_redist <- function(ntrade_data, nuts_column, values_column,
                           to_nuts = 2,
                           prop_data = NULL,
@@ -128,6 +134,7 @@ ntrade_redist <- function(ntrade_data, nuts_column, values_column,
                   .fns = list(redist = ~. * proportion))) %>%
     rename(!!paste0("NUTS", to_nuts) := geo) %>%
     select(!!paste0("NUTS", to_nuts), 
+           NUTS0,
            proportion,
            ends_with("redist")) %>% 
     rename_with(~ sub("_redist$", "", .), ends_with("redist"))

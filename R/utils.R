@@ -141,16 +141,16 @@ missing_intra <- function(data, IDs) {
 get_population_data <- function(nuts) {
   sex <- age <- NULL
   length_nuts <- nuts + 2 # NUTS characters
-  df <- eurostat::get_eurostat("demo_r_pjangrp3", time_format = "num") %>%
+  eurostat::get_eurostat("demo_r_pjangrp3", time_format = "num") %>%
     filter(
       sex == "T" &
       unit == "NR" &
       age == "TOTAL" &
       nchar(geo) == length_nuts
     )
-  filter_nuts <- giscoR::gisco_get_nuts(nuts_level=nuts)$NUTS_ID
-  df <- df %>% filter(geo %in% filter_nuts)
-  return(df)
+  # filter_nuts <- giscoR::gisco_get_nuts(nuts_level=nuts)$NUTS_ID
+  # df <- df %>% filter(geo %in% filter_nuts)
+  # return(df)
 }
 
 #' Cached function to memoize the retrieval of Eurostat data.
