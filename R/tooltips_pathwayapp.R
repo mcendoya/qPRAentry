@@ -41,16 +41,29 @@ data_ntrade_errors <- list(
 
 text_parameters <- HTML('<p class="custom-text">
           <ul class="custom-text">
-          <li><strong>Number of iterations:</strong> Set the number of iterations for ...</li>
-          <li><strong>Parameters distribution:</strong> Distribution ...</li>
-          <li>Click on  <strong>Done</strong></li>
+          <li><strong>Number of iterations:</strong> The number of iterations determines how many times the process will be repeated. 
+        The total number of iterations that will be performed during the execution needs to be specified in the box "number of iterations". 
+        In each iteration, a single value is drawn from the specified distribution for each parameter, representing a sample for that iteration.</li>
+          <li><strong>Parameters distribution:</strong> The distribution type for each parameter needs to be defined. 
+          Common distribution types include Normal (Gaussian), Uniform, Exponential, or others that may fit the nature of the data. For example:
+            <ul class="custom-text">
+                <li><strong>Normal Distribution (Gaussian):</strong> Requires the mean (µ) and standard deviation (σ).</li>
+                <li><strong>Uniform Distribution:</strong> Requires the minimum and maximum bounds for the values.</li>
+                <li><strong>Exponential Distribution:</strong> Requires the rate parameter (λ).</li>
+                <li><strong>Others:</strong> Depending on the parameter, different distributions 
+                and their corresponding shape parameters can be gathered from the EKE (Expert Knowledge Elicitation).</li>
+                </ul>
+        </li>
+          <li>Once all parameters have been set, you can click on the <strong>Done</strong> button to save the current configuration. 
+          After clicking, for each parameter, the distribution histograms will be displayed next to the parameter. 
+          Furthermore, the button <strong>Results >></strong> will be now accessible.</li>
             </ul>
           </li>
           </ul>
           </p>')
 
 text_parametersDone <- HTML(
-  '<p class="custom-text">Note: If you make any changes to the If you make any changes 
+  '<p class="custom-text">Note: If you make any changes 
   to the number of iterations or the parameter distribution, 
   please press <strong>Done</strong> again to apply the changes.<br><br> 
   <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on <strong>"Results"</strong> to go to the Results tab.<br></p>'

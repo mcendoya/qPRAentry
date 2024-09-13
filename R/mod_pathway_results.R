@@ -13,9 +13,9 @@ mod_pathway_results_ui <- function(id){
     fluidRow(
       column(1),
       column(10,
-             HTML('<p class="custom-text"><br>View <i>N<sub>trade</sub></i> results in table or map format.<br><br> 
+             HTML('<p class="custom-text"><br>View the pathway model results (<i>N<sub>inf</sub></i>) in table or map format.<br><br> 
  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the <strong>"Download results"</strong> 
-        button to proceed to download the ... and the final report.<br><br>
+        button to download a zip folder including the <i>N<sub>inf</sub></i> data and the final report.<br><br>
                   You can also return to the "Pathway model" or "Parameters" tabs to review or 
                   change the input data.<br></p>'),
              br(),

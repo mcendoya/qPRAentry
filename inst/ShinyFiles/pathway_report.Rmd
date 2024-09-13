@@ -11,6 +11,7 @@ params:
   n_iter: NA
   dist_result: NA
   Ninf: NA
+  NUTS_lev: NA
 ---
 
 ```{r setup, include=FALSE}
@@ -29,6 +30,8 @@ n_iter <- params$n_iter # number of iterations
 par_settings <- params$par_settings # Parameter distributions
 dist_result <- params$dist_result # random values generated from the distributions
 Ninf <- params$Ninf # Ninf results
+NUTS_lev <- params$NUTS_lev #selected NUTS (depending on the Excel Ntrade file chosen)
+
 ```
 
 
@@ -38,27 +41,25 @@ This report presents the results of the pathway model analysis conducted using t
 
 The pathway model provides an estimation of the number of pest individuals, spores, or propagules entering a risk assessment area through various trade pathways.
 
-EFSA (European Food Safety Authority) utilises pathway models to evaluate the risk of pests entering the EU territories. The complexity of the pathway model can vary based on factors such as the specific pest under consideration and the availability of detailed data.
+The European Food Safety Authority (EFSA) utilises pathway models to evaluate the risk of pests entering the EU territories. The complexity of the pathway model can vary based on factors such as the specific pest under consideration and the availability of detailed data.
 
-The pathway model essentially multiplies trade flow by several factors that account for pest prevalence in the traded products and the effectiveness of entry processes in mitigating pest introduction, from the source country of origin to the EU [@efsa2018guidance].
+The pathway model essentially multiplies the trade flow data by several factors that account for pest prevalence in the traded products and the effectiveness of entry processes in mitigating pest introduction, from the source country of origin to the EU. Additional information can be found in the EFSA Guidance on quantitative pest risk assessment [@efsa2018guidance].
+
+Due to the challenges in obtaining precise data for each stage of a pest risk assessment, Expert Knowledge Elicitation (EKE) is often employed to estimate the values of the pathway model parameters [@efsa2018guidance]. EKE is a structured process that gathers and utilises expert knowledge to make informed decisions, especially when empirical data is limited [@european2014guidance].
 
 
-### $N_{trade}$ data
 
-```{r}
-head(ntrade)
-```
+## Pathway model
 
-### Pathway model
-
-The pathway model you have constructed, along with the corresponding parameters, can be found below:
+The constructed pathway model and its corresponding parameters are presented below:
 
 `r paste0("$$", model_def, "$$")`
 
-### Parameter distributions
+The $N_{trade}$ data used in the model have been previously calculated using the $N_{trade}$ Shiny application, part of the *qPRAentry* package.
 
-`r n_iter` iterations for the random generation of the parameter values from the given distribution.
+A total of `r n_iter` iterations were performed to randomly generate parameter values based on the specified distribution.
 
+### Parameters: 
 
 ```{r, results='asis'}
 param_names <- sapply(param_names, function(x) {
@@ -86,59 +87,35 @@ for (i in seq_along(param_names)) {
 ```
 
 
-## $N_{inf}$ result
+# $N_{inf}$ results and download
+
+The result of the pathway model is a dataframe with the estimated number of founder populations ($N_{inf}$) for each country of interest i.
+Below, the table below displays the $N_{inf}$ results at `r NUTS_lev` level. 
+
 
 ```{r}
-head(Ninf)
+
+# Display the table
+knitr::kable(Ninf, caption = "$N_{inf}$ results", digits = 2) 
+
 ```
 
+The map shows the median $N_{inf}$ values by `r NUTS_lev`.
 
+```{r}
 
+#plot_nuts(Ninf, NUTS_lev, "Median", title = bquote(N[inf] ~ " Median")) +
+#   xlim(-20, 40) + ylim(35,70) +
+#   theme_bw()+
+#  theme(
+#     plot.title = element_text(size = 14),
+#     legend.title = element_text(size = 12)
+#   )
 
-<!-- (CHECK WITH MARTINA HOW TO ADD REFERENCES - I also think we can remove the part I added below) -->
-
-<!-- In recent pest risk assessments【efsa2023a】【efsa2023b】【efsa2023c】, the pathway models have included the following parameters: -->
-
-
-<!-- $$ -->
-<!-- N_{inf} = N_{trade} * p_{prevalence} * (1 - p_{sorting}) * (1 - RROs_{effectiveness}) * d * p_{transfer} -->
-<!-- $$ -->
-<!-- where: -->
-
-<!-- - **$N_{inf}$**: Number of founder populations of the pest. -->
-<!-- - **$N_{trade}$**: Total quantity of commodities (infested or not) imported by the EU from countries where the pest is present. -->
-<!-- - **$p_{prevalence}$**: Proportion of infested commodity at the origin. -->
-<!-- - **$p_{sorting}$**: Proportion of infested commodity removed before entry into the EU. -->
-<!-- - **$RRO_{effectiveness}$**: Reduction in infested commodity through postharvest treatment. -->
-<!-- - **$d$**: Disaggregation factor, reflecting the distribution of the infested commodity to several locations within the risk assessment area. -->
-<!-- - **$p_{transfer}$**: Probability that the pest in one disaggregated batch is transferred to suitable hosts, leading to a founder population. -->
-
-<!-- Due to the challenges in obtaining precise data for each stage of a pest risk assessment, Expert Knowledge Elicitation (EKE) is often employed to estimate the values of the pathway model parameters【EFSAPLHPanel2018†source】. EKE is a structured process that gathers and utilizes expert knowledge to make informed decisions, especially when empirical data is limited【EFSA2014†source. -->
-
-
-
-# Downloading Results
+```
+Figure 1: $N_{inf}$ values redistributed at the `r NUTS_lev` level.
 
 The pathway model results are available in the downloaded Pathway_results20XX-XX-XX.zip folder.
-
-
-<!-- The results of the pathway model are displayed in both tabular and map formats. -->
-<!-- The map shows the mean $N_{inf}$ values by country at the NUTS0 level. -->
-
-
-
-<!-- ```{r} -->
-
-
-
-
-
-
-
-
-<!-- ``` -->
-<!-- Figure 1: Mean $N_{inf}$ values by country at the NUTS0 level. -->
-
 
 
 # References

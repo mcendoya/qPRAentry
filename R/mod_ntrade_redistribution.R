@@ -93,7 +93,11 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         please, press on <strong>"See <i>N<sub>trade</sub></i> redistribution"</strong> 
         to apply the changes.<br><br>
         <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the <strong>"Download results"</strong> 
-        button to proceed to download the <i>N<sub>trade</sub></i> data at NUTS0 and NUTS2 level and the final report.</p>')
+        button to proceed to download the <i>N<sub>trade</sub></i> data at NUTS0 and NUTS2 level and the final report.
+             <br><br>
+                  You can also return to the "Data" tab to review or 
+                  change the input data.<br>
+             </p>')
       } else {
         if(is.null(input$output_NUTS2)){
           text_DataRedistribution

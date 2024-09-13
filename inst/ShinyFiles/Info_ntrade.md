@@ -81,7 +81,7 @@ Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
 
 <br>
 
-## $N_{trade}$ results
+## $N_{trade}$: downloading results
 
 <br>
 
