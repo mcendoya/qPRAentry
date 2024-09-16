@@ -9,7 +9,7 @@ output:
 <hr style="border:1px solid #1E68BA">
 <br>
 
-$N_{trade}$ is defined as the total quantity of commodities (infested by a pest or not) imported by a country (e.g., an EU country) from other third-countries where the pest is present. 
+$N_{trade}$ is defined as "the potentially infected/infested quantity of commodities imported by a country from third-countries where the pest is present".
 
 This application is meant to calculate $N_{trade}$ for European countries ([NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts)), including European Union Member States, EFTA countries, and candidate countries and potential candidates. Note that it is not necessary to consider all countries included in this list.
 

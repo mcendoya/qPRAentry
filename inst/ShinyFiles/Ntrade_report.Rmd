@@ -35,7 +35,7 @@ population_year <- params$population_year
 
 This report details the results of the $N_{trade}$ analysis perdormed using the $N_{trade}$ Shiny application. Data were processed employing the *qPRAentry* package.
 
-$N_{trade}$ is defined as the potentially infected quantity of commodities imported by a country (e.g., an EU country) from other third-countries where the pest is present. This application is meant to calculate $N_{trade}$ and redistribute the data into the countries considered.
+$N_{trade}$ is defined as the potentially infected/infested quantity of commodities imported by a country (e.g., an EU country) from other third-countries where the pest is present. This application is meant to calculate $N_{trade}$ and redistribute the data into the countries considered.
 
 
 ### Calculation of $N_{trade}$
