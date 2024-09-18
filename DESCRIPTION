@@ -1,14 +1,19 @@
 Package: qPRAentry
 Type: Package
-Title: Tools to support the entry step of quantitative Pest Risk Assessment
+Title: Tools to support the entry step of the quantitative Pest Risk Assessment
 Version: 0.1.0
 Authors@R: c(
     person("Martina", "Cendoya", email = "cendoya_marmar@gva.es", role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-0134-7781")),
     person("Maria Chiara", "Rosace", email = "mariachiara.rosace@unicatt.it", role = c("aut"),
            comment = c(ORCID = "0000-0002-7263-8228")))
-Description: Tools to support risk  assessors in performing the entry step of 
-    the quantitative pest risk assessments.
+Description: The package is meant to support risk  assessors in performing the entry step of 
+    the quantitative pest risk assessments. It encompasses functions for calculating and redistributing 
+    the quantity of commodities imported from countries where a pest of interest is present 
+    and estimating the amount of a pest entering a risk assessment area 
+    (in terms of founder populations landing in each country/area/region). 
+    The package comprises two Shiny applications: one for computing N<sub>trade</sub> 
+    and redistributing, and the other for executing the pathway model. 
     The package and functions used are based on the work of the European Food 
     Safety Authority (EFSA PLH Panel et al., 2018) 
     <https://doi.org/10.2903/J.EFSA.2018.5350>.
