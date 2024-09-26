@@ -262,7 +262,8 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
     ))
   
   error_ExtraPest <- total_trade %>%
-    filter(extra_pest > extra_total) %>%
+    filter(all.equal(extra_pest, extra_total)==FALSE,
+           extra_pest > extra_total) %>%
     select(IDs, time_period) %>%
     distinct()
   
