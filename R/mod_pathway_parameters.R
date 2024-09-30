@@ -82,7 +82,9 @@ mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values,
         d <- input[[paste0("dist",i)]]
         pars <- as.character(input[[paste0("par_",d,"_",i)]])
         output[[plotname]] <- renderPlot({
-          hist(parameter_samples[[i]], main = paste0(d,"(",pars,")"), xlab = "", prob = T)
+          hist(parameter_samples[[i]], main = paste0(d,"(",pars,")"), xlab = "",
+               probability = TRUE, breaks = "fd", col = "lightblue")
+          lines(density(parameter_samples[[i]]), col = "blue", lwd = 2)
         })
       })
     })

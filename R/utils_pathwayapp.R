@@ -127,8 +127,8 @@ n_from_dist <- function(dist, input_pars, n_iter){
   if(dist == 'beta'){
     n <- rbeta(n_iter, pars[1], pars[2])
     # Scaled
-    if(pars[3]!=0 & pars[4]!=1){
-      n <- (n-pars[3])/(pars[4]-pars[3])
+    if(pars[3]!=0 | pars[4]!=1){
+      n <- pars[3] + n *(pars[4]-pars[3])
     }else{n}
   }else if(dist == 'binom'){
     n <- rbinom(n_iter, pars[1], pars[2])
