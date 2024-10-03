@@ -13,17 +13,61 @@ text_ntrade_data <- HTML('<p class="custom-text">
           </ul>
           </p>')
 
-text_pathwaymodel <- HTML('<p class="custom-text">
-    Select the appropriate parameters for the pathway model. You can choose to include 
-    or exclude default parameters and add new parameters as needed. When adding new parameters, 
-    specify their role in the model equation, such as defining them as a multiplying factor or another type of contribution.<br><br>
-    After configuring the settings, press <strong>Done</strong> to apply and finalise your selections.
-</p>')
-text_model_done <- HTML('<p class="custom-text">Note: If you make any changes to the trade data 
+text_data_done <- HTML('<p class="custom-text">Note: If you make any changes to the trade data 
                         (such as uploading new data, selecting different columns, or making adjustments 
-                        to existing columns) or modify the pathway model parameters, you must press 
-                        <strong>Done</strong> again to apply and update these changes. Once 
-                        you have completed the equation, click on <strong>Parameters >></strong><br></p>')
+                        to existing columns), you must press <strong>Done</strong> again to apply 
+                        and update these changes.<br> 
+                        Once you have verified the data, click on <strong>Parameters >></strong><br></p>')
+
+text_pathwaymodel <-
+  HTML(
+  '<p class="custom-text">
+  Select the appropriate parameters for the pathway model. You can choose to 
+  include or exclude <strong>default parameters</strong> and add new parameters as needed.
+  <br><br>
+  <strong>Add other parameters:</strong>
+  <ul>
+    <li> Select the number of parameters to add.</li>
+    <li><strong>Parameter Name</strong>:
+    <ul>
+      <li>Enter only the name of the parameter (e.g., <code>p1</code>, <code>p_1</code>, <code>p_{inf}</code>).</li>
+      <li>If using subscripted parameters, use <code>_</code> between braces for more than one character 
+      (e.g., <code>p_{inf}</code>).</li>
+    </ul>
+    </li>
+    <li><strong>In the equation as</strong>:
+      <ul>
+        <li>Select the operation symbol that applies to the parameter</li>
+        <li>Define how the parameter is introduced in the equation. 
+        If transformations are required, input them here.
+          <ul>
+            <li>Example transformations: <code>(1 - p_1)</code>, <code>(p_{inf} / 100)</code></li>
+          </ul>
+        </li>
+        <li>You may add parentheses to adjust the order of operations as necessary.
+          <ul>
+            <li>Example: <code>((p1*100)</code>, <code>(1-p2))</code></li>
+          </ul>
+        <li>Ensure that the parameter name matches exactly what was entered in <strong>Parameter Name</strong>.</li>
+      </ul>
+    </li>
+  </ul>
+  <br>
+  Once the parameters have been set, click on <strong>Done</strong> to update the equation.
+  </p>'
+  )
+
+# When adding new parameters, 
+# specify their role in the model equation, such as defining 
+# them as a multiplying factor or another type of contribution.<br><br> 
+#   After configuring the settings, press <strong>Done</strong> 
+#   to apply and finalise your selections.
+
+text_model_done <- HTML('<p class="custom-text">
+                        Note: If you modify the pathway model parameters, you must 
+                        press <strong>Done</strong> again to apply and update these changes.<br>
+                        Once you have completed the equation, click on <strong>Parameters >></strong> 
+                        to go to the Parameters tab.<br></p>')
 
 # data errors
 data_ntrade_errors <- list(
@@ -62,9 +106,10 @@ text_parameters <- HTML('<p class="custom-text">
           </ul>
           </p>')
 
-text_parametersDone <- HTML(
-  '<p class="custom-text">Note: If you make any changes 
-  to the number of iterations or the parameter distribution, 
-  please press <strong>Done</strong> again to apply the changes.<br><br> 
-  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on <strong>"Results"</strong> to go to the Results tab.<br></p>'
+text_parametersDone <- HTML('<p class="custom-text">
+                            Note: If you make any changes to the number of iterations 
+                            or the parameter distribution, please press <strong>Done</strong> 
+                            again to apply the changes.<br><br>
+                            <i class="fa-solid fa-star" style="color: #63E6BE;"></i>
+                            Click on <strong>"Results >>"</strong> to go to the Results tab.<br></p>'
 )

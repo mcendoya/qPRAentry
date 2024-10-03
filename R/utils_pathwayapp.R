@@ -162,3 +162,62 @@ n_from_dist <- function(dist, input_pars, n_iter){
   return(n)
 }
 
+#' Generates quantiles from a specified distribution.
+#'
+#' This function generates quantiles (0.05, 0.25, 0.5, 0.75, 0.95) from a 
+#' specified distribution based on the input parameters.
+#'
+#' @param dist Distribution type (e.g., 'beta', 'binom', 'norm').
+#' @param input_pars Comma-separated string of distribution parameters.
+#' 
+#' @return A numeric vector.
+#' 
+#' @keywords internal
+q_from_dist <- function(dist, input_pars){
+  set.seed(123)
+  p <- c(0.05, 0.25, 0.5, 0.75, 0.95)
+  #character comma separated to numeric
+  pars <- as.numeric((unlist(strsplit(input_pars, ","))))
+  if(dist == 'beta'){
+    n <- qbeta(p, pars[1], pars[2])
+     # Scaled
+    if(pars[3]!=0 | pars[4]!=1){
+      n <- pars[3] + n *(pars[4]-pars[3])
+    }else{n}
+  }else if(dist == 'binom'){
+    n <- qbinom(p, pars[1], pars[2])
+  }else if(dist == 'cauchy'){
+    n <- qcauchy(p, pars[1], pars[2])
+  }else if(dist == 'chisq'){
+    n <- qchisq(p, pars[1])
+  }else if(dist == 'exp'){
+    n <- qexp(p, pars[1])
+  }else if(dist == 'f'){
+    n <- qf(p, pars[1], pars[2])
+  }else if(dist == 'gamma'){
+    n <- qgamma(p, shape=pars[1], scale=pars[2])
+  }else if(dist == 'geom'){
+    n <- qgeom(p, pars[1])
+  }else if(dist == 'lnorm'){
+    n <- qlnorm(p, pars[1], pars[2])
+  }else if(dist == 'nbinom'){
+    n <- qnbinom(p, pars[1], pars[2])
+  }else if(dist == 'norm'){
+    n <- qnorm(p, pars[1], pars[2])
+  }else if(dist == 'pois'){
+    n <- qpois(p, pars[1])
+  }else if(dist == 't'){
+    n <- qt(p, pars[1])
+  }else if(dist == 'unif'){
+    n <- qunif(p, pars[1], pars[2])
+  }else if(dist == 'weibull'){
+    n <- qweibull(p, pars[1], pars[2])
+  }
+  df <- data.frame("Q0.05"=round(n[1],4),
+                   "Q0.25"=round(n[2],4),
+                   "Q0.5" =round(n[3],4),
+                   "Q0.75"=round(n[4],4),
+                   "Q0.95"=round(n[5],4))
+  return(df)
+}
+

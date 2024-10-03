@@ -37,9 +37,11 @@ pathwayapp_ui <- function(request){
                                   type = "pills",
                                   tabPanel("Pathway model", value = "tab1",
                                            mod_pathway_model_ui("pathway_model")),
-                                  tabPanel("Parameters", value="tab2",
+                                  tabPanel("$N_{trade}$ data", value = "tab2",
+                                           mod_pathway_ntrade_ui("pathway_ntrade")),
+                                  tabPanel("Parameters", value="tab3",
                                            mod_pathway_parameters_ui("pathway_parameters")),
-                                  tabPanel("Results", value="tab3",
+                                  tabPanel("Results", value="tab4",
                                            mod_pathway_results_ui("pathway_results"))
                       )
              )

@@ -63,23 +63,6 @@ mod_ntrade_data_ui <- function(id){
                    shinyjs::disabled(actionButton(ns("trade_done"), "See $N_{trade}$ results"))
       ), #sidebarPanel
       mainPanel(width=9,
-                # sidebarPanel(width = 11,
-                #              fluidRow(
-                #                column(4, align = "center",
-                #                       shinyjs::disabled(actionButton(ns("ExtraTotal_plot"),
-                #                                                      HTML("Plot</br>Extra-EU Import")))
-                #                ),
-                #                column(4, align = "center",
-                #                       shinyjs::disabled(actionButton(ns("IntraEU_plot"),
-                #                                                      HTML("Plot</br> Intra-EU Trade")))
-                #                ),
-                #                column(4, align = "center",
-                #                       shinyjs::disabled(actionButton(ns("IP_plot"),
-                #                                                      HTML("Plot</br> Internal Production")))
-                #                )
-                #              )
-                # ),
-                # help text
                 fluidRow(
                   column(11,
                          div(class="warn",

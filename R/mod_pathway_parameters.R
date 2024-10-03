@@ -54,7 +54,8 @@ mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values,
                    distribution_panel(ns, i)
             ),
             column(6,
-                   plotOutput(ns(paste0("plot_pars",i)), width = "75%", height = "250px")
+                   plotOutput(ns(paste0("plot_pars",i)), width = "75%", height = "250px"),
+                   DT::dataTableOutput(ns(paste0("table_pars",i)))
             )
           )
         )
@@ -73,18 +74,35 @@ mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values,
       parameter_samples
     })
     
+    dist_q <- eventReactive(input$dist_done,{
+      pn <- parameters()
+      parameter_q <- list()
+      for(i in 1:length(pn)){
+        d <- input[[paste0("dist",i)]]
+        pars <- as.character(input[[paste0("par_",d,"_",i)]])
+        parameter_q[[i]] <- q_from_dist(d, pars)
+      }
+      names(parameter_q) <- pn
+      parameter_q 
+    })
+    
     observeEvent(input$dist_done,{
       parameter_samples <- dist_result()
       n <- length(parameter_samples)
-
+      parameter_q <- dist_q()
       lapply(1:n, function(i){
         plotname <- paste0("plot_pars",i)
+        tablename <- paste0("table_pars",i)
         d <- input[[paste0("dist",i)]]
         pars <- as.character(input[[paste0("par_",d,"_",i)]])
         output[[plotname]] <- renderPlot({
           hist(parameter_samples[[i]], main = paste0(d,"(",pars,")"), xlab = "",
                probability = TRUE, breaks = "fd", col = "lightblue")
           lines(density(parameter_samples[[i]]), col = "blue", lwd = 2)
+        })
+        output[[tablename]] <- DT::renderDataTable({
+          DT::datatable(parameter_q[[i]], rownames = NULL,
+                        options = list(dom = 't', ordering=F))
         })
       })
     })

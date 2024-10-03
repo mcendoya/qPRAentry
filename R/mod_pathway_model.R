@@ -22,63 +22,27 @@ mod_pathway_model_ui <- function(id){
                )
         )),
       br(),
-      tagList(sidebarLayout(
-             sidebarPanel(width = 6,
-                          h3("$N_{trade}$ data", style = "color:#327FB0"),
-                          fileInput(ns("ntrade_data"),
-                                    p("$N_{trade}$ data file (CSV):"),
-                                    accept = c('.csv'),
-                                    width = "50%"),
-                          h4("Column names:", style = "color:#327FB0"),
-                          fluidRow(
-                            column(9,
-                            column(6,
-                                   shinyWidgets::pickerInput(
-                                     inputId = ns("nuts"),
-                                     label = "NUTS codes:",
-                                     choices = c("Data must be uploaded"),
-                                     multiple = FALSE,
-                                     width ="fit")
-                                   ),
-                            column(6,
-                                   shinyWidgets::pickerInput(
-                                     inputId = ns("values"),
-                                     label = "Values:",
-                                     choices = c("Data must be uploaded"),
-                                     multiple = FALSE,
-                                     width ="fit")
-                                   )
-                            )
-                          )
-             ),#sidebarPanel
-             mainPanel(width=6, 
-                       fluidRow(
-                         div(class="table-container", style="height:300px;",
-                             DT::dataTableOutput(ns("data_table"))
-                         )
-                       )
-             )
-        )),
-      
-             sidebarPanel(width = 12,
-                          h3("Model parameters", style = "color:#327FB0"),
-                          fluidRow(
-                            column(6, style = "background-color: white; margin-right: 50px;",
-                                   h4(strong("Default parameters:")),
-                              column(4,
-                                     br(),
-                                     checkboxGroupInput(ns("parameters"), label=NULL,
-                                                        choiceNames =lapply(1:length(default_parameters),
-                                                                            function(x) HTML(paste0('<span style="font-size:17px;">',
-                                                                                                    default_parameters_names[x],
-                                                                                                    '</span><br><br>'))),
-                                                        choiceValues = default_parameters,
-                                                        selected = default_parameters)
-                                     ),
-                              column(8,
-                                     br(),
-                                     lapply(seq_along(default_parameters), function(i){
-                                       fluidRow(
+      sidebarPanel(width = 12,
+                   h3("Model parameters", style = "color:#327FB0"),
+                   fluidRow(
+                     column(6, style = "background-color: white; margin-right: 50px;",
+                            h4(strong("Default parameters:")),
+                            column(4,
+                                   br(),
+                                   checkboxGroupInput(ns("parameters"), label=NULL,
+                                                      choiceNames = lapply(
+                                                        1:length(default_parameters),
+                                                        function(x) HTML(paste0(
+                                                          '<span style="font-size:17px;">',
+                                                          default_parameters_names[x],
+                                                          '</span><br><br>'))),
+                                                      choiceValues = default_parameters,
+                                                      selected = default_parameters)
+                            ),
+                            column(8,
+                                   br(),
+                                   lapply(seq_along(default_parameters), function(i){
+                                     fluidRow(
                                        column(6,
                                               style = "margin-left: -50px;",
                                               shinyWidgets::pickerInput(
@@ -88,39 +52,42 @@ mod_pathway_model_ui <- function(id){
                                                 selected = "*",
                                                 multiple = FALSE,
                                                 width ="fit")
-                                              ),
+                                       ),
                                        column(6,
                                               style = "margin-left: -40px;",
-                                              HTML(paste0('<span style="font-size:17px;">$', default_parameters[i], '$</span><br>')))
-                                       )
-                                     })
+                                              HTML(paste0('<span style="font-size:17px;">$', 
+                                                          default_parameters[i], 
+                                                          '$</span><br>')))
                                      )
+                                   })
+                            )
+                     ),
+                     column(5, style = "background-color: white;",
+                            h4(strong("Add other parameters:")),
+                            br(),       
+                            fluidRow(class="inline",
+                                     numericInput(ns("extra_parameters"),
+                                                  label = "Number of parameters to add:",
+                                                  value = 0, min = 0, step = 1)
                             ),
-                          column(5, style = "background-color: white;",
-                                 h4(strong("Add other parameters:")),
-                          br(),       
-                          fluidRow(class="inline",
-                                   numericInput(ns("extra_parameters"),
-                                                label = "Number of parameters to add:",
-                                                value = 0, min = 0, step = 1)
-                          ),
-                          br(),
-                          uiOutput(ns("par_dynamic"))
-                          )
-                          ),
-                          br(),
-                          fluidRow(
-                            column(11, style = "background-color: white; margin: 20px;",
-                                   h4(strong("Pathway model:")),
-                                   uiOutput(ns("pathway_model"))
-                                   )
-                          ),
-                          br(),
-                          shinyjs::disabled(actionButton(ns("model_done"), "Done")),
-                          shinyjs::disabled(actionButton(ns("go_parameters"), "Parameters >>"))
-             )#sidebarPanel
-      )
+                            br(),
+                            uiOutput(ns("par_dynamic"))
+                     )
+                   ),
+                   br(),
+                   fluidRow(
+                     column(11, style = "background-color: white; margin: 20px;",
+                            h4(strong("Pathway model:")),
+                            uiOutput(ns("pathway_model"))
+                     )
+                   ),
+                   br(),
+                   actionButton(ns("model_done"), "Done", class="enable"),
+                   shinyjs::disabled(actionButton(ns("go_ntrade"), 
+                                                  "$N_{trade}$ data >>"))
+      )#sidebarPanel
     )
+  )
 }
 
 #' pathway_model Server Functions
@@ -130,135 +97,13 @@ mod_pathway_model_server <- function(id){
   NUTS_ID <- NULL
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-
-    session$userData$ntrade_reactive <- eventReactive(input$ntrade_data,{
-      output$message <- renderText({NULL})
-      df <- tryCatch({read_file(input$ntrade_data$datapath)
-      }, error = function(e) {
-        output$message <- renderText({e$message})
-        return(NULL)
-      })
-      return(df)
-    })
     
-    # Column names
-    observeEvent(session$userData$ntrade_reactive(),{
-      df <- session$userData$ntrade_reactive()
-      updatePickerInput(session = session,
-                        inputId = "nuts",
-                        selected = character(0),
-                        choices = sort(colnames(df)))
-      updatePickerInput(session = session,
-                        inputId = "values",
-                        selected = character(0),
-                        choices = sort(colnames(df)))
-    })
-    
-    data_complete <- reactiveVal(FALSE)
-    observe({
-      if (!is.null(input$ntrade_data)) {
-        nuts_not_empty <- !is.null(input$nuts) && input$nuts != ""
-        values_not_empty <- !is.null(input$values) && input$values != ""
-        nuts_valid <- input$nuts != "Data must be uploaded"
-        values_valid <- input$values != "Data must be uploaded"
-        
-        if (nuts_not_empty && values_not_empty && nuts_valid && values_valid) {
-          data_complete(TRUE)
-        } else {
-          data_complete(FALSE)
-        }
-      } else {
-        data_complete(FALSE)
-      }
-    })
-    
-    observeEvent(data_complete(),{
-      if(data_complete()){
-        shinyjs::enable("model_done")
-        addClass("model_done", class="enable")
-      }
-    })
-    
-    #data_errors
-    data_message <- function(df){
-      m <- c()
-      nuts <- unique(nchar(df$NUTS_ID))
-      if((length(nuts) > 1 || (nuts != 2 && nuts != 4))){
-        m <- c(m, data_ntrade_errors$nuts)
-      }else{
-        if(nuts==2){
-          if(!all(df$NUTS_ID %in% NUTS_CODES$CNTR_CODE)){
-            m <- c(m, data_ntrade_errors$nuts)
-          }
-        }else if(nuts == 4){
-          if(!all(df$NUTS_ID %in% NUTS_CODES$NUTS2_CODE)){
-            m <- c(m, data_ntrade_errors$nuts)
-          }
-        } 
-      }
-      if(!is.numeric(df$value)){
-        m <- c(m, data_ntrade_errors$values_num)
-      }
-      if(any(df$value[!is.na(df$value)]<0)){
-        m <- c(m, data_ntrade_errors$values_neg)
-      }
-      if(length(m)>0){
-        mss <- paste(m, collapse = "\n")
-      }else{
-        mss <- NULL
-      }
-      return(mss)
-    }
-    
-    ntrade_df <- eventReactive(input$model_done,{
-      output$message <- renderText({NULL})
-      if(data_complete()){
-        tryCatch({
-      df <- session$userData$ntrade_reactive()
-      user_list <- c(NUTS_ID = input$nuts,
-                     values = input$values)
-      df <- df %>%
-        select(c(input$nuts, input$values)) %>%
-        rename(all_of(user_list))
-      # data_errors
-      m <- data_message(df)
-      if (!is.null(m)) { stop(m) }
-      df <- df %>%
-        group_by(NUTS_ID) %>%
-        summarise(values = sum(values, na.rm = TRUE))
-      return(df)
-        }, error = function(e) {
-          output$message <- renderText({e$message})
-          return(NULL)
-        })
-      }
-    })
-    
-    observeEvent(input$model_done,{
-      if(is.null(ntrade_df())){
-        runjs("window.scrollTo({ top: 0, behavior: 'smooth' });")
-        }else{
-        shinyjs::enable("go_parameters")
-        addClass("go_parameters", class="enable")
-      }
-    })
-
     output$help_data <- renderUI({
-      if(!data_complete()){
-        text_ntrade_data
-      }else if(input$model_done==0){
+      if(input$model_done==0){
         text_pathwaymodel
       }else{
         text_model_done
       }
-    })
-    
-    output$data_table <- DT::renderDataTable({
-      req(!is.null(input$ntrade_data))
-      df <- read_file(input$ntrade_data$datapath)
-      numeric_columns <- names(df)[which(sapply(df, is.numeric))]
-      DT::datatable(df, options = list(dom = 't', pageLength = -1)) %>%
-        DT::formatRound(columns = numeric_columns, digits=2)
     })
 
     # Name extra parameters
@@ -270,7 +115,7 @@ mod_pathway_model_server <- function(id){
             fluidRow(
               column(4, class="inline",
                      textInput(inputId = ns(paste0("p",i)),
-                               h5(paste0("p", i," name")),
+                               h5(paste0("p", i," Name")),
                                value = paste0("p_", i),
                                width="100%")
               ),
@@ -278,7 +123,7 @@ mod_pathway_model_server <- function(id){
               column(4, style='margin-left:-10px;',
                      shinyWidgets::pickerInput(
                        inputId = ns(paste0("symbol_p_", i)),
-                       label = HTML("in the equation as &nbsp;"),
+                       label = HTML("In the equation as &nbsp;"),
                        choices = c("+","-","*","/"),
                        selected = "*",
                        multiple = FALSE,
@@ -308,7 +153,7 @@ mod_pathway_model_server <- function(id){
         param_index <- which(default_parameters == param)
         symbol <- input[[paste0("symbol_", param_index)]]
         if (!is.null(symbol)) {
-            model <- paste0(model, " ", symbol, " ", param)
+          model <- paste0(model, " ", symbol, " ", param)
         }
       }
       if(input$extra_parameters>0){
@@ -320,20 +165,22 @@ mod_pathway_model_server <- function(id){
       }
       return(model)
     })
-
+    
     model_eq <- reactiveVal(
       "N_{inf} = N_{trade} * (1/U_{weight}) * P_{prevalence} * (1 - P_{sorting}) * (1 - RRO_{effectiveness})"
     )
-
+    
     observeEvent(input$model_done,{
       model_eq(model_def())
+      shinyjs::enable("go_ntrade")
+      addClass("go_ntrade", class="enable")
     })
-
+    
     # Print model
     output$pathway_model <- renderUI({
       withMathJax(paste0("$$", model_eq(),"$$"))
     })
-
+    
     observeEvent(input$parameters,{
       if(!"(1/U_{weight})"%in%input$parameters){
         showNotification(
@@ -342,30 +189,26 @@ mod_pathway_model_server <- function(id){
           type = "warning")
       }
     })
-
+    
     get_parameters <- eventReactive(input$model_done,{
       par_names <- default_parameters_names[default_parameters %in% input$parameters]
       if(input$extra_parameters>0){
         extra_par <- c()
         for(i in 1:input$extra_parameters){
-          extra_par[i] <- reactiveValuesToList(input)[paste0("p", i)]
+          extra_par[i] <- paste0("$", input[[paste0("p", i)]], "$")
         }
         par_names <- c(par_names, extra_par)
       }
       
-      return(unlist(par_names))
+      return(par_names)
     })
-
+    
     return(
       list(
-        ntrade_data = reactive(input$ntrade_data),
-        nuts = reactive(input$nuts),
-        values = reactive(input$values),
         model_done = reactive(input$model_done),
-        go_parameters = reactive(input$go_parameters),
+        go_ntrade = reactive(input$go_ntrade),
         parameters = get_parameters,
-        model_def = model_def,
-        ntrade_df = ntrade_df
+        model_def = model_def
       )
     )
   })

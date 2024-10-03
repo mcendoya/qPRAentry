@@ -13,10 +13,13 @@ mod_pathway_results_ui <- function(id){
     fluidRow(
       column(1),
       column(10,
-             HTML('<p class="custom-text"><br>View the pathway model results (<i>N<sub>inf</sub></i>) in table or map format.<br><br> 
- <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the <strong>"Download results"</strong> 
-        button to download a zip folder including the <i>N<sub>inf</sub></i> data and the final report.<br><br>
-                  You can also return to the "Pathway model" or "Parameters" tabs to review or 
+             HTML('<p class="custom-text"><br>View the pathway model results (<i>N<sub>inf</sub></i>) 
+             in table or map format.<br><br> 
+             <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the 
+             <strong>"Download results"</strong> 
+             button to download a zip folder including the <i>N<sub>inf</sub></i> 
+             data and the final report.<br><br> 
+             You can also return to the "Pathway model" or "Parameters" tabs to review or 
                   change the input data.<br></p>'),
              br(),
              downloadButton(ns("downloadAll"), "Download results", class="enable"),
@@ -57,9 +60,20 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         names(parameter_samples) <- gsub(sym_sub[i], "", names(parameter_samples))
       }
       mat_samp <- as.matrix(do.call(cbind, parameter_samples))
+      
       # Generic function to evaluate the equation in each matrix row
       eval_equation <- function(row, equation) {
         variables <- names(row)
+        # Variables in the equation
+        parsed_equation <- parse(text = equation)
+        used_vars <- all.vars(parsed_equation)
+        # check if the variables are in the equation
+        missing_vars <- setdiff(variables, used_vars)
+        
+        # Si hay variables que no están en la ecuación, mostrar un error
+        if (length(missing_vars) > 0) {
+          stop(paste("Error: the following variables are not in the equation:", paste(missing_vars, collapse = ", ")))
+        }
         for (i in seq_along(variables)) {
           assign(variables[i], row[i])
         }
