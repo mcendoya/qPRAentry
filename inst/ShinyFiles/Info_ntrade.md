@@ -22,11 +22,7 @@ For the use of this application, trade data of the commodities of interest, i.e.
 - Quantity of commodity imported between EU countries.
 - Quantity of commodity produced in the EU countries.
 
-<span style="color:red;">
-**Suggestion: It is suggested to download these trade data from Eurostat.**
-</span>
-
-<span style="color:green;">It doesn't need to be in bold, I would change it to a sentence along the lines of “Trade data for products imported into the EU, as well as internal trade in the EU, can be found in the Eurostat database” and add the link.</span>
+Trade data for both products imported into the EU and internal EU trade can be accessed through the [Eurostat database](https://ec.europa.eu/eurostat/data/database).
 
 <br>
 
@@ -34,9 +30,7 @@ For the use of this application, trade data of the commodities of interest, i.e.
 
 <br>
 
-<span style="color:red;">
 For a given country $i$, $N_{trade}$ is calculated as follows:
-</span>
 
 For a given country $i$, $N_{trade}$ is calculated based on the quantity of commodity imported by country $i$ from non-EU countries where the pest is present, and the internal trade of this commodity, i.e., export and import between country $i$ and the other EU countries $j$. Thus, $N_{trade}$ is approached as:
 
