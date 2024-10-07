@@ -29,18 +29,19 @@ Trade data for both products imported into the EU and internal EU trade can be a
 ## Calculation of $N_{trade}$
 
 <br>
-
+<span style="color:red;">
 For a given country $i$, $N_{trade}$ is calculated as follows:
+</span>
 
-For a given country $i$, $N_{trade}$ is calculated based on the quantity of commodity imported by country $i$ from non-EU countries where the pest is present, and the internal trade of this commodity, i.e., export and import between country $i$ and the other EU countries $j$. Thus, $N_{trade}$ is approached as:
+For a given EU country $i$, $N_{trade_i}$ is calculated taking into account the quantity of commodity imported by country $i$ from non-EU countries where the pest is present, and the internal trade of this commodity, i.e., export and import between country $i$ and other EU countries $j$, $j \neq i$. Thus, $N_{trade_i}$ is approached as:
 
 $$
 N_{trade_i} = ExtraPest_i - ExtraPest_i \sum_{j \neq i} R_{ij} + \sum_{j \neq i} ExtraPest_j R_{ji},
 $$
 
+<span style="color:red;">
 where:
 
-<span style="color:red;">
 - **$ExtraPest_i$**: Quantity of non-EU commodity imported by country $i$ from countries where the pest is present.
 - **$ExtraPest_j$**: Quantity of non-EU commodity imported by country $j$ from countries where the pest is present.
 - **$R_{ij}$**: The proportion of $ExtraPest_i$ reexported from country $i$ to country $j$. This is calculated as:
@@ -59,21 +60,12 @@ where:
   where $IntraExp_{ji}$ is the quantity of commodity exported from country $j$ to country $i$, and $Total_j$ is the total quantity of commodity available in country $j$.
 </span>
 
-- **$ExtraPest_i$** and **$ExtraPest_j$**: Quantity of non-EU commodity imported from countries where the pest is present by country $i$ and country $j$, respectively.
-- **$R_{ij}$** and **$R_{ji}$**: proportion of commodity exported from one EU country to another EU country, based on the sum of internal production ($IP$) and the total import from non-EU countries ($ExtraTotal$) of the exporting country, this quantity is assumed to be the total quantity of product available in that exporting country. 
-  $$
-  R_{ij} = \frac{IntraExp_{ij}}{Total_i},
-  $$
-  where $IntraExp_{ij}$ is the quantity of commodity exported from country $i$ to country $j$, and $Total_i$ is the total quantity of commodity available in country $i$, given by:
-  $$
-  Total_i = IP_i + ExtraTotal_i
-  $$
-  Here, $IP_i$ represents the internal production in country $i$, and $ExtraTotal_i$ is the total quantity of non-EU commodity imported by country $i$.
-- **$R_{ji}$**: The proportion of $ExtraPest_j$ reexported from country $j$ to country $i$. This is calculated as:
-  $$
-  R_{ji} = \frac{IntraExp_{ji}}{Total_j},
-  $$
-  where $IntraExp_{ji}$ is the quantity of commodity exported from country $j$ to country $i$, and $Total_j$ is the total quantity of commodity available in country $j$.
+where $ExtraPest_i$ and $ExtraPest_j$ is the quantity of commodity imported from non-EU countries where the pest is present by country $i$ and country $j$, respectively. $R_{ij}$ and $R_{ji}$ represent the proportion of commodity exported from $i$ to $j$ ($IntraExp_{ij}$), and from $j$ to $i$ ($IntraExp_{ji}$), respectively, out of the total available commodity in the exporter country. This total quantity is assumed to be the internal production of the country $IP$, and the total quantity imported from non-EU countries ($ExtraTotal$), whether the pest is present or not. In this way, $R_{ij}$ and $R_{ji}$ are expressed as:
+  $$R_{ij} = \frac{IntraExp_{ij}}{IP_i + ExtraTotal_i},$$ 
+  $$R_{ji} = \frac{IntraExp_{ji}}{IP_j + ExtraTotal_j}.$$
+  
+Based on this, the quantity of $ExtraPest_i$ re-exported from country $i$ to all countries $j$ is approximated as $ExtraPest_i \sum_{j \neq i} R_{ij}$, and the quantity of $ExtraPest_j$ re-exported from all countries $j$ to country $i$ as $\sum_{j \neq i} ExtraPest_j R_{ji}$.
+  
 <br>
 
 ## $N_{trade}$ redistribution to NUTS2
