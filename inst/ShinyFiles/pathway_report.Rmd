@@ -30,7 +30,7 @@ n_iter <- params$n_iter # number of iterations
 par_settings <- params$par_settings # Parameter distributions
 dist_result <- params$dist_result # random values generated from the distributions
 Ninf <- params$Ninf # Ninf results
-NUTS_lev <- params$NUTS_lev #selected NUTS (depending on the Excel Ntrade file chosen)
+NUTS_lev <- params$nuts_level #selected NUTS (depending on the Excel Ntrade file chosen)
 
 ```
 
