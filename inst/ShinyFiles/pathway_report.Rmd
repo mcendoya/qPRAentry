@@ -30,6 +30,7 @@ n_iter <- params$n_iter # number of iterations
 par_settings <- params$par_settings # Parameter distributions
 dist_result <- params$dist_result # random values generated from the distributions
 Ninf <- params$Ninf # Ninf results
+Ninf_EU <- params$Ninf_EU # Ninf results total EU
 NUTS_lev <- params$nuts_level #selected NUTS (depending on the Excel Ntrade file chosen)
 
 ```
@@ -87,20 +88,20 @@ for (i in seq_along(param_names)) {
 ```
 
 
-# $N_{inf}$ results and download
+# $NPFP$ results and download
 
-The result of the pathway model is a dataframe with the estimated number of founder populations ($N_{inf}$) for each country of interest i.
-Below, the table below displays the $N_{inf}$ results at `r NUTS_lev` level. 
+The result of the pathway model is a dataframe with the estimated number of founder populations ($NPFP$) for each country of interest i.
+Below, the table below displays the $NPFP$ results at `r NUTS_lev` level. 
 
 
 ```{r}
 
 # Display the table
-knitr::kable(Ninf, caption = "$N_{inf}$ results", digits = 2) 
+knitr::kable(Ninf, caption = "$NPFP$ results", digits = 2) 
 
 ```
 
-The map shows the median $N_{inf}$ values by `r NUTS_lev`.
+The map shows the median $NPFP$ values by `r NUTS_lev`.
 
 ```{r}
 
@@ -113,7 +114,7 @@ The map shows the median $N_{inf}$ values by `r NUTS_lev`.
 #   )
 
 ```
-Figure 1: $N_{inf}$ values redistributed at the `r NUTS_lev` level.
+Figure 1: $NPFP$ values redistributed at the `r NUTS_lev` level.
 
 The pathway model results are available in the downloaded Pathway_results20XX-XX-XX.zip folder.
 
