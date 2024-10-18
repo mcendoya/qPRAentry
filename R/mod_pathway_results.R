@@ -51,7 +51,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
     model_solve <- eventReactive(dist_done(),{
       n_iter <- n_iter()
       equation <- model_def()
-      sym_sub <- c("N_\\{inf\\} = N_\\{trade\\} \\* ", "\\{", "\\}", "_", "\\$")
+      sym_sub <- c("NPFP = N_\\{trade\\} \\* ", "\\{", "\\}", "_", "\\$")
       for(i in 1:length(sym_sub)){
         equation <- gsub(sym_sub[i], "", equation)
       }
@@ -72,7 +72,8 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         
         # Si hay variables que no están en la ecuación, mostrar un error
         if (length(missing_vars) > 0) {
-          stop(paste("Error: the following variables are not in the equation:", paste(missing_vars, collapse = ", ")))
+          stop(paste("Error: the following variables are not in the equation:", 
+                     paste(missing_vars, collapse = ", ")))
         }
         for (i in seq_along(variables)) {
           assign(variables[i], row[i])
@@ -211,7 +212,8 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
       DT::datatable(Ninf_solve(), options = list(dom = 'ft', pageLength = -1)) %>%
         DT::formatRound(columns = 2:length(Ninf_solve()), digits=2) %>%
         DT::formatStyle(columns = "NUTS_ID", target = "cell", backgroundColor = "#F7080880") %>%
-        DT::formatStyle(columns = c("Mean","SD","Q0.05","Median","Q0.95"), target = "cell", backgroundColor = "#F7080820")
+        DT::formatStyle(columns = c("Mean","SD","Q0.05","Median","Q0.95"), target = "cell", 
+                        backgroundColor = "#F7080820")
     })
 
     output$NinfEU_table <- DT::renderDataTable({
@@ -226,8 +228,8 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
       EU00 <- EU00() %>%
         left_join(Ninf, by=join_by(NUTS_ID==NUTS_ID))
       ggiraph_plot(data = EU00, value = "Mean",
-                   name = expression(N[inf]),
-                   title = expression(paste(N[inf], " ", "Mean")),
+                   name = "NPFP",
+                   title = "NPFP Mean",
                    limits = limits,
                    tooltip = paste(EU00$NUTS_ID,
                                    "\nMean: ", round(EU00$Mean,2),

@@ -4,7 +4,7 @@
 \name{qPRAentry-package}
 \alias{qPRAentry}
 \alias{qPRAentry-package}
-\title{qPRAentry: quantitative Pest Risk Assessment entry step calculation}
+\title{qPRAentry: quantitative Pest Risk Assessment at the entry step}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 

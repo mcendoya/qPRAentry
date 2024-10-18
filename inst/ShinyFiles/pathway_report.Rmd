@@ -11,7 +11,8 @@ params:
   n_iter: NA
   dist_result: NA
   Ninf: NA
-  NUTS_lev: NA
+  Ninf_EU: NA
+  nuts_level: NA
 ---
 
 ```{r setup, include=FALSE}
@@ -104,25 +105,26 @@ for (i in seq_along(param_names)) {
 ```
 
 
-# $NPFP$ results and download
+# $\mathit{NPFP}$ results and download
 
 The result of the pathway model is a data frame with the estimated number of 
-potential founder populations ($NPFP$) for each country of interest i.
-The table below displays the $NPFP$ results at `r NUTS_lev` level. 
+potential founder populations $(\mathit{NPFP})$ for each country of interest i.
+The table below displays the $\mathit{NPFP}$ results at NUTS`r NUTS_lev` level. 
 
 
 ```{r}
 
 # Display the table
-knitr::kable(Ninf, caption = "$NPFP$ results", digits = 2) 
+knitr::kable(Ninf, caption = "NPFP results", digits = 2) 
 
 ```
 
-The map shows the median $NPFP$ values by `r NUTS_lev`.
+The map shows the median $\mathit{NPFP}$ values by NUTS`r NUTS_lev`.
 
 ```{r}
 
-plot_nuts(Ninf, NUTS_lev, "Median", title = bquote(N[inf] ~ " Median")) +
+plot_nuts(Ninf, "NUTS_ID", "Median", nuts_level = NUTS_lev,
+          title = "NPFP Median") +
    xlim(-20, 40) + ylim(35,70) +
    theme_bw()+
   theme(
@@ -131,7 +133,7 @@ plot_nuts(Ninf, NUTS_lev, "Median", title = bquote(N[inf] ~ " Median")) +
    )
 
 ```
-Figure 1: $NPFP$ values redistributed at the `r NUTS_lev` level.
+Figure 1: $\mathit{NPFP}$ values redistributed at the NUTS`r NUTS_lev` level.
 
 The pathway model results are available in the downloaded Pathway_results20XX-XX-XX.zip folder.
 
