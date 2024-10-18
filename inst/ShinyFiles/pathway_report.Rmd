@@ -38,15 +38,29 @@ NUTS_lev <- params$nuts_level #selected NUTS (depending on the Excel Ntrade file
 
 # Introduction
 
-This report presents the results of the pathway model analysis conducted using the Pathway model Shiny application. Data were processed employing the *qPRAentry* package.
+This report presents the results of the pathway model analysis conducted using 
+the Pathway model Shiny app. Data were processed employing the *qPRAentry* 
+package.
 
-The pathway model provides an estimation of the number of pest individuals, spores, or propagules entering a risk assessment area through various trade pathways.
+The pathway model provides an estimation of the number of pest individuals, spores, 
+or propagules entering a risk assessment area through various trade pathways.
 
-The European Food Safety Authority (EFSA) utilises pathway models to evaluate the risk of pests entering the EU territories. The complexity of the pathway model can vary based on factors such as the specific pest under consideration and the availability of detailed data.
+The European Food Safety Authority (EFSA) utilises pathway models to evaluate the 
+risk of pests entering the EU territories. The complexity of the pathway model 
+can vary based on factors such as the specific pest under consideration and the 
+availability of detailed data.
 
-The pathway model essentially multiplies the trade flow data by several factors that account for pest prevalence in the traded products and the effectiveness of entry processes in mitigating pest introduction, from the source country of origin to the EU. Additional information can be found in the EFSA Guidance on quantitative pest risk assessment [@efsa2018guidance].
+The pathway model essentially multiplies the trade flow data by several factors 
+that account for pest prevalence in the traded products and the effectiveness 
+of entry processes in mitigating pest introduction, from the source country of 
+origin to the EU. Additional information can be found in the EFSA Guidance on 
+quantitative pest risk assessment [@efsa2018guidance].
 
-Due to the challenges in obtaining precise data for each stage of a pest risk assessment, Expert Knowledge Elicitation (EKE) is often employed to estimate the values of the pathway model parameters [@efsa2018guidance]. EKE is a structured process that gathers and utilises expert knowledge to make informed decisions, especially when empirical data is limited [@european2014guidance].
+Due to the challenges in obtaining precise data for each stage of a pest risk assessment, 
+Expert Knowledge Elicitation (EKE) is often employed to estimate the values of 
+the pathway model parameters [@efsa2018guidance]. EKE is a structured process 
+that gathers and utilises expert knowledge to make informed decisions, 
+especially when empirical data is limited [@european2014guidance].
 
 
 
@@ -56,9 +70,11 @@ The constructed pathway model and its corresponding parameters are presented bel
 
 `r paste0("$$", model_def, "$$")`
 
-The $N_{trade}$ data used in the model have been previously calculated using the $N_{trade}$ Shiny application, part of the *qPRAentry* package.
+The $N_{trade}$ data used in the model have been previously calculated using 
+the $N_{trade}$ Shiny application, part of the *qPRAentry* package.
 
-A total of `r n_iter` iterations were performed to randomly generate parameter values based on the specified distribution.
+A total of `r n_iter` iterations were performed to randomly generate parameter 
+values based on the specified distribution.
 
 ### Parameters: 
 
@@ -90,8 +106,9 @@ for (i in seq_along(param_names)) {
 
 # $NPFP$ results and download
 
-The result of the pathway model is a dataframe with the estimated number of founder populations ($NPFP$) for each country of interest i.
-Below, the table below displays the $NPFP$ results at `r NUTS_lev` level. 
+The result of the pathway model is a data frame with the estimated number of 
+potential founder populations ($NPFP$) for each country of interest i.
+The table below displays the $NPFP$ results at `r NUTS_lev` level. 
 
 
 ```{r}
@@ -105,13 +122,13 @@ The map shows the median $NPFP$ values by `r NUTS_lev`.
 
 ```{r}
 
-#plot_nuts(Ninf, NUTS_lev, "Median", title = bquote(N[inf] ~ " Median")) +
-#   xlim(-20, 40) + ylim(35,70) +
-#   theme_bw()+
-#  theme(
-#     plot.title = element_text(size = 14),
-#     legend.title = element_text(size = 12)
-#   )
+plot_nuts(Ninf, NUTS_lev, "Median", title = bquote(N[inf] ~ " Median")) +
+   xlim(-20, 40) + ylim(35,70) +
+   theme_bw()+
+  theme(
+     plot.title = element_text(size = 14),
+     legend.title = element_text(size = 12)
+   )
 
 ```
 Figure 1: $NPFP$ values redistributed at the `r NUTS_lev` level.

@@ -4,7 +4,7 @@ output:
   pdf_document: default
 ---
 
-# Overview of $N_{trade}$ Shiny application
+# Overview of $N_{trade}$ Shiny app
 
 <hr style="border:1px solid #1E68BA">
 <br>
