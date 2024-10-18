@@ -21,6 +21,19 @@ code{
   
 }
 
+.nav > li > a {
+  padding: 2vh 3vw;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.navbar-nav li a:hover, .navbar-nav > .active > a {
+color: #fff !important;
+
+background-color:#2b8cc4 !important;
+background-image: none !important;
+}
+
 .nav-pills > li > a {
   min-width: 145px;
   text-align: center;
