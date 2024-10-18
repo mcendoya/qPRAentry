@@ -293,7 +293,8 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
                        n_iter = n_iter(),
                        par_settings = par_settings(),
                        dist_result = dist_result(),
-                       Ninf = Ninf_solve())
+                       Ninf = Ninf_solve(),
+                       Ninf_EU = Ninf_EU())
         
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document
