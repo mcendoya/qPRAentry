@@ -56,9 +56,7 @@ $$
 N_{trade_i} = ExtraPest_i - ExtraPest_i \sum_{j \neq i} R_{ij} + \sum_{j \neq i} ExtraPest_j R_{ji},
 $$
 
-Where:
-
-$ExtraPest_i$ and $ExtraPest_j$ are the quantity of commodity imported from 
+Where: $ExtraPest_i$ and $ExtraPest_j$ are the quantity of commodity imported from 
 non-EU countries where the pest is present by country $i$ and country $j$, respectively. 
 $R_{ij}$ and $R_{ji}$ represent the proportion of commodity exported from $i$ 
 to $j$ ($IntraExp_{ij}$), and from $j$ to $i$ ($IntraExp_{ji}$), respectively, 
@@ -68,10 +66,12 @@ the total quantity imported from non-EU countries ($ExtraTotal$),
 regardless of whether the pest is present. Thus, the ratios $R_{ij}$ and $R_{ji}$ 
 are defined as: 
 
-  $$R_{ij} = \frac{IntraExp_{ij}}{IP_i + ExtraTotal_i},$$ 
+  $$R_{ij} = \frac{IntraExp_{ij}}{IP_i + ExtraTotal_i},$$
+  
   $$R_{ji} = \frac{IntraExp_{ji}}{IP_j + ExtraTotal_j}.$$
+  
 
-Based on these ratios, the quantity of $ExtraPest_i$ re-exported from country $i$ 
+Based on these proportions, the quantity of $ExtraPest_i$ re-exported from country $i$ 
 to all countries $j$ is approximated by $ExtraPest_i \sum_{j \neq i} R_{ij}$, 
 while the quantity of $ExtraPest_j$ re-exported from all countries $j$ to country 
 $i$ is estimated as $\sum_{j \neq i} ExtraPest_j R_{ji}$.

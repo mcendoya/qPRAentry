@@ -28,7 +28,7 @@ potential carriers of the target pests, are required. The trade data required ar
 - Quantity of commodity imported between EU countries.
 - Quantity of commodity produced in the EU countries.
 
-Trade data for both products imported into the EU and internal EU trade can be accessed 
+All the trade data required can be accessed 
 through the [Eurostat database](https://ec.europa.eu/eurostat/data/database).
 
 <br>
@@ -82,7 +82,7 @@ Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
    [population data](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3) 
    is sourced from Eurostat and is already integrated into the application.
    
-   - **How It works:** The $N_{trade_i}$ value for a country $i$ is redistributed 
+   - **How it works:** The $N_{trade_i}$ value for a country $i$ is redistributed 
    to its respective NUTS2 regions $k$. This redistribution is done proportionally 
    based on the population of each region $k$. Thus, the quantity allocated to a specific 
    region $k$ is calculated as $N_{trade_k} = N_{trade_i} \cdot (Population_k / Population_i)$.
@@ -94,7 +94,7 @@ Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
    redistribution based on custom data. Users can upload their own dataset containing 
    specific values for each NUTS2 region.
    
-   - **How It works:** Users upload a file containing the NUTS2 codes along with the 
+   - **How it works:** Users upload a file containing the NUTS2 codes along with the 
    corresponding values from which $N_{trade}$ will be proportionally redistributed 
    (e.g., consumption data). The application will then use this custom dataset to redistribute 
    the $N_{trade_i}$ value for a country $i$ to its respective NUTS2 regions $k$ proportionally 
