@@ -144,10 +144,10 @@ mod_pathway_model_server <- function(id){
     
     # Model equation
     model_def <- eventReactive(input$model_done,{
-      model <- "N_{inf} = N_{trade}"
+      model <- "NPFP = N_{trade}"
       selected_parameters <- input$parameters
       if (is.null(selected_parameters)){
-        model <- "N_{inf} = N_{trade}"
+        model <- "NPFP = N_{trade}"
       }
       for (param in selected_parameters) {
         param_index <- which(default_parameters == param)
@@ -167,7 +167,7 @@ mod_pathway_model_server <- function(id){
     })
     
     model_eq <- reactiveVal(
-      "N_{inf} = N_{trade} * (1/U_{weight}) * P_{prevalence} * (1 - P_{sorting}) * (1 - RRO_{effectiveness})"
+      "NPFP = N_{trade} * (1/U_{weight}) * P_{prevalence} * (1 - P_{sorting}) * (1 - RRO_{effectiveness})"
     )
     
     observeEvent(input$model_done,{
@@ -185,7 +185,7 @@ mod_pathway_model_server <- function(id){
       if(!"(1/U_{weight})"%in%input$parameters){
         showNotification(
           withMathJax("A a parameter must be added to convert units from $N_{trade}$
-                       (weight units) to $N_{inf}$ (number of potential founder populations)"),
+                       (weight units) to $NPFP$ (number of potential founder populations)"),
           type = "warning")
       }
     })

@@ -1,6 +1,6 @@
 Package: qPRAentry
 Type: Package
-Title: quantitative Pest Risk Assessment entry step calculation
+Title: quantitative Pest Risk Assessment at the entry step
 Version: 0.1.0
 Authors@R: c(
     person("Martina", "Cendoya", email = "cendoya_marmar@gva.es", role = c("aut", "cre"),
