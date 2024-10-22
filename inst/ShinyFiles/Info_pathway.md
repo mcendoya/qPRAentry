@@ -34,7 +34,7 @@ The pathway model equation to estimate the $\mathit{NPFP}$ in each country/regio
 must first be established. 
 
 The application provides by default the model with the parameters frequently 
-used in EFSA's qPRAs [EFSA 2018 guidelines](https://doi.org/10.2903/j.efsa.2018.5350). 
+used in EFSA's quantitative Pest Risk Assessments ([EFSA 2018 guidelines](https://doi.org/10.2903/j.efsa.2018.5350)). 
 However, users can deselect these default parameters and/or add new ones.
 When adding new parameters, their roles in the model equation must be specified, 
 including the symbol for their incorporation into the model 
