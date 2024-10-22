@@ -82,9 +82,8 @@ mod_pathway_model_ui <- function(id){
                      )
                    ),
                    br(),
-                   actionButton(ns("model_done"), "Done", class="enable"),
-                   shinyjs::disabled(actionButton(ns("go_ntrade"), 
-                                                  "$N_{trade}$ data >>"))
+                   actionButton(ns("model_done"), "Done", class="enable",
+                                style='width:100px; font-size:17px')
       )#sidebarPanel
     )
   )
@@ -115,7 +114,7 @@ mod_pathway_model_server <- function(id){
             fluidRow(
               column(4, class="inline",
                      textInput(inputId = ns(paste0("p",i)),
-                               h5(paste0("p", i," Name")),
+                               paste0("p", i, " Name"),
                                value = paste0("p_", i),
                                width="100%")
               ),
@@ -172,8 +171,6 @@ mod_pathway_model_server <- function(id){
     
     observeEvent(input$model_done,{
       model_eq(model_def())
-      shinyjs::enable("go_ntrade")
-      addClass("go_ntrade", class="enable")
     })
     
     # Print model
@@ -206,7 +203,6 @@ mod_pathway_model_server <- function(id){
     return(
       list(
         model_done = reactive(input$model_done),
-        go_ntrade = reactive(input$go_ntrade),
         parameters = get_parameters,
         model_def = model_def
       )

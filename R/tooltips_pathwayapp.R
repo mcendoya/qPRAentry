@@ -1,27 +1,8 @@
 # Help text pathway app
 # pathway model tab
-text_ntrade_data <- HTML('<p class="custom-text">
-          <ul class="custom-text">
-          <li><strong>Upload data file:</strong> Please upload your data file in CSV format.</li>
-          <li><strong>Column selection:</strong>
-            <ul style="margin-right:10px;">
-              <li><strong>NUTS codes:</strong> Select the column that contains the NUTS codes, 
-              which may be at the country level (NUTS0) or regional level (NUTS2) for the EU countries or regions of interest.</li>
-              <li><strong>Values:</strong> Choose the column that includes the <i>N<sub>trade</sub></i> values.</li>
-            </ul>
-          </li>
-          </ul>
-          </p>')
-
-text_data_done <- HTML('<p class="custom-text">Note: If you make any changes to the trade data 
-                        (such as uploading new data, selecting different columns, or making adjustments 
-                        to existing columns), you must press <strong>Done</strong> again to apply 
-                        and update these changes.<br> 
-                        Once you have verified the data, click on <strong>Parameters >></strong><br></p>')
-
 text_pathwaymodel <-
   HTML(
-  '<p class="custom-text">
+    '<p class="custom-text">
   Select the appropriate parameters for the pathway model. You can choose to 
   include or exclude <strong>default parameters</strong> and add new parameters as needed.
   <br><br>
@@ -48,7 +29,7 @@ text_pathwaymodel <-
           <ul>
             <li>Example: <code>((p1*100)</code>, <code>(1-p2))</code></li>
           </ul>
-        <li>Ensure that the parameter name matches exactly what was entered in <strong>Parameter Name</strong>.</li>
+        <li>Ensure that the parameter name in the equation matches exactly what was entered in <strong>Parameter Name</strong>.</li>
       </ul>
     </li>
   </ul>
@@ -57,17 +38,40 @@ text_pathwaymodel <-
   </p>'
   )
 
-# When adding new parameters, 
-# specify their role in the model equation, such as defining 
-# them as a multiplying factor or another type of contribution.<br><br> 
-#   After configuring the settings, press <strong>Done</strong> 
-#   to apply and finalise your selections.
 
 text_model_done <- HTML('<p class="custom-text">
                         Note: If you modify the pathway model parameters, you must 
-                        press <strong>Done</strong> again to apply and update these changes.<br>
-                        Once you have completed the equation, click on <strong>Parameters >></strong> 
-                        to go to the Parameters tab.<br></p>')
+                        press <strong>Done</strong> again to apply and update these changes.<br><br>
+                        <i class="fa-solid fa-star" style="color: #63E6BE;"></i>
+                        Once you have completed the equation, you can go to the 
+                        <strong style="color: #1E68BA;"><i>N<sub>trade</sub></i> data</strong> 
+                        tab to to proceed with the data upload.<br></p>')
+# Ntrade data tab
+
+
+text_ntrade_data <- HTML('<p class="custom-text">
+          <ul class="custom-text">
+          <li><strong>Upload data file:</strong> Please upload your data file in CSV format.</li>
+          <li><strong>Column selection:</strong>
+            <ul style="margin-right:10px;">
+              <li><strong>NUTS codes:</strong> Select the column that contains the NUTS codes, 
+              which may be at the country level (NUTS0) or regional level (NUTS2) for the EU 
+              countries or regions of interest.</li>
+              <li><strong>Values:</strong> Choose the column that includes the <i>N<sub>trade</sub></i> values.</li>
+            </ul>
+          </li>
+          </ul>
+          </p>')
+
+text_data_done <- HTML('<p class="custom-text">Note: If you make any changes to the trade data 
+                        (such as uploading new data, selecting different columns, or making adjustments 
+                        to existing columns), you must press <strong>Done</strong> again to apply 
+                        and update these changes.<br><br>
+                        <i class="fa-solid fa-star" style="color: #63E6BE;"></i>
+                        Once you have verified the data, you can go to the <strong style="color: #1E68BA;">
+                        Parameters</strong> tab.<br></p>')
+
+
 
 # data errors
 data_ntrade_errors <- list(
@@ -99,8 +103,7 @@ text_parameters <- HTML('<p class="custom-text">
                 </ul>
         </li>
           <li>Once all parameters have been set, you can click on the <strong>Done</strong> button to save the current configuration. 
-          After clicking, for each parameter, the distribution histograms will be displayed next to the parameter. 
-          Furthermore, the button <strong>Results >></strong> will be now accessible.</li>
+          After clicking, for each parameter, the distribution histograms will be displayed next to the parameter.</li>
             </ul>
           </li>
           </ul>
@@ -111,5 +114,6 @@ text_parametersDone <- HTML('<p class="custom-text">
                             or the parameter distribution, please press <strong>Done</strong> 
                             again to apply the changes.<br><br>
                             <i class="fa-solid fa-star" style="color: #63E6BE;"></i>
-                            Click on <strong>"Results >>"</strong> to go to the Results tab.<br></p>'
+                            After checking the distributions, you can go to the 
+                            <strong style="color: #1E68BA;">Results</strong> tab.<br></p>'
 )

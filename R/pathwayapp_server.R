@@ -33,26 +33,14 @@ pathwayapp_server <- function(input, output, session) {
     shinyjs::runjs("document.querySelector('a[data-value=\"tab2\"]').classList.remove('disabled-tab');")
   })
   
-  observeEvent(model$go_ntrade(),{
-    updateTabsetPanel(session, "pathway_tabs", selected = "tab2" )
-  })
-  
   observeEvent(ntrade_data$data_done(),{
     shinyjs::enable(selector = 'a[data-value="tab3"]')
     shinyjs::runjs("document.querySelector('a[data-value=\"tab3\"]').classList.remove('disabled-tab');")
-  })
-  
-  observeEvent(ntrade_data$go_parameters(),{
-    updateTabsetPanel(session, "pathway_tabs", selected = "tab3" )
   })
 
   observeEvent(parameters$dist_done(),{
     shinyjs::enable(selector = 'a[data-value="tab4"]')
     shinyjs::runjs("document.querySelector('a[data-value=\"tab4\"]').classList.remove('disabled-tab');")
-  })
-
-  observeEvent(parameters$go_results(),{
-    updateTabsetPanel(session, "pathway_tabs", selected = "tab4")
   })
 
   observeEvent(c(ntrade_data$ntrade_data(), ntrade_data$nuts(), ntrade_data$values(), 

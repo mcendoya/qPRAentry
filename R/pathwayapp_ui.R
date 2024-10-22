@@ -35,7 +35,7 @@ pathwayapp_ui <- function(request){
                       icon = icon("chart-line", "fa-pull-right"),
                       tabsetPanel(id = "pathway_tabs",
                                   type = "pills",
-                                  tabPanel("Pathway model", value = "tab1",
+                                  tabPanel("Model", value = "tab1",
                                            mod_pathway_model_ui("pathway_model")),
                                   tabPanel("$N_{trade}$ data", value = "tab2",
                                            mod_pathway_ntrade_ui("pathway_ntrade")),

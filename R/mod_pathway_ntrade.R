@@ -24,9 +24,9 @@ mod_pathway_ntrade_ui <- function(id){
       br(),
       tagList(sidebarLayout(
         sidebarPanel(width = 6,
-                     h3("$N_{trade}$ data", style = "color:#327FB0"),
+                     h4("$N_{trade}$ data file (CSV)", style = "color:#327FB0"),
                      fileInput(ns("ntrade_data"),
-                               p("$N_{trade}$ data file (CSV):"),
+                               label=NULL,
                                accept = c('.csv'),
                                width = "50%"),
                      h4("Column names:", style = "color:#327FB0"),
@@ -49,7 +49,10 @@ mod_pathway_ntrade_ui <- function(id){
                                        width ="fit")
                               )
                        )
-                     )
+                     ),
+                     br(),
+                     shinyjs::disabled(actionButton(ns("data_done"), "Done", 
+                                                    style='width:100px; font-size:17px'))
         ),#sidebarPanel
         mainPanel(width=6, 
                   fluidRow(
@@ -58,12 +61,7 @@ mod_pathway_ntrade_ui <- function(id){
                     )
                   )
         )
-      )),
-      
-      sidebarPanel(width = 12,
-                   shinyjs::disabled(actionButton(ns("data_done"), "Done")),
-                   shinyjs::disabled(actionButton(ns("go_parameters"), "Parameters >>"))
-      )#sidebarPanel
+      ))
     )
   )
 }
@@ -182,9 +180,6 @@ mod_pathway_ntrade_server <- function(id){
     observeEvent(input$data_done,{
       if(is.null(ntrade_df())){
         runjs("window.scrollTo({ top: 0, behavior: 'smooth' });")
-      }else{
-        shinyjs::enable("go_parameters")
-        addClass("go_parameters", class="enable")
       }
     })
     
@@ -211,7 +206,6 @@ mod_pathway_ntrade_server <- function(id){
         nuts = reactive(input$nuts),
         values = reactive(input$values),
         data_done = reactive(input$data_done),
-        go_parameters = reactive(input$go_parameters),
         ntrade_df = ntrade_df
       )
     )

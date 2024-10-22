@@ -24,8 +24,8 @@ mod_pathway_parameters_ui <- function(id){
       ),
       br(),
       uiOutput(ns("pars")),
-      actionButton(ns("dist_done"), "Done", class="enable"),
-      shinyjs::disabled(actionButton(ns("go_results"), "Results >>"))
+      actionButton(ns("dist_done"), "Done", class="enable",
+                   style='width:100px; font-size:17px')
     )
   )
 }
@@ -110,14 +110,10 @@ mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values,
     go_results_state <- reactiveValues(is_enabled = FALSE)
     
     observeEvent(input$dist_done,{
-      shinyjs::enable("go_results")
-      addClass("go_results", class="enable")
       go_results_state$is_enabled <- TRUE
     })
 
     observeEvent(c(ntrade_data(), nuts(), values(), model_done()),{
-      shinyjs::disable("go_results")
-      removeClass("go_results", class="enable")
       go_results_state$is_enabled <- FALSE
     })
     
@@ -143,7 +139,6 @@ mod_pathway_parameters_server <- function(id, ntrade_data, nuts, values,
       list(
         dist_done = reactive(input$dist_done),
         n_iter = reactive(input$n_iter),
-        go_results = reactive(input$go_results),
         par_settings = par_settings,
         dist_result = dist_result
       )
