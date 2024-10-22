@@ -28,27 +28,27 @@ function, install the `qPRAentry` package.
 
 <br>
 
-### Data and parameter requirements
+## Data and parameter requirements
 <br>
 
 In order to built and execute the pathway model, the following inputs are required:
 
-- **$N_{trade}$ data**: This represents the total quantity of commodities imported by 
+- **$N_{trade}$ data**: Total quantity of commodities imported by 
 a country or region from third countries where the pest is present.
 The use of the $N_{trade}$ Shiny app is recommended for the calculation of 
-$N_{trade}$ data at the national level (NUTS0) or the regional level (NUTS2).
-- **User-defined parameters**: The model uses additional parameters to estimate 
-the $\mathit{NPFP}$ in each country/region. These parameters can either be:
-  - **Default parameters**: The application comes pre-loaded with commonly used parameters 
-  based on the [EFSA 2018 guidelines](https://doi.org/10.2903/j.efsa.2018.5350).
-  - **Custom Parameters**: Users have the flexibility to deselect the pre-loaded 
-  parameters and add new ones. When adding new parameters, their role in the model 
-  equation has to be specified, such as defining them as a multiplying factor 
-  or another type of contribution.
-  - **Parameter distribution**: The distribution type for each parameter needs 
-  to be defined. The distributions and shape of the parameters can come from 
-  the Expert Knowledge Elicitation (EKE) 
-  ([EFSA 2018 guidelines](https://doi.org/10.2903/j.efsa.2018.5350)). 
+$N_{trade}$ data at NUTS0 or NUTS2 level.
+
+- **User-defined pathway model**: Model to estimate the $\mathit{NPFP}$ in each country/region.
+The application provides by default the model 
+with the parameters frequently used in EFSA's qPRAs [(EFSA 2018 guidelines)](https://doi.org/10.2903/j.efsa.2018.5350).
+The model specification is flexible, so that users can deselect default parameters and/or 
+add new parameters. When adding new parameters, the symbol for their incorporation into the 
+model and whether they require transformation must be specified. 
+
+- **Parameter distribution**: The distribution type for each parameter needs 
+to be defined. The distributions and shape of the parameters can come from 
+the Expert Knowledge Elicitation (EKE) 
+([EFSA 2018 guidelines](https://doi.org/10.2903/j.efsa.2018.5350)). 
 
 <br>
 
