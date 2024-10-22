@@ -14,13 +14,12 @@ founder populations $(\mathit{NPFP})$ of a pest in different regions, using
 $N_{trade}$ data combined with additional user-defined parameters.
 
 
-The pathway model is tailored for use with European countries, either at the 
-national level (NUTS0) 
-or the regional level (NUTS2), as classified by the 
-[NUTS - Nomenclature of Territorial Units for Statistics](https://ec.europa.eu/eurostat/web/nuts), 
-including the European Union Member States, EFTA countries, 
-and candidate countries and potential candidates. 
-Note that it is not necessary to consider all countries included in this list.
+The pathway model is tailored for application within European countries, 
+either at the national level (NUTS0) or the regional level (NUTS2), as classified by the 
+[NUTS - Nomenclature of Territorial Units for Statistics](https://ec.europa.eu/eurostat/web/nuts) classification. This includes all European Union Member States, EFTA countries,
+candidate countries and potential candidates. 
+It is important to note that it is not necessary to include all countries 
+included in this list.
 
 For countries outside of Europe, the pathway model can be applied using the `pathway_model` 
 function from the `qPRAentry` package in R. In order to use the `pathway_model` 
@@ -31,23 +30,25 @@ function, install the `qPRAentry` package.
 ## Data and parameter requirements
 <br>
 
-In order to built and execute the pathway model, the following inputs are required:
+The pathway model equation to estimate the $\mathit{NPFP}$ in each country/region 
+must first be established. 
 
+The application provides by default the model with the parameters frequently 
+used in EFSA's qPRAs [EFSA 2018 guidelines](https://doi.org/10.2903/j.efsa.2018.5350). 
+However, users can deselect these default parameters and/or add new ones.
+When adding new parameters, their roles in the model equation must be specified, 
+including the symbol for their incorporation into the model 
+and whether they require transformation.
+
+
+Once the equation has been established, the following inputs are required:
 - **$N_{trade}$ data**: Total quantity of commodities imported by 
-a country or region from third countries where the pest is present.
+a country or region from third countries where the pest of interest is present.
 The use of the $N_{trade}$ Shiny app is recommended for the calculation of 
 $N_{trade}$ data at NUTS0 or NUTS2 level.
-
-- **User-defined pathway model**: Model to estimate the $\mathit{NPFP}$ in each country/region.
-The application provides by default the model 
-with the parameters frequently used in EFSA's qPRAs [(EFSA 2018 guidelines)](https://doi.org/10.2903/j.efsa.2018.5350).
-The model specification is flexible, so that users can deselect default parameters and/or 
-add new parameters. When adding new parameters, the symbol for their incorporation into the 
-model and whether they require transformation must be specified. 
-
-- **Parameter distribution**: The distribution type for each parameter needs 
-to be defined. The distributions and shape of the parameters can come from 
-the Expert Knowledge Elicitation (EKE) 
+- **Parameter distribution**: The distribution type for each of the chosen 
+parameter needs to be defined. The distributions and shape of the parameters 
+can come from the Expert Knowledge Elicitation (EKE)
 ([EFSA 2018 guidelines](https://doi.org/10.2903/j.efsa.2018.5350)). 
 
 <br>
@@ -57,7 +58,7 @@ the Expert Knowledge Elicitation (EKE)
 
 <br>
 
-Upon completion of the analysis, the user will have the option to download a 
+Upon completion of the analysis, the user have the option to download a 
 ZIP file containing:
 
 - A comprehensive PDF report summarising the analysis results
