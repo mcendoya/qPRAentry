@@ -36,28 +36,28 @@ mod_ntrade_results_ui <- function(id){
 #'
 #' @noRd
 mod_ntrade_results_server <- function(id, trade_done, time_period, units, TradeData){
-  IDs <- q0.05 <- q0.95 <- CNTR_CODE <- CNTR_NAME <- NUTS_ID <- Median <- NULL
+  country_IDs <- q0.05 <- q0.95 <- CNTR_CODE <- CNTR_NAME <- NUTS_ID <- Median <- NULL
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     Nt <- eventReactive(trade_done(),{
       trade <- TradeData()
       if(length(time_period())>1){
-        res <- ntrade(trade = trade,
-                      summarize_ntrade = c("quantile(0.05)", "median", "quantile(0.95)",
+        res <- ntrade(trade_data = trade,
+                      summarise_result = c("quantile(0.05)", "median", "quantile(0.95)",
                                            "mean", "sd"))
         res <- res %>%
-          relocate(IDs, q0.05, median, q0.95, mean, sd) %>%
-          rename(NUTS0 = IDs,
+          relocate(country_IDs, q0.05, median, q0.95, mean, sd) %>%
+          rename(NUTS0 = country_IDs,
                  Q0.05 = q0.05,
                  Median = median,
                  Q0.95 = q0.95,
                  Mean = mean,
                  SD = sd)
       }else{
-        res <- ntrade(trade = trade)
+        res <- ntrade(trade_data = trade)
         res <- res %>%
-          relocate(IDs) %>%
-          rename(NUTS0 = IDs)
+          relocate(country_IDs) %>%
+          rename(NUTS0 = country_IDs)
       }
       res <- res %>% 
         left_join(select(NUTS_CODES, CNTR_CODE, CNTR_NAME)%>% distinct(),

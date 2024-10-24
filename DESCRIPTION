@@ -33,6 +33,7 @@ Imports:
     ggplot2,
     giscoR,
     knitr,
+    magrittr,
     purrr,
     rmarkdown,
     sf,
@@ -40,6 +41,7 @@ Imports:
     shinycssloaders,
     shinyjs,
     shinyWidgets,
+    stats,
     tidyr
 Suggests: 
     testthat (>= 3.0.0)

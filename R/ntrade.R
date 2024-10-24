@@ -25,25 +25,28 @@
 #' in the \eqn{MS_i} or \eqn{MS_j}.
 #' }
 #'
-#' @param trade An object of class `TradeData` that can be the output of \code{\link{trade_data}}.
-#' @param IDs A vector containing the identification codes of the countries of interest.
-#' @param select_period A vector specifying the time periods to be selected (from the \code{time_period} column).
-#'   By default, it is set to NULL, meaning all periods in the trade data will be considered.
-#' @param summarize_ntrade A character vector specifying functions to summarize the \eqn{N_{trade}} result
-#'   for the selected time periods (\code{select_period}). It accepts the expressions \code{"mean"} for the mean, 
+#' @param trade_data An object of class `TradeData` that can be the output of \code{\link{trade_data}}.
+#' @param filter_IDs A vector containing the country IDs to filter (identification codes 
+#' of the countries of interest). By default, it is set to \code{NULL}, meaning all 
+#' \code{reporter} countries in the data frames will be considered.
+#' @param filter_period A vector specifying the time periods to filter, based on 
+#' the \code{time_period} column. By default, it is set to \code{NULL}, meaning 
+#' all time periods in the data frames will be considered.
+#' @param summarise_result A character vector specifying functions to summarise the \eqn{N_{trade}} result
+#'   for the selected time periods (\code{filter_period}). It accepts the expressions \code{"mean"} for the mean, 
 #'   \code{"sd"} for the standard deviation, "median" for the median value and
 #'   \code{"quantile(p)"} where \code{p} is the probability for the quantiles to the given probabilities. See examples.
 #'
-#' @return A data frame with the quantity of commodity imported by each ID from countries or regions
-#'   where the pest is present. The result is returned for each time period if \code{summarize_ntrade} is not specified
-#'   (default is NULL). If a summary function is specified, the result will be summarized accordingly.
+#' @return A data frame with the quantity of commodity imported by each countrie of interest 
+#' from countries or regions where the pest is present. The result is returned for each 
+#' time period if \code{summarise_result} is not specified (default is NULL). 
+#' If a summary function is specified, the result will be summarised accordingly.
 #'
 #' @export
 #'
 #' @examples
 #' ## Example with simulated trade data for Northern America
 #' data("datatrade_NA")
-#' library(dplyr)
 #' # Total extra-import data: data contains imports from 5 third countries (column partner). 
 #' extra_total <- datatrade_NA$extra_import
 #' # Extra-import data from countries where the pest is present (e.g., CNTR_1 and CNTR_2)
@@ -59,19 +62,18 @@
 #'                        intra_trade = intra_trade,
 #'                        internal_production = internal_production)
 #' # Calculation of the Ntrade for each time period
-#' ntrade_NA <- ntrade(trade = trade_NA)
+#' ntrade_NA <- ntrade(trade_data = trade_NA)
 #' head(ntrade_NA)
 #' # Ntrade summary for the time periods
-#' ntrade_NA_summary <- ntrade(trade = trade_NA,
-#'                             summarize_ntrade = c("mean", "sd", 
+#' ntrade_NA_summary <- ntrade(trade_data = trade_NA,
+#'                             summarise_result = c("mean", "sd", 
 #'                                                  "quantile(0.025)", 
 #'                                                  "median",
 #'                                                  "quantile(0.975)"))
 #' head(ntrade_NA_summary)
 #' # Plot the median of Ntrade
-#' library(ggplot2)
 #' plot_countries(data = ntrade_NA_summary,
-#'                IDs_column = "IDs", 
+#'                IDs_column = "country_IDs", 
 #'                values_column = "median") +
 #'   xlim(-180,-20) + ylim(0,90)
 #' 
@@ -92,68 +94,67 @@
 #'                        intra_trade = intra_trade,
 #'                        internal_production = internal_production)
 #' # Ntrade mean and sd for the time periods
-#' ntrade_EU <- ntrade(trade = trade_EU,
-#'                     summarize_ntrade = c("mean", "sd"))
+#' ntrade_EU <- ntrade(trade_data = trade_EU,
+#'                     summarise_result = c("mean", "sd"))
 #' # Plot Ntrade mean
 #' plot_countries(data = ntrade_EU, 
-#'                IDs_column="IDs", 
+#'                IDs_column="country_IDs", 
 #'                values_column="mean") +
 #'   xlim(-40,50) + ylim(25,70)
 #' # Ntrade for selected countries and a specific time period
 #' # Sample 5 countries from trade data
-#' IDs <- sample(unique(trade_EU$total_trade$IDs), 5)
-#' ntrade_EU_s <- ntrade(trade = trade_EU,
-#'                       IDs = IDs,
-#'                       select_period = 2020)
+#' country_IDs <- sample(unique(trade_EU$total_trade$country_IDs), 5)
+#' ntrade_EU_s <- ntrade(trade_data = trade_EU,
+#'                       filter_IDs = country_IDs,
+#'                       filter_period = 2020)
 #' head(ntrade_EU_s)
 #' # Plot Ntrade result
 #' plot_countries(data = ntrade_EU_s, 
-#'                IDs_column="IDs", 
+#'                IDs_column="country_IDs", 
 #'                values_column="Ntrade_2020") +
 #'   xlim(-40,50) + ylim(25,70)
 #' 
-ntrade <- function(trade, IDs = NULL, select_period=NULL, summarize_ntrade = NULL){
+ntrade <- function(trade_data, filter_IDs = NULL, filter_period=NULL, summarise_result = NULL){
   reporter <- partner <- IDi <- Rij <- NULL
   # Check if trade is of class TradeData and has required elements
-  if (!inherits(trade, "TradeData")) {
-    stop("Error: 'trade' must be an object of class 'TradeData'. See ?trade_data.")
+  if (!inherits(trade_data, "TradeData")) {
+    stop("Error: 'trade_data' must be an object of class 'TradeData'. See ?trade_data.")
   }
   
-  # Check if summarize_ntrade is valid
+  # Check if summarise_result is valid
   valid_functions <- c("mean", "sd", "median")
-  valid_quantile <- grepl("^quantile\\(0\\.\\d+\\)$", summarize_ntrade)
-  valid_summarize <- all(summarize_ntrade %in% valid_functions | valid_quantile)
+  valid_quantile <- grepl("^quantile\\(0\\.\\d+\\)$", summarise_result)
+  valid_summarise <- all(summarise_result %in% valid_functions | valid_quantile)
   
-  if (!is.null(summarize_ntrade) && !valid_summarize) {
-    stop(paste0("Error: 'summarize_ntrade' must be a character vector specifying valid functions:\n",
+  if (!is.null(summarise_result) && !valid_summarise) {
+    stop(paste0("Error: 'summarise_result' must be a character vector specifying valid functions:\n",
                 "'mean', 'sd', 'median', or 'quantile(p)' where p is a probability between 0 and 1."))
   }
   
-  trade_df <- trade$total_trade
-  intra_df <- trade$intra_trade
-  
-  if(!is.null(IDs)){
-    if(!all(IDs%in% trade_df$IDs) || !all(IDs%in%intra_df$reporter)){
-      stop("Error: The selected 'IDs' must be in 'trade' data IDs.")
+  trade_df <- trade_data$total_trade
+  intra_df <- trade_data$intra_trade
+  country_IDs <- filter_IDs
+  if(!is.null(country_IDs)){
+    if(!all(country_IDs%in% trade_df$country_IDs) || !all(country_IDs%in%intra_df$reporter)){
+      stop("Error: The selected 'filter_IDs' must be in 'country_IDs' in trade data")
     }
-    IDs_select <- IDs
     trade_df <- trade_df %>% 
-      filter(IDs %in% IDs_select)
+      filter(country_IDs %in% country_IDs)
     intra_df <- intra_df %>% 
-      filter(reporter %in% IDs_select,
-             partner %in% IDs_select)
+      filter(reporter %in% country_IDs,
+             partner %in% country_IDs)
   }else{
-    IDs <- unique(trade_df$IDs)
+    country_IDs <- unique(trade_df$country_IDs)
   }
   
-  Nt_calc <- function(IDs, intra_df, trade_df){
-    dfR <- data.frame(IDi = IDs) %>%
+  Nt_calc <- function(country_IDs, intra_df, trade_df){
+    dfR <- data.frame(IDi = country_IDs) %>%
       expand(IDi=IDi, IDj=IDi) %>%
       filter(IDj!=IDi)
     dfR$Rij <- 0
-    for(i in IDs){
-      total_i <- trade_df$total_available[trade_df$IDs == i]
-      IDj <- IDs[IDs != i]
+    for(i in country_IDs){
+      total_i <- trade_df$total_available[trade_df$country_IDs == i]
+      IDj <- country_IDs[country_IDs != i]
       for(j in IDj){
         intraExp_ij <- intra_df$value[intra_df$partner==i & intra_df$reporter==j]
         dfR$Rij[dfR$IDi==i & dfR$IDj == j] <- intraExp_ij/total_i
@@ -162,14 +163,14 @@ ntrade <- function(trade, IDs = NULL, select_period=NULL, summarize_ntrade = NUL
     dfR <- dfR %>%
       mutate(Rji = Rij[match(paste(IDi, IDj), paste(IDj, IDi))])
 
-    df_Nt <- data.frame(IDs = IDs, Ntrade = 0)
+    df_Nt <- data.frame(country_IDs = country_IDs, Ntrade = 0)
 
-    for(i in IDs){
-      IDj <- IDs[IDs != i]
+    for(i in country_IDs){
+      IDj <- country_IDs[country_IDs != i]
       sum_Pest_j <- 0
 
       for(j in IDj){
-        Pest_j <- trade_df$extra_pest[trade_df$IDs == j]
+        Pest_j <- trade_df$extra_pest[trade_df$country_IDs == j]
         if(length(Pest_j) == 0){
           sum_Pest_j <- sum_Pest_j
         }else{
@@ -178,22 +179,22 @@ ntrade <- function(trade, IDs = NULL, select_period=NULL, summarize_ntrade = NUL
         }
       }
 
-      Pest_i <- trade_df$extra_pest[trade_df$IDs == i]
+      Pest_i <- trade_df$extra_pest[trade_df$country_IDs == i]
       if(length(Pest_i) == 0){
-        Nt$Ntrade[Nt$IDs==i] <- sum_Pest_j
+        df_Nt$Ntrade[df_Nt$country_IDs==i] <- sum_Pest_j
       }else{
         sum_Rij <- sum(dfR$Rij[dfR$IDi == i])
-        df_Nt$Ntrade[df_Nt$IDs==i] <- Pest_i - (Pest_i * sum_Rij) + sum_Pest_j
+        df_Nt$Ntrade[df_Nt$country_IDs==i] <- Pest_i - (Pest_i * sum_Rij) + sum_Pest_j
       }
     }
     return(df_Nt)
   }
 
-  tp <- if (!is.null(select_period)) {
-    if(!all(select_period%in%trade_df$time_period) || !all(select_period%in%intra_df$time_period)){
-      stop("Error: The selected period 'select_period' must be in 'time_period' in trade data.")
+  tp <- if (!is.null(filter_period)) {
+    if(!all(filter_period%in%trade_df$time_period) || !all(filter_period%in%intra_df$time_period)){
+      stop("Error: The selected period 'filter_period' must be in 'time_period' in trade data.")
     }
-    select_period
+    filter_period
   } else {
     unique(trade_df$time_period)
   }
@@ -201,28 +202,30 @@ ntrade <- function(trade, IDs = NULL, select_period=NULL, summarize_ntrade = NUL
   Nt_list <- map(tp, ~ {
     t <- .x
     df_Nt <- Nt_calc(
-      IDs = IDs,
+      country_IDs = country_IDs,
       intra_df = intra_df %>%
         filter(time_period==t) %>%
-        missing_intra(IDs),
-      trade_df = trade_df %>% filter(time_period==t)
+        missing_intra(country_IDs),
+      trade_df = trade_df %>% 
+        filter(time_period==t)
     )
-    df_Nt <- df_Nt %>% rename_with(.fn = ~paste0("Ntrade_", t), .cols = "Ntrade")
+    df_Nt <- df_Nt %>% 
+      rename_with(.fn = ~paste0("Ntrade_", t), .cols = "Ntrade")
   })
 
-  df_Nt <- reduce(Nt_list, left_join, by = "IDs")
+  df_Nt <- reduce(Nt_list, left_join, by = "country_IDs")
 
-  if(!is.null(summarize_ntrade)){
-    summarize_fns <- summarize_ntrade[!grepl("quantile", summarize_ntrade)]
-    if (any(grepl("quantile", summarize_ntrade))) {
+  if(!is.null(summarise_result)){
+    summarise_fns <- summarise_result[!grepl("quantile", summarise_result)]
+    if (any(grepl("quantile", summarise_result))) {
       quantiles <- as.numeric(gsub("quantile\\((\\d+\\.?\\d*)\\)", "\\1",
-                                   summarize_ntrade[grepl("quantile", summarize_ntrade)]))
-      fns_names <- c(summarize_fns, paste0("q",quantiles))
+                                   summarise_result[grepl("quantile", summarise_result)]))
+      fns_names <- c(summarise_fns, paste0("q",quantiles))
     }else{
       quantiles <- NULL
-      fns_names <- summarize_fns
+      fns_names <- summarise_fns
     }
-    fns <- append(map(summarize_fns, ~eval(parse(text = .x))),
+    fns <- append(map(summarise_fns, ~eval(parse(text = .x))),
                   map(quantiles, ~partial(quantile, probs = .x, na.rm=TRUE)))
     apply_functions <- function(...) {
       values <- c(...)
@@ -232,7 +235,7 @@ ntrade <- function(trade, IDs = NULL, select_period=NULL, summarize_ntrade = NUL
       select(starts_with("Ntrade")) %>%
       pmap_dfr(apply_functions)
 
-    result <- cbind(IDs = df_Nt[,1], result)
+    result <- cbind(country_IDs = df_Nt[,1], result)
   }else{
     result <- df_Nt
   }

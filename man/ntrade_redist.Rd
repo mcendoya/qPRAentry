@@ -6,13 +6,13 @@
 \usage{
 ntrade_redist(
   ntrade_data,
-  nuts_column,
-  values_column,
+  ntrade_nuts_col,
+  ntrade_values_col,
   to_nuts = 2,
-  prop_data = NULL,
-  prop_nuts_column = NULL,
-  prop_values_column = NULL,
-  time_period = 2023
+  redist_data = "population",
+  redist_nuts_col = NULL,
+  redist_values_col = NULL,
+  population_year = 2023
 )
 }
 \arguments{
@@ -20,25 +20,25 @@ ntrade_redist(
 imported from third countries where the pest is present. It can be calculated
 using \code{\link{ntrade}} function.}
 
-\item{nuts_column}{Column name in \code{ntrade_data} with the NUTS0 codes.}
+\item{ntrade_nuts_col}{Column name in \code{ntrade_data} with the NUTS0 codes.}
 
-\item{values_column}{Column name, or vector with the name of multiple columns, 
+\item{ntrade_values_col}{Column name, or vector with the name of multiple columns,
 in \code{ntrade_data} with the \eqn{N_{trade}} values
 (quantity of potentially infested commodity imports) to be redistributed.}
 
 \item{to_nuts}{Numeric. NUTS level for redistribution (1, 2 or 3).}
 
-\item{prop_data}{Data frame to proportionally distribute \eqn{N_{trade}}.
+\item{redist_data}{Data frame to proportionally distribute \eqn{N_{trade}}.
 By default NULL: redistribution based on population
 (Eurostat data - <https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3>).}
 
-\item{prop_nuts_column}{Column name in \code{prop_data} with the destination
+\item{redist_nuts_col}{Column name in \code{redist_data} with the destination
 NUTS codes in the redistribution. Same NUTS level as set in \code{to_nuts}.}
 
-\item{prop_values_column}{Column name in \code{prop_data} with the with the values
+\item{redist_values_col}{Column name in \code{redist_data} with the with the values
 according to which to proportionally redistribute \eqn{N_{trade}}.}
 
-\item{time_period}{Year of population data. By default 2023.
+\item{population_year}{Year of population data. By default 2023.
 Available years can be found at
 <https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3>.
 Multiple years can be entered by a numeric vector, the average population of
@@ -58,10 +58,10 @@ NUTS stands for nomenclature of territorial units for statistics.
 \examples{
 \dontrun{
 Nt_r <- ntrade_redist(
-ntrade_data = Nt_df,
-nuts_column = "IDs",
-values_column = "mean",
-to_nuts = 2
+  ntrade_data = Nt_df,
+  ntrade_nuts_col = "country_IDs",
+  ntrade_values_col = "mean",
+  to_nuts = 2
 )
 }
 }

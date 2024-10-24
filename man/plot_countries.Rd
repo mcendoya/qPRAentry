@@ -6,11 +6,11 @@
 \usage{
 plot_countries(
   data,
-  IDs_column,
-  values_column,
+  IDs_col,
+  values_col,
   countrycode = "CNTR_CODE",
   colors = NULL,
-  na.value = "grey",
+  na_value = "grey",
   title = NULL,
   legend_title = NULL
 )
@@ -18,13 +18,13 @@ plot_countries(
 \arguments{
 \item{data}{A data frame containing the values to be plotted on the map.}
 
-\item{IDs_column}{Column name in \code{data} with the country codes.
+\item{IDs_col}{Column name in \code{data} with the country codes.
 CNTR_ID from \code{\link[giscoR]{giscoR}} package .
 [To be completed]}
 
-\item{values_column}{Column name in \code{data} with the values to be plotted.}
+\item{values_col}{Column name in \code{data} with the values to be plotted.}
 
-\item{countrycode}{Country code in \code{IDs_column}. Possible values are "CNTR_CODE" 
+\item{countrycode}{Country code in \code{IDs_col}. Possible values are "CNTR_CODE" 
 (2-letter code of each country), or "ISO3_CODE" (3-letter code of each country). 
 Default is "CNTR_CODE", for Europe the same as NUTS codes (country level), 
 United Kingdom as "UK" and Greece as "EL". 
@@ -32,11 +32,11 @@ See \code{\link[giscoR]{gisco_countrycode}} for details on country codes.}
 
 \item{colors}{Optional vector of colors used in the gradient scale.}
 
-\item{na.value}{Color for missing values (default is "grey").}
+\item{na_value}{Color for missing values (default is "grey").}
 
 \item{title}{A title for the plot (default is NULL).}
 
-\item{legend_title}{A title for the legend. Default NULL, name in the \code{values_column}.}
+\item{legend_title}{A title for the legend. Default NULL, name in the \code{values_col}.}
 }
 \value{
 A ggplot object with the plotted countries.
@@ -48,23 +48,21 @@ of the aesthetics such as colors, legend title, and title.
 \examples{
 ## Example with CNTR_CODE (2-letter country code)
 # Country codes from the giscoR package
-library(giscoR)
 IDs  <- gisco_countrycode$CNTR_CODE[gisco_countrycode$continent=="Africa"]
 # Values simulation
 df <- data.frame(IDs = IDs,
                  value = runif(length(IDs)))
 # Plot
 plot_countries(data = df,
-               IDs_column = "IDs",
-               values_column = "value",
+               IDs_col = "IDs",
+               values_col = "value",
                countrycode = "CNTR_CODE")
 # Changing colors and adding other ggplot2 options
 pl <- plot_countries(data = df,
-                     IDs_column = "IDs",
-                     values_column = "value",
+                     IDs_col = "IDs",
+                     values_col = "value",
                      countrycode = "CNTR_CODE",
                      colors = c("white", "lightblue", "darkblue"))
-library(ggplot2)
 pl + 
   xlim(-40, 60) + ylim(-40, 40) +
   theme_bw()
@@ -74,8 +72,8 @@ pl +
 df_ISO3 <- data.frame(IDs = sample(gisco_countrycode$ISO3_CODE, 20),
                       value = runif(20))
 plot_countries(data = df_ISO3,
-               IDs_column = "IDs",
-               values_column = "value",
+               IDs_col = "IDs",
+               values_col = "value",
                countrycode = "ISO3_CODE")
 
 }

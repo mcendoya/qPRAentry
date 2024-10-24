@@ -9,8 +9,8 @@ trade_data(
   extra_pest,
   intra_trade,
   internal_production,
-  IDs = NULL,
-  select_period = NULL
+  filter_IDs = NULL,
+  filter_period = NULL
 )
 }
 \arguments{
@@ -30,12 +30,13 @@ and exported among the countries of interest.  It must contain the following col
 produced by each country of interest. It must contain the following columns: 
 \code{reporter}, \code{value} and \code{time_period}.}
 
-\item{IDs}{A vector containing the country IDs of interest. By default, it is 
-set to \code{NULL}, meaning all \code{reporter} countries in the data frames will be considered.}
+\item{filter_IDs}{A vector containing the country IDs to filter (identification codes 
+of the countries of interest). By default, it is set to \code{NULL}, meaning all 
+\code{reporter} countries in the data frames will be considered.}
 
-\item{select_period}{A vector specifying the time periods to be selected 
-(from \code{time_period} column). By default, it is set to \code{NULL}, 
-meaning all time periods in the data frames will be considered.}
+\item{filter_period}{A vector specifying the time periods to filter, based on 
+the \code{time_period} column. By default, it is set to \code{NULL}, meaning 
+all time periods in the data frames will be considered.}
 }
 \value{
 An object of class \code{TradeData} is returned containing the following list of dataframes:
@@ -44,7 +45,7 @@ An object of class \code{TradeData} is returned containing the following list of
 \item \code{total_trade} A data frame with one row for each ID and each time period with 9 variables:
 
 \tabular{ll}{
-  \code{IDs} \tab Country IDs.\cr
+  \code{country_IDs} \tab Country IDs.\cr
   \tab \cr
   \code{time_period} \tab Time period.\cr
   \tab \cr
@@ -98,7 +99,6 @@ Proportional internal export when intra export is higher than the total availabl
 ## Example with simulated trade data for Northern America
 # Load data
 data("datatrade_NA")
-library(dplyr)
 # Total extra-import data: data contains imports from 5 third countries (column partner). 
 extra_total <- datatrade_NA$extra_import
 # Extra-import data from countries where the pest is present (e.g., CNTR_1 and CNTR_2)
@@ -116,7 +116,6 @@ trade_NA <- trade_data(extra_total = extra_total,
 head(trade_NA$total_trade)
 head(trade_NA$intra_trade)
 # Plot the total available quantity of commodity available in each country
-library(ggplot2)
 plot_countries(data = trade_NA$total_trade,
                IDs_column = "IDs", 
                values_column = "total_available") +
@@ -135,14 +134,14 @@ intra_trade  <- datatrade_EU$intra_trade
 # Internal production data
 internal_production  <- datatrade_EU$internal_production
 # Sample 5 countries from data
-IDs <- sample(unique(extra_total$reporter), 5)
+filter_IDs <- sample(unique(extra_total$reporter), 5)
 # Generate trade data (TradeData object)
 trade_EU <- trade_data(extra_total = extra_total,
                        extra_pest = extra_pest,
                        intra_trade = intra_trade,
                        internal_production = internal_production,
-                       IDs = IDs,
-                       select_period = 2020)
+                       filter_IDs = filter_IDs,
+                       filter_period = 2020)
 # Plot the total available quantity of commodity available in each country
 plot_countries(data = trade_EU$total_trade, 
                IDs_column = "IDs", 

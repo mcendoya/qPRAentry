@@ -15,11 +15,12 @@
 #' @param internal_production A data frame containing the quantity of commodity
 #' produced by each country of interest. It must contain the following columns: 
 #' \code{reporter}, \code{value} and \code{time_period}.
-#' @param IDs A vector containing the country IDs of interest. By default, it is 
-#' set to \code{NULL}, meaning all \code{reporter} countries in the data frames will be considered.
-#' @param select_period A vector specifying the time periods to be selected 
-#' (from \code{time_period} column). By default, it is set to \code{NULL}, 
-#' meaning all time periods in the data frames will be considered.
+#' @param filter_IDs A vector containing the country IDs to filter (identification codes 
+#' of the countries of interest). By default, it is set to \code{NULL}, meaning all 
+#' \code{reporter} countries in the data frames will be considered.
+#' @param filter_period A vector specifying the time periods to filter, based on 
+#' the \code{time_period} column. By default, it is set to \code{NULL}, meaning 
+#' all time periods in the data frames will be considered.
 #' 
 #'
 #' @details Trade flow from reporter to partner.
@@ -33,7 +34,7 @@
 #' \item \code{total_trade} A data frame with one row for each ID and each time period with 9 variables:
 #'
 #' \tabular{ll}{
-#'   \code{IDs} \tab Country IDs.\cr
+#'   \code{country_IDs} \tab Country IDs.\cr
 #'   \tab \cr
 #'   \code{time_period} \tab Time period.\cr
 #'   \tab \cr
@@ -79,7 +80,6 @@
 #' ## Example with simulated trade data for Northern America
 #' # Load data
 #' data("datatrade_NA")
-#' library(dplyr)
 #' # Total extra-import data: data contains imports from 5 third countries (column partner). 
 #' extra_total <- datatrade_NA$extra_import
 #' # Extra-import data from countries where the pest is present (e.g., CNTR_1 and CNTR_2)
@@ -97,7 +97,6 @@
 #' head(trade_NA$total_trade)
 #' head(trade_NA$intra_trade)
 #' # Plot the total available quantity of commodity available in each country
-#' library(ggplot2)
 #' plot_countries(data = trade_NA$total_trade,
 #'                IDs_column = "IDs", 
 #'                values_column = "total_available") +
@@ -116,14 +115,14 @@
 #' # Internal production data
 #' internal_production  <- datatrade_EU$internal_production
 #' # Sample 5 countries from data
-#' IDs <- sample(unique(extra_total$reporter), 5)
+#' filter_IDs <- sample(unique(extra_total$reporter), 5)
 #' # Generate trade data (TradeData object)
 #' trade_EU <- trade_data(extra_total = extra_total,
 #'                        extra_pest = extra_pest,
 #'                        intra_trade = intra_trade,
 #'                        internal_production = internal_production,
-#'                        IDs = IDs,
-#'                        select_period = 2020)
+#'                        filter_IDs = filter_IDs,
+#'                        filter_period = 2020)
 #' # Plot the total available quantity of commodity available in each country
 #' plot_countries(data = trade_EU$total_trade, 
 #'                IDs_column = "IDs", 
@@ -132,7 +131,7 @@
 #'
 #'   
 trade_data <- function(extra_total, extra_pest, intra_trade, internal_production,
-                       IDs = NULL, select_period = NULL){
+                       filter_IDs = NULL, filter_period = NULL){
   reporter <- partner <- intra_export <- value <- export_prop <- time_period <- 
     total_available <- NULL
   # check data.frames
@@ -191,6 +190,7 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
   }
 
   #selected IDs
+  IDs <- filter_IDs
   if(!is.null(IDs)){
     extra_total <- extra_total %>%
       filter(reporter%in%IDs)
@@ -207,8 +207,8 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
                     internal_production$reporter))
   }
   
-  tp <- if(!is.null(select_period)){
-    select_period
+  tp <- if(!is.null(filter_period)){
+    filter_period
   }else{
     unique(c(extra_total$time_period, 
              intra_trade$time_period, 
@@ -231,19 +231,19 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
       filter(!reporter%in%IDs_excluded$missing_IDs)
   }
 
-  dataframes_list <- list("extra_total" = summarize_data(extra_total, select_period),
-                          "extra_pest" = summarize_data(extra_pest, select_period),
-                          "intra_import" = summarize_data(intra_trade, select_period),
-                          "intra_export" = summarize_data(intra_trade, select_period,
+  dataframes_list <- list("extra_total" = summarise_data(extra_total, filter_period),
+                          "extra_pest" = summarise_data(extra_pest, filter_period),
+                          "intra_import" = summarise_data(intra_trade, filter_period),
+                          "intra_export" = summarise_data(intra_trade, filter_period,
                                                           reporter = FALSE, partner = TRUE),
-                          "internal_production" = summarize_data(internal_production, select_period)
+                          "internal_production" = summarise_data(internal_production, filter_period)
   )
   dataframes_list <- imap(dataframes_list, ~rename(.x, !!.y := "value"))
   
   total_trade <- data.frame(IDs = rep(IDs, each = length(tp)),
                             time_period = rep(tp, length(IDs)))
   
-  total_trade <- reduce(
+  total_trade <-reduce(
     dataframes_list,
     function(left, right) {
       full_join(left, right, by=join_by(IDs, time_period))
@@ -259,12 +259,13 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
         total_available / intra_export
       },
       .default = 1
-    ))
+    )) %>% 
+    rename(country_IDs = IDs)
   
   error_ExtraPest <- total_trade %>%
-    filter(all.equal(extra_pest, extra_total)==FALSE,
+    filter(isTRUE(all.equal(extra_pest, extra_total, tolerance = 1e-6)) == FALSE,
            extra_pest > extra_total) %>%
-    select(IDs, time_period) %>%
+    select(country_IDs, time_period) %>%
     distinct()
   
   if (nrow(error_ExtraPest) > 0) {
@@ -273,12 +274,13 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
   }
   
   warning_cases <- total_trade %>%
-    filter(intra_export > total_available) %>%
-    select(IDs, time_period) %>%
+    filter(isTRUE(all.equal(intra_export, total_available, tolerance = 1e-6)) == FALSE,
+           intra_export > total_available) %>%
+    select(country_IDs, time_period) %>%
     distinct()
   
   if (nrow(warning_cases) > 0) {
-    message(paste0("Note: For IDs where intra-export is greater than total available ",
+    message(paste0("Note: For countries where intra-export is greater than total available ",
                    "(extra-import + internal production), intra-export is considered ",
                    "proportional to the total available.\n"))
   }
@@ -287,10 +289,10 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
     message(IDs_excluded$warning_message)
   }
 
-  intra_trade <- summarize_data(intra_trade, select_period,
+  intra_trade <- summarise_data(intra_trade, filter_period,
                                 reporter = TRUE, partner = TRUE) %>%
-    left_join(select(total_trade, IDs, time_period, export_prop),
-              by=c("partner" = "IDs", "time_period")) %>%
+    left_join(select(total_trade, country_IDs, time_period, export_prop),
+              by=c("partner" = "country_IDs", "time_period")) %>%
     mutate(value = value*export_prop) # proportional to the total available
 
   trade_df <- list("total_trade" = as.data.frame(total_trade), 

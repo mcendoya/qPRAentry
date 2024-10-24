@@ -10,8 +10,8 @@ test_that("ntrade should return a data frame", {
 
   expect_no_error(
     nt <- ntrade(trade, 
-                 IDs = c("AL", "ES", "IT"), 
-                 select_period=NULL, 
+                 filter_IDs = c("AL", "ES", "IT"), 
+                 filter_period=NULL, 
                  summarize_ntrade = NULL)
   )
   expect_equal(nrow(nt), 3)
@@ -29,23 +29,23 @@ test_that("ntrade errors", {
   )
   expect_error(
     ntrade(trade, 
-           IDs = 1:3, 
-           select_period=NULL, 
+           filter_IDs = 1:3, 
+           filter_period=NULL, 
            summarize_ntrade = NULL),
-    "Error: The selected 'IDs' must be in 'trade' data IDs."
+    "Error: The selected 'filter_IDs' must be in 'country_IDs' in trade data"
   )
   expect_no_error(
     nt <- ntrade(trade, 
-           IDs = c("AL", "ES", "IT"), 
-           select_period=NULL, 
-           summarize_ntrade = NULL)
+                 filter_IDs = c("AL", "ES", "IT"), 
+                 filter_period=NULL, 
+                 summarize_ntrade = NULL)
   )
   expect_equal(nrow(nt), 3)
   expect_error(
     ntrade(trade,
-           select_period=1:3,
+           filter_period=1:3,
            summarize_ntrade = NULL),
-    "Error: The selected period 'select_period' must be in 'time_period' in trade data."
+    "Error: The selected period 'filter_period' must be in 'time_period' in trade data."
   )
   expect_error(
     ntrade(trade,
@@ -57,7 +57,7 @@ test_that("ntrade errors", {
   
   expect_error(
     ntrade(data.frame(a=1, b=2)),
-    "Error: 'trade' must be an object of class 'TradeData'. See ?trade_data.",
+    "Error: 'trade_data' must be an object of class 'TradeData'. See ?trade_data.",
     fixed=TRUE
   )
 })

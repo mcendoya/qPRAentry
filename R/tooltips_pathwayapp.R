@@ -29,7 +29,8 @@ text_pathwaymodel <-
           <ul>
             <li>Example: <code>((p1*100)</code>, <code>(1-p2))</code></li>
           </ul>
-        <li>Ensure that the parameter name in the equation matches exactly what was entered in <strong>Parameter Name</strong>.</li>
+        <li>Ensure that the parameter name in the equation matches exactly what was 
+        entered in <strong>Parameter Name</strong>.</li>
       </ul>
     </li>
   </ul>
@@ -93,14 +94,7 @@ text_parameters <- HTML('<p class="custom-text">
         The total number of iterations that will be performed during the execution needs to be specified in the box "number of iterations". 
         In each iteration, a single value is drawn from the specified distribution for each parameter, representing a sample for that iteration.</li>
           <li><strong>Parameters distribution:</strong> The distribution type for each parameter needs to be defined. 
-          Common distribution types include Normal (Gaussian), Uniform, Exponential, or others that may fit the nature of the data. For example:
-            <ul class="custom-text">
-                <li><strong>Normal Distribution (Gaussian):</strong> Requires the mean (µ) and standard deviation (σ).</li>
-                <li><strong>Uniform Distribution:</strong> Requires the minimum and maximum bounds for the values.</li>
-                <li><strong>Exponential Distribution:</strong> Requires the rate parameter (λ).</li>
-                <li><strong>Others:</strong> Depending on the parameter, different distributions 
-                and their corresponding shape parameters can be gathered from the EKE (Expert Knowledge Elicitation).</li>
-                </ul>
+          Common distribution types include Normal (Gaussian), Uniform, Exponential, or others that may fit the nature of the data. 
         </li>
           <li>Once all parameters have been set, you can click on the <strong>Done</strong> button to save the current configuration. 
           After clicking, for each parameter, the distribution histograms will be displayed next to the parameter.</li>

@@ -67,10 +67,10 @@ mod_ntrade_data_ui <- function(id){
                   column(11,
                          div(class="warn",
                              verbatimTextOutput(ns("message"))
-                             ),
+                         ),
                          uiOutput(ns("help_data")),
                          br()
-                         )),
+                  )),
                 # Plot buttons
                 uiOutput(ns("plot_buttons")),
                 # Plots
@@ -96,7 +96,8 @@ mod_ntrade_data_server <- function(id){
     # data
     session$userData$ExtraTotal_reactive <- eventReactive(input$ExtraTotal,{
       output$message <- renderText({NULL})
-      df <- tryCatch({read_file(input$ExtraTotal$datapath)
+      df <- tryCatch({
+        read_file(input$ExtraTotal$datapath)
       }, error = function(e) {
         output$message <- renderText({e$message})
         return(NULL)
@@ -105,7 +106,8 @@ mod_ntrade_data_server <- function(id){
     })
     session$userData$ExtraPest_reactive <- eventReactive(input$ExtraPest,{
       output$message <- renderText({NULL})
-      df <- tryCatch({read_file(input$ExtraPest$datapath)
+      df <- tryCatch({
+        read_file(input$ExtraPest$datapath)
       }, error = function(e) {
         output$message <- renderText({e$message})
         return(NULL)
@@ -114,7 +116,8 @@ mod_ntrade_data_server <- function(id){
     })
     session$userData$IntraEU_reactive <- eventReactive(input$IntraEU,{
       output$message <- renderText({NULL})
-      df <- tryCatch({read_file(input$IntraEU$datapath)
+      df <- tryCatch({
+        read_file(input$IntraEU$datapath)
       }, error = function(e) {
         output$message <- renderText({e$message})
         return(NULL)
@@ -123,7 +126,8 @@ mod_ntrade_data_server <- function(id){
     })
     session$userData$IP_reactive <- eventReactive(input$IP,{
       output$message <- renderText({NULL})
-      df <- tryCatch({read_file(input$IP$datapath)
+      df <- tryCatch({
+        read_file(input$IP$datapath)
       }, error = function(e) {
         output$message <- renderText({e$message})
         return(NULL)
@@ -163,8 +167,8 @@ mod_ntrade_data_server <- function(id){
                                       inputId = "extra_partner_ExtraPest",
                                       choices = unique(df[,input$partner_ExtraPest]))
     }, ignoreInit = TRUE)
-
-
+    
+    
     # Units
     output$unitsOutputExtraTotal <- renderText({
       paste0("= ", input$units)
@@ -178,7 +182,7 @@ mod_ntrade_data_server <- function(id){
     output$unitsOutputIP <- renderText({
       paste0("= ", input$units)
     })
-
+    
     #close dropMenu
     observeEvent(input$done_ExtraTotal,{
       shinyWidgets::hideDropMenu("ExtraTotal_menu_dropmenu")
@@ -192,7 +196,7 @@ mod_ntrade_data_server <- function(id){
     observeEvent(input$done_IP,{
       shinyWidgets::hideDropMenu("IP_menu_dropmenu")
     })
-
+    
     # fn to rename colnames
     colnames_rename <- function(df, data_name, partner = TRUE){
       user_colnames <- c(input[[paste0("reporter_", data_name)]],
@@ -299,7 +303,7 @@ mod_ntrade_data_server <- function(id){
         return(NULL)
       })
     })
-
+    
     ExtraPest_df <- eventReactive(input$done_ExtraPest,{
       tryCatch({
         df <- session$userData$ExtraPest_reactive()
@@ -329,7 +333,7 @@ mod_ntrade_data_server <- function(id){
         return(NULL)
       })
     })
-
+    
     IntraEU_df <- eventReactive(input$done_IntraEU,{
       tryCatch({
         df <- session$userData$IntraEU_reactive()
@@ -354,7 +358,7 @@ mod_ntrade_data_server <- function(id){
           } else {
             .
           }}
-
+        
         #data errors
         m <- data_message(df, partner=TRUE)
         if (!is.null(m)) { stop(m) }
@@ -438,7 +442,7 @@ mod_ntrade_data_server <- function(id){
       }else{NULL}
       
     }
-
+    
     # when Done
     observeEvent(input$done_ExtraTotal, {
       df <- ExtraTotal_df()
@@ -498,7 +502,7 @@ mod_ntrade_data_server <- function(id){
         update_time_periods("IP", session)
       }
     })
-
+    
     all_btns <- reactiveVal("")
     observe({
       if(input$done_ExtraTotal &
@@ -507,7 +511,7 @@ mod_ntrade_data_server <- function(id){
          input$done_IP){
         all_btns("all")
       }
-      })
+    })
     # Enable plot buttons
     observe({
       if(all_btns()=="all"){
@@ -519,7 +523,7 @@ mod_ntrade_data_server <- function(id){
         # 
         # shinyjs::enable("IP_plot")
         # addClass("IP_plot", class="enable")
-
+        
         shinyjs::enable("trade_done")
         addClass("trade_done", class="enable")
         
@@ -550,7 +554,7 @@ mod_ntrade_data_server <- function(id){
                        )
           )
         })
- 
+        
       }
     })
     
@@ -559,39 +563,39 @@ mod_ntrade_data_server <- function(id){
                                  input$done_IntraEU, input$done_IP, input$time_period),{
                                    if(all_btns()=="all"){
                                      tryCatch({
-                                     withCallingHandlers({
-                                       shinyjs::html("message", "")
-                                       df <- trade_data(extra_total = ExtraTotal_df(),
-                                                        extra_pest = ExtraPest_df(),
-                                                        intra_trade = IntraEU_df(),
-                                                        internal_production = IP_df(),
-                                                        select_period = input$time_period)
-                                     },
-                                     message = function(m) {
-                                       shinyjs::html(id = "message", html = m$message, add = TRUE)
-                                     })
+                                       withCallingHandlers({
+                                         shinyjs::html("message", "")
+                                         df <- trade_data(extra_total = ExtraTotal_df(),
+                                                          extra_pest = ExtraPest_df(),
+                                                          intra_trade = IntraEU_df(),
+                                                          internal_production = IP_df(),
+                                                          filter_period = input$time_period)
+                                       },
+                                       message = function(m) {
+                                         shinyjs::html(id = "message", html = m$message, add = TRUE)
+                                       })
                                        return(df)
-                                       },error = function(e) {
+                                     },error = function(e) {
                                        output$message <- renderText({e$message})
                                        return(NULL)
                                      })
                                    }
                                  })
-
+    
     # Data plot when press buttons
     data_plot <- reactiveVal()
-
+    
     observe_plot_event <- function(input_id) {
       observeEvent(input[[paste0(input_id, "_plot")]], {
         data_plot(input_id)
       })
     }
-
+    
     # change data_plot reactive
     observe_plot_event("ExtraTotal")
     observe_plot_event("IntraEU")
     observe_plot_event("IP")
-
+    
     output$dataPlot <- ggiraph::renderGirafe({
       req(length(data_plot())>0)
       df <- TradeData()$total_trade
@@ -620,17 +624,17 @@ mod_ntrade_data_server <- function(id){
         opts_selection(only_shiny = FALSE, type = "single", css = "stroke:white;")
       ))
     })
-
+    
     # reactive to change plot based on selected MS
     selected_MS <- reactiveVal()
     observeEvent(input$dataPlot_selected,{
       selected_MS(input$dataPlot_selected)
     })
-
+    
     #event_data
     observeEvent(input$dataPlot_selected,{
       output$MSplot <- renderPlot({
-
+        
         df <- TradeData()$total_trade
         idx <- selected_MS()
         yLab <- paste0("Quantity (", input$units, ")")

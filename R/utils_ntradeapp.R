@@ -107,61 +107,61 @@ data_summary <- function(df, group, value){
 
 plot_dataUpload <- function(df, dfName, timePeriod, yLab,
                             plotTitle, legendTitle=NULL){
-  IDs <- extra_total <- extra_pest <- intra_import <- intra_export <- 
+  country_IDs <- extra_total <- extra_pest <- intra_import <- intra_export <- 
     internal_production <- text1 <- text2 <- Mean <- SD <- Trade <- 
     trade_mean <- trade_sd <- value <- time_period <- NULL
   
   if(dfName == "ExtraTotal"){
     if(length(timePeriod)==1){
       Total <- df %>%
-        select(IDs, extra_total) %>%
+        select(country_IDs, extra_total) %>%
         mutate(value=extra_total,
-               text1 = paste0(IDs, "\nTotal: ", round(extra_total,2)))
+               text1 = paste0(country_IDs, "\nTotal: ", round(extra_total,2)))
       Pest <- df %>%
-        select(IDs, extra_pest) %>%
+        select(country_IDs, extra_pest) %>%
         mutate(value = extra_pest,
-               text2 = paste0(IDs, "\nPest present: ", round(value,2)))
+               text2 = paste0(country_IDs, "\nPest present: ", round(value,2)))
       
-      pl <- ggplot(NULL, aes(IDs, value)) +
-        geom_col_interactive(aes(fill = "Total", tooltip=text1, data_id=IDs), data = Total, alpha = 0.5) +
-        geom_col_interactive(aes(fill= "Pest present", tooltip=text2, data_id=IDs), data = Pest, alpha = 0.7)
+      pl <- ggplot(NULL, aes(country_IDs, value)) +
+        geom_col_interactive(aes(fill = "Total", tooltip=text1, data_id=country_IDs), data = Total, alpha = 0.5) +
+        geom_col_interactive(aes(fill= "Pest present", tooltip=text2, data_id=country_IDs), data = Pest, alpha = 0.7)
       
     }else{
       Total <- df %>%
-        select(IDs, extra_total) %>%
-        data_summary(group="IDs", value="extra_total") %>%
-        mutate(text1 = paste0(IDs, " - Total\nMean: ", round(Mean,2),
+        select(country_IDs, extra_total) %>%
+        data_summary(group="country_IDs", value="extra_total") %>%
+        mutate(text1 = paste0(country_IDs, " - Total\nMean: ", round(Mean,2),
                               "\nSD: ", round(SD,2)))
       Pest <- df %>%
-        select(IDs, extra_pest) %>%
-        data_summary(group="IDs", value="extra_pest") %>%
-        mutate(text2 = paste0(IDs, " - Pest present\nMean: ", round(Mean,2),
+        select(country_IDs, extra_pest) %>%
+        data_summary(group="country_IDs", value="extra_pest") %>%
+        mutate(text2 = paste0(country_IDs, " - Pest present\nMean: ", round(Mean,2),
                               "\nSD: ", round(SD,2)))
-      pl <- ggplot(NULL, aes(IDs, Mean)) +
-        geom_col_interactive(aes(fill = "Total", tooltip=text1, data_id=IDs), data = Total, alpha = 0.5) +
+      pl <- ggplot(NULL, aes(country_IDs, Mean)) +
+        geom_col_interactive(aes(fill = "Total", tooltip=text1, data_id=country_IDs), data = Total, alpha = 0.5) +
         geom_errorbar(aes(ymin=Mean-SD, ymax=Mean+SD),
                       data = Total, width=.2, color="#6D6C6C") +
-        geom_col_interactive(aes(fill="Pest present", tooltip=text2, data_id=IDs), data = Pest, alpha = 0.7) +
+        geom_col_interactive(aes(fill="Pest present", tooltip=text2, data_id=country_IDs), data = Pest, alpha = 0.7) +
         geom_errorbar(aes(ymin=Mean-SD, ymax=Mean+SD),
                       data = Pest, width=.2, color="#6D6C6C")
     }
   }else if(dfName == "IntraEU"){
     if(length(timePeriod)==1){
       intraEU <- df %>%
-        select(IDs, intra_import, intra_export) %>%
+        select(country_IDs, intra_import, intra_export) %>%
         rename(Import = intra_import,
                Export = intra_export) %>%
         pivot_longer(cols=c('Import', 'Export'),
                      names_to='Trade',
                      values_to='value')
-      pl <- ggplot(intraEU, aes(IDs, value, fill=Trade, data_id=IDs))+
+      pl <- ggplot(intraEU, aes(country_IDs, value, fill=Trade, data_id=country_IDs))+
         geom_col_interactive(position = "dodge", alpha=0.7,
-                             aes(tooltip = paste0(IDs, "\n", Trade, ": ", round(value,2)))) +
+                             aes(tooltip = paste0(country_IDs, "\n", Trade, ": ", round(value,2)))) +
         scale_fill_manual(values =c("#009E73", "orange"))
     }else{
       intraEU_mean <- df %>%
-        select(IDs, time_period, intra_import, intra_export) %>%
-        group_by(IDs) %>%
+        select(country_IDs, time_period, intra_import, intra_export) %>%
+        group_by(country_IDs) %>%
         summarise(Import = mean(intra_import),
                   Export = mean(intra_export)) %>%
         pivot_longer(cols=c('Import', 'Export'),
@@ -169,8 +169,8 @@ plot_dataUpload <- function(df, dfName, timePeriod, yLab,
                      values_to="trade_mean")
       
       intraEU_sd <- df %>%
-        select(IDs, time_period, intra_import, intra_export) %>%
-        group_by(IDs) %>%
+        select(country_IDs, time_period, intra_import, intra_export) %>%
+        group_by(country_IDs) %>%
         summarise(Import = sd(intra_import),
                   Export = sd(intra_export)) %>%
         pivot_longer(cols=c('Import', 'Export'),
@@ -178,12 +178,12 @@ plot_dataUpload <- function(df, dfName, timePeriod, yLab,
                      values_to="trade_sd")
       
       intraEU <- intraEU_mean %>%
-        left_join(intraEU_sd, by = join_by(IDs, Trade)) %>%
+        left_join(intraEU_sd, by = join_by(country_IDs, Trade)) %>%
         replace(is.na(.), 0)
       
-      pl <- ggplot(intraEU, aes(IDs, trade_mean, fill=Trade, data_id=IDs))+
+      pl <- ggplot(intraEU, aes(country_IDs, trade_mean, fill=Trade, data_id=country_IDs))+
         geom_col_interactive(position = "dodge", alpha=0.7,
-                             aes(tooltip = paste0(IDs,
+                             aes(tooltip = paste0(country_IDs,
                                                   "\n", Trade, " Mean: ", round(trade_mean,2),
                                                   "\n", Trade, " SD: ", round(trade_sd,2))))+
         geom_errorbar(aes(ymin=trade_mean-trade_sd, ymax=trade_mean+trade_sd),
@@ -193,16 +193,16 @@ plot_dataUpload <- function(df, dfName, timePeriod, yLab,
     
   }else if(dfName == "IP"){
     if(length(timePeriod)==1){
-      pl <- ggplot(df, aes(IDs, internal_production, data_id=IDs)) +
+      pl <- ggplot(df, aes(country_IDs, internal_production, data_id=country_IDs)) +
         geom_col_interactive(alpha = 0.7, fill="#CAD100",
-                             aes(tooltip = paste0(IDs, ": ", round(internal_production,2)) ))
+                             aes(tooltip = paste0(country_IDs, ": ", round(internal_production,2)) ))
     }else{
       df <- df %>%
-        select(IDs, internal_production, time_period) %>%
-        data_summary(group="IDs", value="internal_production")
-      pl <- ggplot(df, aes(IDs, Mean, data_id=IDs))+
+        select(country_IDs, internal_production, time_period) %>%
+        data_summary(group="country_IDs", value="internal_production")
+      pl <- ggplot(df, aes(country_IDs, Mean, data_id=country_IDs))+
         geom_col_interactive(position = "dodge", alpha=0.7, fill="#CAD100",
-                             aes(tooltip=paste0(IDs, "\nMean: ", round(Mean,2),
+                             aes(tooltip=paste0(country_IDs, "\nMean: ", round(Mean,2),
                                                 "\nSD: ", round(SD,2))))+
         geom_errorbar(aes(ymin=Mean-SD, ymax=Mean+SD),
                       width=.2, color="#6D6C6C")
@@ -225,27 +225,27 @@ plot_dataUpload <- function(df, dfName, timePeriod, yLab,
 }
 
 plot_byCountry <- function(df, dfName, idx, yLab, plotTitle, legendTitle=NULL){
-  IDs <- extra_total <- extra_pest <- intra_import <- time_period <- value <- 
+  country_IDs <- extra_total <- extra_pest <- intra_import <- time_period <- value <- 
     intra_export <- Trade <- internal_production <- NULL
   if(dfName=="ExtraTotal"){
     Total <- df %>%
-      select(IDs, time_period, extra_total) %>%
+      select(country_IDs, time_period, extra_total) %>%
       rename(value = extra_total) %>%
-      filter(IDs==idx)
+      filter(country_IDs==idx)
     Pest <- df %>%
-      select(IDs, time_period, extra_pest) %>%
+      select(country_IDs, time_period, extra_pest) %>%
       rename(value = extra_pest) %>%
-      filter(IDs==idx)
+      filter(country_IDs==idx)
     v_max <- max(Total$value, na.rm=T)
     pl <- ggplot(NULL, aes(as.factor(time_period), value)) +
       geom_col(aes(fill = "Total"), data = Total, alpha = 0.5) +
       geom_col(aes(fill="Pest present"), data = Pest, alpha = 0.7)
   }else if(dfName=="IntraEU"){
     intraEU <- df %>%
-      select(IDs, time_period, intra_import, intra_export) %>%
+      select(country_IDs, time_period, intra_import, intra_export) %>%
       rename(Import = intra_import,
              Export = intra_export) %>%
-      filter(IDs==idx) %>%
+      filter(country_IDs==idx) %>%
       pivot_longer(cols=c('Import', 'Export'),
                    names_to='Trade',
                    values_to='value')
@@ -255,9 +255,9 @@ plot_byCountry <- function(df, dfName, idx, yLab, plotTitle, legendTitle=NULL){
       scale_fill_manual(values =c("#009E73", "orange"))
   }else if(dfName=="IP"){
     IP_time <- df %>%
-      select(IDs, time_period, internal_production) %>%
+      select(country_IDs, time_period, internal_production) %>%
       rename(value = internal_production) %>%
-      filter(IDs==idx)
+      filter(country_IDs==idx)
     v_max <- max(IP_time$value, na.rm=T)
     pl <- ggplot(IP_time, aes(as.factor(time_period), value))+
       geom_col(fill="#CAD100", alpha=0.7)

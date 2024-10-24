@@ -36,6 +36,31 @@ NUTS_lev <- params$nuts_level #selected NUTS (depending on the Excel Ntrade file
 
 ```
 
+```{r}
+# function to print the model equation on multiple lines
+split_equation <- function(eq, width = 80) {
+  parts <- strsplit(eq, "(?<=\\*|\\/|\\+|\\-)", perl = TRUE)[[1]]
+  output <- ""
+  line_length <- 0
+  for (part in parts) {
+    line_length <- line_length + nchar(part)
+     if (grepl("\\*", part)) {
+      part <- gsub("\\*", " \\\\cdot ", part)
+    }
+    if (line_length > width) {
+      output <- paste0(output, part, " \\\\ ")
+      line_length <- nchar(part)
+    } else {
+      output <- paste0(output, part, " ")
+    }
+  }
+  return(output)
+}
+
+# width: width of the line
+model_def_split <- split_equation(model_def, width=110)
+```
+
 
 # Introduction
 
@@ -67,9 +92,12 @@ especially when empirical data is limited [@european2014guidance].
 
 ## Pathway model
 
-The constructed pathway model and its corresponding parameters are presented below:
+The defined pathway model and its corresponding parameters are presented below:
 
-`r paste0("$$", model_def, "$$")`
+\begin{gather*}
+`r model_def_split`
+\end{gather*}
+
 
 The $N_{trade}$ data used in the model have been previously calculated using 
 the $N_{trade}$ Shiny app, part of the *qPRAentry* package.
@@ -94,10 +122,13 @@ for (i in seq_along(param_names)) {
   plot.new()
   hist(dist_result[[i]], 
        main = par_settings[i], 
-       xlab = "", 
-       prob = TRUE,
+       xlab = "",
+       probability = TRUE, 
+       breaks = "fd", 
+       col = "lightblue",
        cex.main = 0.8, 
        cex.lab = 0.8)
+  lines(density(dist_result[[i]]), col = "blue", lwd = 2)
   
   # space
   cat("\n\n")
@@ -116,8 +147,7 @@ Below, the results are displayed for the entire EU territory only.
 ```{r}
 
 # Display the table
-#PLEASE, CHANGE TABLE BELOW WITH TOTAL EU RESULTS
-knitr::kable(Ninf, caption = "NPFP results", digits = 2) 
+knitr::kable(Ninf_EU, caption = "NPFP results", digits = 2) 
 
 ```
 

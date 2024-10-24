@@ -1,6 +1,8 @@
-utils::globalVariables(c("TIME_PERIOD", "geo", "values", "NUTS0", 
-                         "values_redistribution", "proportion",
-                         "Ntrade_proportional", ":="))
+utils::globalVariables(c(
+  "TIME_PERIOD", "geo", "values", "NUTS0",
+  "values_redistribution", "proportion",
+  "Ntrade_proportional", ":="
+))
 #' Ntrade redistribution
 #'
 #' Redistribution of the quantity of potentially infested commodities (\eqn{N_{trade}})
@@ -12,19 +14,19 @@ utils::globalVariables(c("TIME_PERIOD", "geo", "values", "NUTS0",
 #' @param ntrade_data A data frame with the quantity of potentially infested commodities
 #' imported from third countries where the pest is present. It can be calculated
 #' using \code{\link{ntrade}} function.
-#' @param nuts_column Column name in \code{ntrade_data} with the NUTS0 codes.
-#' @param values_column Column name, or vector with the name of multiple columns, 
+#' @param ntrade_nuts_col Column name in \code{ntrade_data} with the NUTS0 codes.
+#' @param ntrade_values_col Column name, or vector with the name of multiple columns,
 #' in \code{ntrade_data} with the \eqn{N_{trade}} values
 #' (quantity of potentially infested commodity imports) to be redistributed.
 #' @param to_nuts Numeric. NUTS level for redistribution (1, 2 or 3).
-#' @param prop_data Data frame to proportionally distribute \eqn{N_{trade}}.
+#' @param redist_data Data frame to proportionally distribute \eqn{N_{trade}}.
 #' By default NULL: redistribution based on population
 #' (Eurostat data - <https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3>).
-#' @param prop_nuts_column Column name in \code{prop_data} with the destination
+#' @param redist_nuts_col Column name in \code{redist_data} with the destination
 #' NUTS codes in the redistribution. Same NUTS level as set in \code{to_nuts}.
-#' @param prop_values_column Column name in \code{prop_data} with the with the values
+#' @param redist_values_col Column name in \code{redist_data} with the with the values
 #' according to which to proportionally redistribute \eqn{N_{trade}}.
-#' @param time_period Year of population data. By default 2023.
+#' @param population_year Year of population data. By default 2023.
 #' Available years can be found at
 #' <https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3>.
 #' Multiple years can be entered by a numeric vector, the average population of
@@ -36,108 +38,104 @@ utils::globalVariables(c("TIME_PERIOD", "geo", "values", "NUTS0",
 #' @examples
 #' \dontrun{
 #' Nt_r <- ntrade_redist(
-#' ntrade_data = Nt_df,
-#' nuts_column = "IDs",
-#' values_column = "mean",
-#' to_nuts = 2
+#'   ntrade_data = Nt_df,
+#'   ntrade_nuts_col = "country_IDs",
+#'   ntrade_values_col = "mean",
+#'   to_nuts = 2
 #' )
 #' }
-# ntrade_redist <- function(ntrade, ntrade_nuts, ntrade_values,
-#                           to_nuts = 2,
-#                           redist = NULL,
-#                           redist_nuts = NULL,
-#                           redist_values = NULL,
-#                           population_yr = NULL)
-ntrade_redist <- function(ntrade_data, nuts_column, values_column,
-                          to_nuts = 2,
-                          prop_data = NULL,
-                          prop_nuts_column = NULL,
-                          prop_values_column = NULL,
-                          time_period = 2023) {
+ntrade_redist <- function(ntrade_data, ntrade_nuts_col, ntrade_values_col, 
+                          to_nuts = 2, redist_data = "population", 
+                          redist_nuts_col = NULL, redist_values_col = NULL,
+                          population_year = 2023) {
   # check data.frame
-  if(!is.data.frame(ntrade_data)){
+  if (!is.data.frame(ntrade_data)) {
     stop("Error: 'ntrade_data' must be data.frame.")
   }
-  #check to_nuts
-  if(!to_nuts%in%c(1,2,3)||!is.numeric(to_nuts)){
+  # check to_nuts
+  if (!to_nuts %in% c(1, 2, 3) || !is.numeric(to_nuts)) {
     stop("Error: 'to nuts' must be numeric, 1, 2 or 3 NUTS level for redistribution.")
   }
-  #check value numeric
-  if(!all(sapply(ntrade_data[,values_column], is.numeric))){
-    stop("Error: 'values_column' in 'ntrade_data' must be numeric.")
+  # check value numeric
+  if (!all(sapply(ntrade_data[, ntrade_values_col], is.numeric))) {
+    stop("Error: 'ntrade_values_col' in 'ntrade_data' must be numeric.")
   }
   # check value not negative
-  if(any(sapply(ntrade_data[,values_column], function(x) x[!is.na(x)]<0))){
-    stop("Error: Invalid 'value' detected. Negative values 'values_column' in 'ntrade_data' not interpretable as quantities.")
+  if (any(sapply(ntrade_data[, ntrade_values_col], function(x) x[!is.na(x)] < 0))) {
+    stop("Error: Invalid 'value' detected. Negative values 'ntrade_values_col' in 'ntrade_data' not interpretable as quantities.")
   }
-  
-  if ("GR" %in% unique(ntrade_data[[nuts_column]])) {
-    ntrade_data[[nuts_column]][ntrade_data[[nuts_column]] == "GR"] <- "EL"
+
+  if ("GR" %in% unique(ntrade_data[[ntrade_nuts_col]])) {
+    ntrade_data[[ntrade_nuts_col]][ntrade_data[[ntrade_nuts_col]] == "GR"] <- "EL"
   }
-  if ("GB" %in% unique(ntrade_data[[nuts_column]])) {
-    ntrade_data[[nuts_column]][ntrade_data[[nuts_column]] == "GB"] <- "UK"
+  if ("GB" %in% unique(ntrade_data[[ntrade_nuts_col]])) {
+    ntrade_data[[ntrade_nuts_col]][ntrade_data[[ntrade_nuts_col]] == "GB"] <- "UK"
   }
-  #check country codes
-  if(!all(ntrade_data[[nuts_column]] %in% NUTS_CODES$CNTR_CODE)){
-    stop("Error: 'nuts_column' in 'ntrade_data' does not contain NUTS Country codes (2-letter code country level).")
+  # check country codes
+  if (!all(ntrade_data[[ntrade_nuts_col]] %in% NUTS_CODES$CNTR_CODE)) {
+    stop("Error: 'ntrade_nuts_col' in 'ntrade_data' does not contain NUTS Country codes (2-letter code country level).")
   }
-  
-  if(!is.null(prop_data)){
+
+  if (redist_data!="population") {
     # check data.frame
-    if(!is.data.frame(prop_data)){
-      stop("Error: 'prop_data' must be data.frame.")
+    if (!is.data.frame(redist_data)) {
+      stop("Error: 'redist_data' must be data.frame.")
     }
-    #check value numeric
-    if(!is.numeric(prop_data[[prop_values_column]])){
-      stop("Error: 'prop_values_column' in 'prop_data' must be numeric.")
+    # check value numeric
+    if (!is.numeric(redist_data[[redist_values_col]])) {
+      stop("Error: 'redist_values_col' in 'redist_data' must be numeric.")
     }
     # check value not negative
-    if(any(prop_data[[prop_values_column]][!is.na(prop_data[[prop_values_column]])]<0)){
-      stop("Error: Invalid 'value' detected. Negative values 'prop_values_column' in 'prop_data'.")
+    if (any(redist_data[[redist_values_col]][!is.na(redist_data[[redist_values_col]])] < 0)) {
+      stop("Error: Invalid 'value' detected. Negative values 'redist_values_col' in 'redist_data'.")
     }
     # check nuts2 codes
-    if(!all(prop_data[[prop_nuts_column]] %in% NUTS_CODES$NUTS2_CODE)){
-      stop("Error: 'prop_nuts_column' in 'prop_data' does not contain NUTS2 codes.")
+    if (!all(redist_data[[redist_nuts_col]] %in% NUTS_CODES$NUTS2_CODE)) {
+      stop("Error: 'redist_nuts_col' in 'redist_data' does not contain NUTS2 codes.")
     }
   }
 
-  if (is.null(prop_data)) {
-    prop_df <- cached_get_eurostat_data(to_nuts) %>%
-      filter(TIME_PERIOD %in% time_period)
-    if(length(unique(prop_df$TIME_PERIOD))>1){
-      prop_df <- prop_df %>%
+  if (redist_data=="population") {
+    redist_df <- cached_get_eurostat_data(to_nuts) %>%
+      filter(TIME_PERIOD %in% population_year)
+    if (length(unique(redist_df$TIME_PERIOD)) > 1) {
+      redist_df <- redist_df %>%
         group_by(geo) %>%
-        summarise(values_redistribution = mean(values, na.rm=TRUE))
-    }else{
-      prop_df <- prop_df %>%
+        summarise(values_redistribution = mean(values, na.rm = TRUE))
+    } else {
+      redist_df <- redist_df %>%
         select(geo, values) %>%
         rename(values_redistribution = values)
     }
-  }else{
-    new_cols <- c(geo = prop_nuts_column, values_redistribution = prop_values_column)
-    prop_df <- prop_data %>%
-      rename(all_of(new_cols)) %>% 
+  } else {
+    new_cols <- c(geo = redist_nuts_col, values_redistribution = redist_values_col)
+    redist_df <- redist_data %>%
+      rename(all_of(new_cols)) %>%
       select(geo, values_redistribution)
   }
 
-  prop_df <- prop_df %>%
+  redist_df <- redist_df %>%
     mutate(NUTS0 = substr(geo, 1, 2)) %>%
-    filter(NUTS0 %in% unique(ntrade_data[[nuts_column]])) %>%
+    filter(NUTS0 %in% unique(ntrade_data[[ntrade_nuts_col]])) %>%
     group_by(NUTS0) %>%
     mutate(proportion = values_redistribution / sum(values_redistribution)) %>% # Proportion per NUTS0
     ungroup(NUTS0)
 
-  df <- prop_df %>%
-    left_join(select(ntrade_data, !!nuts_column, !!values_column),
-              by = c("NUTS0"=nuts_column)) %>%
-    mutate(across(all_of(values_column),
-                  .fns = list(redist = ~. * proportion))) %>%
+  df <- redist_df %>%
+    left_join(select(ntrade_data, !!ntrade_nuts_col, !!ntrade_values_col),
+      by = c("NUTS0" = ntrade_nuts_col)
+    ) %>%
+    mutate(across(all_of(ntrade_values_col),
+      .fns = list(redist = ~ . * proportion)
+    )) %>%
     rename(!!paste0("NUTS", to_nuts) := geo) %>%
-    select(!!paste0("NUTS", to_nuts), 
-           NUTS0,
-           proportion,
-           ends_with("redist")) %>% 
+    select(
+      !!paste0("NUTS", to_nuts),
+      NUTS0,
+      proportion,
+      ends_with("redist")
+    ) %>%
     rename_with(~ sub("_redist$", "", .), ends_with("redist"))
-  
+
   return(df)
 }

@@ -4,25 +4,34 @@
 \alias{ntrade}
 \title{Ntrade calculation}
 \usage{
-ntrade(trade, IDs = NULL, select_period = NULL, summarize_ntrade = NULL)
+ntrade(
+  trade_data,
+  filter_IDs = NULL,
+  filter_period = NULL,
+  summarise_result = NULL
+)
 }
 \arguments{
-\item{trade}{An object of class `TradeData` that can be the output of \code{\link{trade_data}}.}
+\item{trade_data}{An object of class `TradeData` that can be the output of \code{\link{trade_data}}.}
 
-\item{IDs}{A vector containing the identification codes of the countries of interest.}
+\item{filter_IDs}{A vector containing the country IDs to filter (identification codes 
+of the countries of interest). By default, it is set to \code{NULL}, meaning all 
+\code{reporter} countries in the data frames will be considered.}
 
-\item{select_period}{A vector specifying the time periods to be selected (from the \code{time_period} column).
-By default, it is set to NULL, meaning all periods in the trade data will be considered.}
+\item{filter_period}{A vector specifying the time periods to filter, based on 
+the \code{time_period} column. By default, it is set to \code{NULL}, meaning 
+all time periods in the data frames will be considered.}
 
-\item{summarize_ntrade}{A character vector specifying functions to summarize the \eqn{N_{trade}} result
-for the selected time periods (\code{select_period}). It accepts the expressions \code{"mean"} for the mean, 
+\item{summarise_result}{A character vector specifying functions to summarise the \eqn{N_{trade}} result
+for the selected time periods (\code{filter_period}). It accepts the expressions \code{"mean"} for the mean, 
 \code{"sd"} for the standard deviation, "median" for the median value and
 \code{"quantile(p)"} where \code{p} is the probability for the quantiles to the given probabilities. See examples.}
 }
 \value{
-A data frame with the quantity of commodity imported by each ID from countries or regions
-  where the pest is present. The result is returned for each time period if \code{summarize_ntrade} is not specified
-  (default is NULL). If a summary function is specified, the result will be summarized accordingly.
+A data frame with the quantity of commodity imported by each countrie of interest 
+from countries or regions where the pest is present. The result is returned for each 
+time period if \code{summarise_result} is not specified (default is NULL). 
+If a summary function is specified, the result will be summarised accordingly.
 }
 \description{
 This function calculates the quantity of potentially infested imported commodity
@@ -54,7 +63,6 @@ in the \eqn{MS_i} or \eqn{MS_j}.
 \examples{
 ## Example with simulated trade data for Northern America
 data("datatrade_NA")
-library(dplyr)
 # Total extra-import data: data contains imports from 5 third countries (column partner). 
 extra_total <- datatrade_NA$extra_import
 # Extra-import data from countries where the pest is present (e.g., CNTR_1 and CNTR_2)
@@ -70,19 +78,18 @@ trade_NA <- trade_data(extra_total = extra_total,
                        intra_trade = intra_trade,
                        internal_production = internal_production)
 # Calculation of the Ntrade for each time period
-ntrade_NA <- ntrade(trade = trade_NA)
+ntrade_NA <- ntrade(trade_data = trade_NA)
 head(ntrade_NA)
 # Ntrade summary for the time periods
-ntrade_NA_summary <- ntrade(trade = trade_NA,
-                            summarize_ntrade = c("mean", "sd", 
+ntrade_NA_summary <- ntrade(trade_data = trade_NA,
+                            summarise_result = c("mean", "sd", 
                                                  "quantile(0.025)", 
                                                  "median",
                                                  "quantile(0.975)"))
 head(ntrade_NA_summary)
 # Plot the median of Ntrade
-library(ggplot2)
 plot_countries(data = ntrade_NA_summary,
-               IDs_column = "IDs", 
+               IDs_column = "country_IDs", 
                values_column = "median") +
   xlim(-180,-20) + ylim(0,90)
 
@@ -103,23 +110,23 @@ trade_EU <- trade_data(extra_total = extra_total,
                        intra_trade = intra_trade,
                        internal_production = internal_production)
 # Ntrade mean and sd for the time periods
-ntrade_EU <- ntrade(trade = trade_EU,
-                    summarize_ntrade = c("mean", "sd"))
+ntrade_EU <- ntrade(trade_data = trade_EU,
+                    summarise_result = c("mean", "sd"))
 # Plot Ntrade mean
 plot_countries(data = ntrade_EU, 
-               IDs_column="IDs", 
+               IDs_column="country_IDs", 
                values_column="mean") +
   xlim(-40,50) + ylim(25,70)
 # Ntrade for selected countries and a specific time period
 # Sample 5 countries from trade data
-IDs <- sample(unique(trade_EU$total_trade$IDs), 5)
-ntrade_EU_s <- ntrade(trade = trade_EU,
-                      IDs = IDs,
-                      select_period = 2020)
+country_IDs <- sample(unique(trade_EU$total_trade$country_IDs), 5)
+ntrade_EU_s <- ntrade(trade_data = trade_EU,
+                      filter_IDs = country_IDs,
+                      filter_period = 2020)
 head(ntrade_EU_s)
 # Plot Ntrade result
 plot_countries(data = ntrade_EU_s, 
-               IDs_column="IDs", 
+               IDs_column="country_IDs", 
                values_column="Ntrade_2020") +
   xlim(-40,50) + ylim(25,70)
 

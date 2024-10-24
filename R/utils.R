@@ -12,7 +12,7 @@ utils::globalVariables(c(".", "NUTS_CODES"))
 #' If reporter and partner are TRUE the data frame contains both columns.
 #'
 #' @keywords internal
-summarize_data <- function(data, select_period = NULL, reporter = TRUE, partner = FALSE) {
+summarise_data <- function(data, select_period = NULL, reporter = TRUE, partner = FALSE) {
   time_period <- value <- NULL
   data <- data %>%
     filter(if (!is.null(select_period)) time_period %in% select_period else TRUE)
@@ -81,7 +81,7 @@ check_missing_ids <- function(df1, df2, df3, IDs, time_period) {
   if (nrow(missing_info) > 0) {
     warning_messages <- missing_info %>%
       group_by(ID) %>%
-      summarize(tps = paste(unique(tp), collapse = ", ")) %>%
+      summarise(tps = paste(unique(tp), collapse = ", ")) %>%
       mutate(message = paste(ID, "in time periods", tps)) %>%
       pull(message)
     

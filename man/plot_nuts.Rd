@@ -6,11 +6,11 @@
 \usage{
 plot_nuts(
   data,
-  nuts_column,
-  values_column,
+  nuts_col,
+  values_col,
   nuts_level = 2,
   colors = NULL,
-  na.value = "grey",
+  na_value = "grey",
   title = NULL,
   legend_title = NULL
 )
@@ -18,17 +18,20 @@ plot_nuts(
 \arguments{
 \item{data}{A data frame containing the values to be plotted on the map.}
 
-\item{nuts_column}{Column name in \code{data} containing NUTS2 codes.}
+\item{nuts_col}{Column name in \code{data} containing NUTS2 codes.}
 
-\item{values_column}{Column name in \code{data} with the values to be plotted.}
+\item{values_col}{Column name in \code{data} with the values to be plotted.}
+
+\item{nuts_level}{Numeric. NUTS level to plot (0 = countries, 1 = groups of regions,
+2 = regions, or 3 = provinces or districts). Default is 2.}
 
 \item{colors}{Optional vector of colors used in the gradient scale.}
 
-\item{na.value}{Color for missing values (default is "grey").}
+\item{na_value}{Color for missing values (default is "grey").}
 
 \item{title}{A title for the plot (default is NULL).}
 
-\item{legend_title}{A title for the legend. Default NULL, name in the \code{values_column}.}
+\item{legend_title}{A title for the legend. Default NULL, name in the \code{values_col}.}
 }
 \value{
 A ggplot object with the plotted NUTS regions.
@@ -39,6 +42,6 @@ of the aesthetics such as colors, legend title, and title.
 }
 \examples{
 \dontrun{
-plot_nuts(data = nt_redistrib, nuts_column = "NUTS2", values_column="mean")
+plot_nuts(data = nt_redistrib, nuts_col = "NUTS2", values_col="mean")
 }
 }

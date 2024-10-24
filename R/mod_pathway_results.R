@@ -13,11 +13,11 @@ mod_pathway_results_ui <- function(id){
     fluidRow(
       column(1),
       column(10,
-             HTML('<p class="custom-text"><br>View the pathway model results (<i>N<sub>inf</sub></i>) 
+             HTML('<p class="custom-text"><br>View the pathway model results (<i>NPFP</i>) 
              in table or map format.<br><br> 
              <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the 
              <strong>"Download results"</strong> 
-             button to download a zip folder including the <i>N<sub>inf</sub></i> 
+             button to download a zip folder including the <i>NPFP</i> 
              data and the final report.<br><br> 
              You can also return to the "Pathway model" or "Parameters" tabs to review or 
                   change the input data.<br></p>'),
@@ -197,11 +197,15 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
               )
             )
           }else{
-            fluidRow(width = 11,
+            fluidRow(
+              column(3),
+              column(6, align="center",
                      HTML('<p class="custom-text">Place your cursor over the map to display the values.<br></p>'),
                      br(),
                      ggiraph::girafeOutput(ns("NUTSmap")) %>%
                        shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
+            ),
+            column(3)
             )
           }
         })
@@ -263,8 +267,8 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         limits <- c(min(country$Mean, na.rm=T), max(country$Mean, na.rm=T))
 
         ggiraph_plot(data = country, value = "Mean",
-                     name = expression(N[inf]),
-                     title = bquote(paste(.(idx)," ", "- ", N[inf])),
+                     name = "NPFP",
+                     title = paste(.(idx)," ", "- NPFP"),
                      limits = limits,
                      tooltip = paste0(country$NUTS_ID,
                                       "\nMean: ", round(country$Mean,2),
@@ -307,11 +311,11 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
                           envir = new.env(parent = globalenv()))
         
         # CSV files
-        tempCsv <- file.path(tempDir, "Ninf.csv")
+        tempCsv <- file.path(tempDir, "NPFP.csv")
         write.csv(Ninf_solve(), tempCsv, row.names = FALSE)
         
         # Create ZIP file
-        fs <- c("pathway_report.pdf", "Ninf.csv")
+        fs <- c("pathway_report.pdf", "NPFP.csv")
         utils::zip(zipfile = fname, files = fs)
         setwd(userDir)
       },

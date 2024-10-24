@@ -78,7 +78,7 @@ mod_ntrade_redistribution_ui <- function(id){
 #' @noRd
 #'
 mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
-  CNTR_NAME <- NUTS2 <- NUTS2_CODE <- NUTS_ID <- Median_NUTS2 <- CNTR_CODE <- NULL
+  CNTR_NAME <- NUTS2 <- NUTS2_CODE <- NUTS_ID <- Median <- CNTR_CODE <- NULL
   moduleServer(id, function(input, output, session){
     ns <- session$ns
 
@@ -174,14 +174,14 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
       output$message <- renderText({NULL})
       Nt <- Nt()
       if(input$output_NUTS2=="Population"){
-        prop_data  <-  NULL
-        prop_nuts_column <- NULL
-        prop_values_column <- NULL
+        redist_data  <-  "population"
+        redist_nuts_col <- NULL
+        redist_values_col <- NULL
         tp <- input$population_year
       }else if(input$output_NUTS2=="Custom Data"){
-        prop_data <- read_file(input$NUTS2_proportion$datapath)
-        prop_nuts_column <- input$colname_NUTS2
-        prop_values_column <- input$colname_values
+        redist_data <- read_file(input$NUTS2_proportion$datapath)
+        redist_nuts_col <- input$colname_NUTS2
+        redist_values_col <- input$colname_values
         tp <- NULL
       }
       if(length(time_period())>1){
@@ -192,13 +192,13 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
       tryCatch({
         Nt_r <- ntrade_redist(
           ntrade_data = Nt,
-          nuts_column = "NUTS0",
-          values_column = nt_values,
+          ntrade_nuts_col = "NUTS0",
+          ntrade_values_col = nt_values,
           to_nuts = 2,
-          prop_data = prop_data,
-          prop_nuts_column = prop_nuts_column,
-          prop_values_column = prop_values_column,
-          time_period = tp
+          redist_data = redist_data,
+          redist_nuts_col = redist_nuts_col,
+          redist_values_col = redist_values_col,
+          population_year = tp
         )
         Nt_r <- Nt_r %>% 
           left_join(select(Nt, NUTS0, CNTR_NAME), by="NUTS0") %>% 
