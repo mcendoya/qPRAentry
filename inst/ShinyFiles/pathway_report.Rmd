@@ -72,7 +72,7 @@ The constructed pathway model and its corresponding parameters are presented bel
 `r paste0("$$", model_def, "$$")`
 
 The $N_{trade}$ data used in the model have been previously calculated using 
-the $N_{trade}$ Shiny application, part of the *qPRAentry* package.
+the $N_{trade}$ Shiny app, part of the *qPRAentry* package.
 
 A total of `r n_iter` iterations were performed to randomly generate parameter 
 values based on the specified distribution.
@@ -108,18 +108,20 @@ for (i in seq_along(param_names)) {
 # $\mathit{NPFP}$ results and download
 
 The result of the pathway model is a data frame with the estimated number of 
-potential founder populations $(\mathit{NPFP})$ for each country of interest i.
-The table below displays the $\mathit{NPFP}$ results at NUTS`r NUTS_lev` level. 
-
+potential founder populations $(\mathit{NPFP})$ for each country of interest $i$.
+The table reporting the $\mathit{NPFP}$ results at NUTS`r NUTS_lev` level 
+is available as a .csv file within the Pathway_results20XX-XX-XX.zip folder.  
+Below, the results are displayed for the entire EU territory only. 
 
 ```{r}
 
 # Display the table
+#PLEASE, CHANGE TABLE BELOW WITH TOTAL EU RESULTS
 knitr::kable(Ninf, caption = "NPFP results", digits = 2) 
 
 ```
 
-The map shows the median $\mathit{NPFP}$ values by NUTS`r NUTS_lev`.
+The map below shows the median $\mathit{NPFP}$ values by NUTS`r NUTS_lev`.
 
 ```{r}
 
@@ -134,8 +136,6 @@ plot_nuts(Ninf, "NUTS_ID", "Median", nuts_level = NUTS_lev,
 
 ```
 Figure 1: $\mathit{NPFP}$ values redistributed at the NUTS`r NUTS_lev` level.
-
-The pathway model results are available in the downloaded Pathway_results20XX-XX-XX.zip folder.
 
 
 # References
