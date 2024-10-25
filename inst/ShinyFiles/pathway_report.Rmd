@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE,
                       fig.pos = 'h',
                       fig.align = 'center',
                       fig.height = 3,
-                      fig.width = 4)
+                      fig.width = 7)
 ```
 
 ```{r}
@@ -96,40 +96,25 @@ values based on the specified distribution.
 
 ### Parameters: 
 
+
 ```{r, results='asis'}
+tex_to_expr <- function(tex_str) {
+  tex_str <- gsub("\\$", "", tex_str) 
+  tex_str <- gsub("_\\{([^}]+)\\}", "[\\1]", tex_str) 
+  tex_str <- gsub("_([[:alnum:]])", "[\\1]", tex_str)
+  tex_str <- gsub("\\^\\{([^}]+)\\}", "^\\1", tex_str)
+  tex_str <- gsub("\\^([[:alnum:]])", "^\\1", tex_str)
+
+  parse(text = tex_str)[[1]]
+}
 
 par(mfrow = c(1, 2), mar = c(4, 3, 2, 1))
 
-param_names <- sapply(param_names, function(x) {
-  if (!grepl("^\\$", x)) x <- paste0("$", x)
-  if (!grepl("\\$$", x)) x <- paste0(x, "$")
-  return(x)
-})
-
-#for (i in seq_along(param_names)) {
-#  # Parameter name
-#  cat(paste0(param_names[i], "\n\n"))
-#  
-#  # Histogram
-#  plot.new()
-#  hist(dist_result[[i]], 
-#       main = par_settings[i], 
-#       xlab = "",
-#       probability = TRUE, 
-#       breaks = "fd", 
-#       col = "lightblue",
-#       cex.main = 0.8, 
-#       cex.lab = 0.8)
-#  lines(density(dist_result[[i]]), col = "blue", lwd = 2)
-#  
-#  # space
-#  cat("\n\n")
-#}
-
 for (i in seq_along(param_names)) {
+  par_name <- tex_to_expr(param_names[i])
   # Histogram
   hist(dist_result[[i]], 
-       main = param_names[i], 
+       main = bquote(.(par_name) ~ "~" ~ .(par_settings[i])),
        xlab = "",
        probability = TRUE, 
        breaks = "fd", 
