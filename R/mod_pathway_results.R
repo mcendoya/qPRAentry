@@ -19,7 +19,7 @@ mod_pathway_results_ui <- function(id){
              <strong>"Download results"</strong> 
              button to download a zip folder including the <i>NPFP</i> 
              data and the final report.<br><br> 
-             You can also return to the "Pathway model" or "Parameters" tabs to review or 
+             You can also return to the previous tabs to review or 
                   change the input data.<br></p>'),
              br(),
              downloadButton(ns("downloadAll"), "Download results", class="enable"),
@@ -268,7 +268,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
 
         ggiraph_plot(data = country, value = "Mean",
                      name = "NPFP",
-                     title = paste(.(idx)," ", "- NPFP"),
+                     title = paste(idx, "- NPFP"),
                      limits = limits,
                      tooltip = paste0(country$NUTS_ID,
                                       "\nMean: ", round(country$Mean,2),
