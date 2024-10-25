@@ -61,7 +61,7 @@ can come from the Expert Knowledge Elicitation (EKE)
 Upon completion of the analysis, the user have the option to download a 
 ZIP file containing:
 
-- A comprehensive PDF report summarising the analysis results
-- A CSV file with the $\mathit{NPFP}$ table results
+- A comprehensive PDF report summarising the analysis results (pathway_report.pdf)
+- A CSV file with the $\mathit{NPFP}$ table results (NPFP.csv)
 
 To proceed with the analysis, navigate to the "Pathway model" tab at the top of the page.

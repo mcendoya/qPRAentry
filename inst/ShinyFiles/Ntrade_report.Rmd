@@ -33,18 +33,18 @@ population_year <- params$population_year
 ```
 
 
-# Introduction
+## Introduction
 
-This report details the results of the $N_{trade}$ analysis perdormed using 
-the $N_{trade}$ Shiny app. Data were processed employing the *qPRAentry* package.
+This report details the results of the $N_{trade}$ analysis performed using the 
+$N_{trade}$ app of the \texttt{qPRAentry} package.
 
-$N_{trade}$ is defined as the potentially infected/infested quantity of commodities 
-imported by a country (e.g., an EU country) from other third-countries where 
-the pest of interest is present. This application is meant to calculate $N_{trade}$ 
-and redistribute the data into the countries considered.
+In the context of quantitative risk assessment of pest entry, $N_{trade}$ is defined as the potentially infected/infested quantity of commodities imported by a country from 
+other third-countries where the pest of interest is present. 
+This application is meant to calculate $N_{trade}$ in EU countries (NUTS0) and 
+redistribute this quantity to the regions (NUTS2) of the countries considered.
 
 
-### Calculation of $N_{trade}$
+## Calculation of $N_{trade}$
 
 For a given EU country $i$, $N_{trade_i}$ is calculated taking into account the 
 quantity of commodity imported by country $i$ from non-EU countries where the pest 
@@ -56,13 +56,13 @@ $$
 N_{trade_i} = ExtraPest_i - ExtraPest_i \sum_{j \neq i} R_{ij} + \sum_{j \neq i} ExtraPest_j R_{ji},
 $$
 
-Where: $ExtraPest_i$ and $ExtraPest_j$ are the quantity of commodity imported from 
+where $ExtraPest_i$ and $ExtraPest_j$ are the quantity of commodity imported from 
 non-EU countries where the pest is present by country $i$ and country $j$, respectively. 
 $R_{ij}$ and $R_{ji}$ represent the proportion of commodity exported from $i$ 
 to $j$ ($IntraExp_{ij}$), and from $j$ to $i$ ($IntraExp_{ji}$), respectively, 
-out of the total available commodity in the exporter country. This total quantity 
-is considered as the sum of the internal production of the country ($IP$) and 
-the total quantity imported from non-EU countries ($ExtraTotal$), 
+out of the total available commodity in the exporter country. This total available
+quantityis considered as the sum of the internal production of the country ($IP$) 
+and the total quantity imported from non-EU countries ($ExtraTotal$), 
 regardless of whether the pest is present. Thus, the ratios $R_{ij}$ and $R_{ji}$ 
 are defined as: 
 
@@ -76,38 +76,27 @@ to all countries $j$ is approximated by $ExtraPest_i \sum_{j \neq i} R_{ij}$,
 while the quantity of $ExtraPest_j$ re-exported from all countries $j$ to country 
 $i$ is estimated as $\sum_{j \neq i} ExtraPest_j R_{ji}$.
   
-When uploading the datasets to calculate $N_{trade}$, the selected unit was 
-`r units`, while the selected time-period is as follows: `r time_period`.
+$N_{trade}$ has been calculated in `r units` for the following time-period: `r time_period`.
 
-
-### $N_{trade}$ results
-
-Below, the $N_{trade}$ results are displayed in both tabular and map formats.
-The map shows the median $N_{trade}$ values by country at the NUTS0 level.
-
-```{r}
-
-# Display the table
-knitr::kable(Nt, caption = "$N_{trade}$ results by Country", digits = 2) 
-# %>%
-#   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-
+```{r, fig.width=8, fig.height=8}
 
 plot_countries(Nt, "NUTS0", "Median", title = bquote(N[trade] ~ " Median")) +
    xlim(-20, 40) + ylim(35,70) +
    theme_bw()+
+   labs(color = units, fill = units) +  
    theme(
      plot.title = element_text(size = 14),
      legend.title = element_text(size = 12)
    )
 
 ```
-Figure 1: Median $N_{trade}$ values by country at the NUTS0 level.
+\begin{center}
+Figure 1: $N_{trade}$ values by country (NUTS0 level).
+\end{center}
 
 
-# $N_{trade}$ redistribution
 
-### Redistribution to NUTS2
+## $N_{trade}$ redistribution to NUTS2
 
 After calculating $N_{trade}$ at the country level (NUTS0), the next step involves 
 redistributing these quantities to NUTS2 regions. 
@@ -128,23 +117,37 @@ proportionally to `r data_text`.
 ```{r}
 
 # population year/s:
-if(length(population_year)==1){
-  population_year_text <- paste0("year for population data is ", population_year)
+
+if(data_redistribution=="Population"){
+  data_text <- "population data from Eurostat"
+  if(length(population_year)==1){
+    population_year_text <- paste0("The selected year for population data is ", population_year)
   }else{
-  population_year_text <- paste0("years, for which the average population will be 
-                                 used as the basis for redistribution, are: ", 
-                                 paste0(population_year, collapse=", "))
+    population_year_text <- paste0("The selected years for which the average population will be 
+                                 used as the basis for redistribution are: ", 
+                                   paste0(population_year, collapse=", "))
+  }
+}else{
+  data_text <- "user custom data"
+  population_year_text <- NULL
 }
+
+
+
+
+#if(length(population_year)==1){
+#  population_year_text <- paste0("year for population data is ", population_year)
+#  }else{
+#  population_year_text <- paste0("years, for which the average population will be 
+#                                 used as the basis for redistribution, are: ", 
+#                                 paste0(population_year, collapse=", "))
+#}
 
 ```
 
-The selected `r population_year_text`.
+`r population_year_text`.
 
-Below, the $N_{trade}$ redistribution results are displayed in map format. 
-The table is available in the downloaded Ntrade_results20XX-XX-XX.zip folder.
-The map shows the median $N_{trade}$ values by regions (NUTS2 level).
-
-```{r}
+```{r, fig.width=8, fig.height=8}
 
 plot_nuts(Nt_redist, "NUTS2", "Median", title = bquote(N[trade] ~ " Median")) +
    xlim(-20, 40) + ylim(35,70) +
@@ -152,6 +155,8 @@ plot_nuts(Nt_redist, "NUTS2", "Median", title = bquote(N[trade] ~ " Median")) +
   theme(
      plot.title = element_text(size = 14),
      legend.title = element_text(size = 12)
-   )
+   ) 
 ```
+\begin{center}
 Figure 2: $N_{trade}$ values redistributed at the NUTS2 level.
+\end{center}
