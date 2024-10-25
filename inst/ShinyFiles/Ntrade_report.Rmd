@@ -80,14 +80,15 @@ $N_{trade}$ has been calculated in `r units` for the following time-period: `r t
 
 ```{r, fig.width=8, fig.height=8}
 
-plot_countries(Nt, "NUTS0", "Median", title = bquote(N[trade] ~ " Median")) +
+p <- plot_countries(Nt, "NUTS0", "Median", title = bquote(N[trade] ~ " Median"), legend_title=units) +
    xlim(-20, 40) + ylim(35,70) +
    theme_bw()+
-   labs(color = units, fill = units) +  
-   theme(
+  theme(
      plot.title = element_text(size = 14),
      legend.title = element_text(size = 12)
-   )
+   ) 
+
+print(p)
 
 ```
 \begin{center}
@@ -149,7 +150,7 @@ if(data_redistribution=="Population"){
 
 ```{r, fig.width=8, fig.height=8}
 
-plot_nuts(Nt_redist, "NUTS2", "Median", title = bquote(N[trade] ~ " Median")) +
+plot_nuts(Nt_redist, "NUTS2", "Median", title = bquote(N[trade] ~ " Median"), legend_title=units) +
    xlim(-20, 40) + ylim(35,70) +
    theme_bw()+
   theme(

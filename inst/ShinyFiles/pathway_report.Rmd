@@ -62,31 +62,23 @@ model_def_split <- split_equation(model_def, width=110)
 ```
 
 
-# Introduction
+## Introduction
 
-This report presents the results of the pathway model analysis conducted using 
-the Pathway model Shiny app. Data were processed employing the *qPRAentry* 
-package.
-
-The pathway model provides an estimation of the number of pest individuals, spores, 
-or propagules entering a risk assessment area through various trade pathways.
+This report details the results of the pathway model analysis conducted using 
+the Pathway model app of the \texttt{qPRAentry} package.
+It provides an estimation of the number of potential founder populations 
+$(\mathit{NPFP})$ of a pest in different regions, using $N_{trade}$ data combined 
+with additional user-defined parameters.
 
 The European Food Safety Authority (EFSA) utilises pathway models to evaluate the 
 risk of pests entering the EU territories. The complexity of the pathway model 
 can vary based on factors such as the specific pest under consideration and the 
 availability of detailed data.
 
-The pathway model essentially multiplies the trade flow data by several factors 
-that account for pest prevalence in the traded products and the effectiveness 
-of entry processes in mitigating pest introduction, from the source country of 
+The pathway model combines trade data on potentially infested commodities with 
+other parameters that are involved in the risk of pest entry, from the source country of 
 origin to the EU. Additional information can be found in the EFSA Guidance on 
 quantitative pest risk assessment [@efsa2018guidance].
-
-Due to the challenges in obtaining precise data for each stage of a pest risk assessment, 
-Expert Knowledge Elicitation (EKE) is often employed to estimate the values of 
-the pathway model parameters [@efsa2018guidance]. EKE is a structured process 
-that gathers and utilises expert knowledge to make informed decisions, 
-especially when empirical data is limited [@european2014guidance].
 
 
 
@@ -99,64 +91,77 @@ The defined pathway model and its corresponding parameters are presented below:
 \end{gather*}
 
 
-The $N_{trade}$ data used in the model have been previously calculated using 
-the $N_{trade}$ Shiny app, part of the *qPRAentry* package.
-
 A total of `r n_iter` iterations were performed to randomly generate parameter 
 values based on the specified distribution.
 
 ### Parameters: 
 
 ```{r, results='asis'}
+
+par(mfrow = c(1, 2), mar = c(4, 3, 2, 1))
+
 param_names <- sapply(param_names, function(x) {
   if (!grepl("^\\$", x)) x <- paste0("$", x)
   if (!grepl("\\$$", x)) x <- paste0(x, "$")
   return(x)
 })
 
+#for (i in seq_along(param_names)) {
+#  # Parameter name
+#  cat(paste0(param_names[i], "\n\n"))
+#  
+#  # Histogram
+#  plot.new()
+#  hist(dist_result[[i]], 
+#       main = par_settings[i], 
+#       xlab = "",
+#       probability = TRUE, 
+#       breaks = "fd", 
+#       col = "lightblue",
+#       cex.main = 0.8, 
+#       cex.lab = 0.8)
+#  lines(density(dist_result[[i]]), col = "blue", lwd = 2)
+#  
+#  # space
+#  cat("\n\n")
+#}
+
 for (i in seq_along(param_names)) {
-  # Parameter name
-  cat(paste0(param_names[i], "\n\n"))
-  
   # Histogram
-  plot.new()
   hist(dist_result[[i]], 
-       main = par_settings[i], 
+       main = param_names[i], 
        xlab = "",
        probability = TRUE, 
        breaks = "fd", 
        col = "lightblue",
-       cex.main = 0.8, 
-       cex.lab = 0.8)
+       cex.main = 0.8,
+       cex.lab = 0.8) 
+  # Add a density line
   lines(density(dist_result[[i]]), col = "blue", lwd = 2)
-  
-  # space
-  cat("\n\n")
 }
+
 ```
 
 
-# $\mathit{NPFP}$ results and download
+## $\mathit{NPFP}$ results
 
-The result of the pathway model is a data frame with the estimated number of 
-potential founder populations $(\mathit{NPFP})$ for each country of interest $i$.
-The table reporting the $\mathit{NPFP}$ results at NUTS`r NUTS_lev` level 
-is available as a .csv file within the Pathway_results20XX-XX-XX.zip folder.  
-Below, the results are displayed for the entire EU territory only. 
+As a result of the pathway model the number of potential founder populations $(\mathit{NPFP})$ 
+is estimated for each `r NUTS_lev` level.
+The summary of the overall results for all the selected NUTS are shown below.
 
 ```{r}
 
 # Display the table
-knitr::kable(Ninf_EU, caption = "NPFP results", digits = 2) 
+knitr::kable(Ninf_EU, caption = "NPFP results for all the selected NUTS", digits = 2) 
 
 ```
 
 The map below shows the median $\mathit{NPFP}$ values by NUTS`r NUTS_lev`.
 
-```{r}
+```{r, fig.width=8, fig.height=8}
 
 plot_nuts(Ninf, "NUTS_ID", "Median", nuts_level = NUTS_lev,
-          title = "NPFP Median") +
+          title = "NPFP Median", legend_title="NPFP") +
    xlim(-20, 40) + ylim(35,70) +
    theme_bw()+
   theme(
@@ -165,9 +170,11 @@ plot_nuts(Ninf, "NUTS_ID", "Median", nuts_level = NUTS_lev,
    )
 
 ```
-Figure 1: $\mathit{NPFP}$ values redistributed at the NUTS`r NUTS_lev` level.
+\begin{center}
+Figure 1: $\mathit{NPFP}$ values at the NUTS`r NUTS_lev` level.
+\end{center}
 
 
-# References
+## References
 
 
