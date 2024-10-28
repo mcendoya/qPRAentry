@@ -131,7 +131,7 @@ for (i in seq_along(param_names)) {
 ## $\mathit{NPFP}$ results
 
 As a result of the pathway model the number of potential founder populations $(\mathit{NPFP})$ 
-is estimated for each `r NUTS_lev` level.
+is estimated for each NUTS `r NUTS_lev` level.
 The summary of the overall results for all the selected NUTS are shown below.
 
 ```{r}
@@ -156,7 +156,7 @@ plot_nuts(Ninf, "NUTS_ID", "Median", nuts_level = NUTS_lev,
 
 ```
 \begin{center}
-Figure 1: $\mathit{NPFP}$ values at the NUTS`r NUTS_lev` level.
+Figure 1: $\mathit{NPFP}$ at the NUTS`r NUTS_lev` level.
 \end{center}
 
 

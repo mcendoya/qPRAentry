@@ -17,14 +17,14 @@ This application is meant to calculate $N_{trade}$ for European countries
 including European Union Member States, EFTA countries, and candidate countries and potential candidates. 
 Note that it is not necessary to consider all countries included in this list.
 
-For countries outside Europe, the calculation of $N_{trade}$ can be performed using 
+For non-European countries, the calculation of $N_{trade}$ can be performed using 
 the `ntrade` function from the `qPRAentry` package.
 
 For the use of this application, trade data of the commodities of interest, i.e., 
-potential carriers of the target pests, are required. The trade data required are: 
+potential carriers of the target pests, are required. The required trade data are: 
 
 - Total quantity of non-EU commodity imported by EU countries.
-- Quantity of commodities from non-EU countries where the pest is present imported by EU countries.
+- Quantity of commodity from non-EU countries where the pest is present imported by EU countries.
 - Quantity of commodity imported between EU countries.
 - Quantity of commodity produced in the EU countries.
 
