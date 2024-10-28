@@ -66,8 +66,9 @@ mod_ntrade_redistribution_ui <- function(id){
                          uiOutput(ns("help_data")),
                          br()
                   )),
-                uiOutput(ns("NUTS2_results")) %>% 
-                  shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
+                uiOutput(ns("NUTS2_results")) 
+                # %>% 
+                #   shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
       )
     )#sidebarLayout
   )
@@ -150,12 +151,20 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
 
     observeEvent(input$output_NUTS2,{
       if(input$output_NUTS2=="Population"){
+
+        withProgress(message = 'Downloading population data...', value = 0, {
+          for (i in 1:5) {
+            Sys.sleep(0.5) 
+            incProgress(1/5)
+          }
+        
         df <- cached_get_eurostat_data(nuts = 2) 
           
         shinyWidgets::updatePickerInput(session = session,
                                         inputId = "population_year",
                                         choices = sort(unique(df$TIME_PERIOD)),
                                         selected = character(0))
+        })#withProgress
       }
     })
 
@@ -251,20 +260,18 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         })
       }else if(input$NUTS2_btn=="Map"){
         output$NUTS2_content <- renderUI({
-          tagList(
-            HTML('<p class="custom-text">Place your cursor over the map to display the values 
-                 Click on a country to zoom in for a closer view.<br></p>'),
-            br(),
           fluidRow(
-            div(class = "dual-plot-container",
-                div(class = "dual-plot-column-large", 
-                      ggiraph::girafeOutput(ns("NUTS2map"))
-                    ),
-                div(class = "dual-plot-column-small", 
-                    ggiraph::girafeOutput(ns("NUTS2map_zoom"))
-                    )
+            column(6,
+                   HTML('<p class="custom-text">Place your cursor over the map to display the values. 
+                 Click on a country to zoom in for a closer view.<br></p>'),
+                   br(),
+                   ggiraph::girafeOutput(ns("NUTS2map")) %>%
+                     shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
+            ),
+            column(6,
+                   br(),br(),
+                   ggiraph::girafeOutput(ns("NUTS2map_zoom"))
             )
-          )#fluidRow
           )
         })
       }
@@ -354,6 +361,11 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         paste("Ntrade_results", Sys.Date(), ".zip", sep = "")
       },
       content = function(fname) {
+        withProgress(message = 'Preparing download files...', value = 0, {
+          for (i in 1:5) {
+            Sys.sleep(0.5) 
+            incProgress(1/5)
+          }
         # temporary directory before processing
         userDir <- getwd()
         tempDir <- tempdir()
@@ -389,6 +401,8 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         fs <- c("Ntrade_report.pdf", "Ntrade_NUTS0.csv", "Ntrade_NUTS2.csv")
         utils::zip(zipfile = fname, files = fs)
         setwd(userDir)
+        
+        }) #withProgress
       },
       contentType = "application/zip"
     )

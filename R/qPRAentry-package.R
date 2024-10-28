@@ -10,7 +10,6 @@
 #' @importFrom bsplus shinyInput_label_embed shiny_iconlink bs_embed_popover use_bs_popover
 #' @importFrom giscoR gisco_get_countries gisco_get_nuts
 #' @importFrom eurostat get_eurostat
-#' @importFrom magrittr %>%
 #' @importFrom memoise memoise
 #' @importFrom purrr imap map map2 partial pmap_dfr reduce
 #' @importFrom sf st_as_sf st_crop

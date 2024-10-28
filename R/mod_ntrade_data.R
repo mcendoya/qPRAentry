@@ -68,6 +68,7 @@ mod_ntrade_data_ui <- function(id){
                          div(class="warn",
                              verbatimTextOutput(ns("message"))
                          ),
+                         br(),
                          uiOutput(ns("help_data")),
                          br()
                   )),

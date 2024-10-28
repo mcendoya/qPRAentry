@@ -76,17 +76,25 @@ ntrade_redist <- function(ntrade_data, ntrade_nuts_col, ntrade_values_col,
     stop("Error: 'ntrade_nuts_col' in 'ntrade_data' does not contain NUTS Country codes (2-letter code country level).")
   }
 
-  if (redist_data!="population") {
+  # Check redist_data
+  if(is.vector(redist_data)){
+    if(redist_data!="population"){
+      stop("Error: 'redist_data' must be 'population' (default option) or a dataframe")
+    }else{
+      redist_data <- NULL
+    }
+  }
+  if (!is.null(redist_data)) {
     # check data.frame
     if (!is.data.frame(redist_data)) {
       stop("Error: 'redist_data' must be data.frame.")
     }
     # check value numeric
-    if (!is.numeric(redist_data[[redist_values_col]])) {
+    if (!all(sapply(redist_data[, redist_values_col], is.numeric))) {
       stop("Error: 'redist_values_col' in 'redist_data' must be numeric.")
     }
     # check value not negative
-    if (any(redist_data[[redist_values_col]][!is.na(redist_data[[redist_values_col]])] < 0)) {
+    if (any(sapply(redist_data[, redist_values_col], function(x) x[!is.na(x)] < 0))) {
       stop("Error: Invalid 'value' detected. Negative values 'redist_values_col' in 'redist_data'.")
     }
     # check nuts2 codes
@@ -94,8 +102,8 @@ ntrade_redist <- function(ntrade_data, ntrade_nuts_col, ntrade_values_col,
       stop("Error: 'redist_nuts_col' in 'redist_data' does not contain NUTS2 codes.")
     }
   }
-
-  if (redist_data=="population") {
+  
+  if (is.null(redist_data)) {
     redist_df <- cached_get_eurostat_data(to_nuts) %>%
       filter(TIME_PERIOD %in% population_year)
     if (length(unique(redist_df$TIME_PERIOD)) > 1) {

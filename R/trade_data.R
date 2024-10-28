@@ -79,16 +79,16 @@
 #' @examples
 #' ## Example with simulated trade data for Northern America
 #' # Load data
-#' data("datatrade_NA")
+#' data("datatrade_NorthAm")
 #' # Total extra-import data: data contains imports from 5 third countries (column partner). 
-#' extra_total <- datatrade_NA$extra_import
+#' extra_total <- datatrade_NorthAm$extra_import
 #' # Extra-import data from countries where the pest is present (e.g., CNTR_1 and CNTR_2)
 #' CNTR_pest <- c("CNTR_1", "CNTR_2")
-#' extra_pest <- datatrade_NA$extra_import %>% filter(partner%in%CNTR_pest)
+#' extra_pest <- datatrade_NorthAm$extra_import %>% filter(partner%in%CNTR_pest)
 #' # Intra-trade data
-#' intra_trade  <- datatrade_NA$intra_trade
+#' intra_trade  <- datatrade_NorthAm$intra_trade
 #' # Internal production data
-#' internal_production  <- datatrade_NA$internal_production
+#' internal_production  <- datatrade_NorthAm$internal_production
 #' # Generate trade data (TradeData object)
 #' trade_NA <- trade_data(extra_total = extra_total,
 #'                        extra_pest = extra_pest,
@@ -133,7 +133,7 @@
 trade_data <- function(extra_total, extra_pest, intra_trade, internal_production,
                        filter_IDs = NULL, filter_period = NULL){
   reporter <- partner <- intra_export <- value <- export_prop <- time_period <- 
-    total_available <- NULL
+    total_available <- country_IDs <- NULL
   # check data.frames
   if(!all(is.data.frame(extra_total), is.data.frame(extra_pest), 
           is.data.frame(intra_trade), is.data.frame(internal_production))){

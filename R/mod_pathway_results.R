@@ -283,6 +283,11 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         paste("Pathway_results", Sys.Date(), ".zip", sep = "")
       },
       content = function(fname) {
+        withProgress(message = 'Preparing download files...', value = 0, {
+          for (i in 1:5) {
+            Sys.sleep(0.5) 
+            incProgress(1/5)
+          }
         # temporary directory before processing
         userDir <- getwd()
         tempDir <- tempdir()
@@ -318,6 +323,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         fs <- c("pathway_report.pdf", "NPFP.csv")
         utils::zip(zipfile = fname, files = fs)
         setwd(userDir)
+        }) #withProgress
       },
       contentType = "application/zip"
     )

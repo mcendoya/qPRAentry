@@ -17,7 +17,7 @@ test_that("ntrade_redist should return a data frame", {
                   "data.frame")
 })
 
-test_that("ntrade_redist errors", {
+test_that("ntrade_redist with redist_data should return a data frame", {
   skip_on_cran()
   test_data <- datatrade_EU
   suppressMessages(
@@ -31,10 +31,36 @@ test_that("ntrade_redist errors", {
   )
   
   df_redist <- NUTS_CODES %>% 
+    mutate(values=rgamma(nrow(NUTS_CODES),0.5,0.5))
+  
+  expect_s3_class(suppressMessages(ntrade_redist(ntrade_data=nt, 
+                                                 ntrade_nuts_col="country_IDs", 
+                                                 ntrade_values_col="median",
+                                                 to_nuts = 2,
+                                                 redist_data = df_redist,
+                                                 redist_nuts_col = "NUTS2_CODE",
+                                                 redist_values_col = "values")),
+                  "data.frame")
+})
+
+test_that("ntrade_redist errors", {
+  skip_on_cran()
+  test_data <- datatrade_EU
+  suppressMessages(
+    trade <- trade_data(extra_total = test_data$extra_import %>% filter(partner=="Extra_Total"), 
+                        extra_pest = test_data$extra_import %>% filter(partner!="Extra_Total"),
+                        intra_trade = test_data$intra_trade, 
+                        internal_production = test_data$internal_production))
+  suppressMessages(
+    nt <- ntrade(trade, 
+                 summarise_result = "median")
+  )
+
+  df_redist <- NUTS_CODES %>% 
     mutate(values=rgamma(nrow(NUTS_CODES),0.5,0.5),
            values_neg=values-100)
-  expect_error(ntrade_redist(ntrade_data=nt, 
-                             ntrade_nuts_col="country_IDs", 
+  expect_error(ntrade_redist(ntrade_data=nt,
+                             ntrade_nuts_col="country_IDs",
                              ntrade_values_col="median",
                              to_nuts = 2,
                              redist_data = df_redist,

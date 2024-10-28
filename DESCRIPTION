@@ -33,7 +33,7 @@ Imports:
     ggplot2,
     giscoR,
     knitr,
-    magrittr,
+    memoise,
     purrr,
     rmarkdown,
     sf,

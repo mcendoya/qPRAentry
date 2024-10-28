@@ -12,7 +12,7 @@ test_that("ntrade should return a data frame", {
     nt <- ntrade(trade, 
                  filter_IDs = c("AL", "ES", "IT"), 
                  filter_period=NULL, 
-                 summarize_ntrade = NULL)
+                 summarise_result = NULL)
   )
   expect_equal(nrow(nt), 3)
   expect_s3_class(nt, "data.frame")
@@ -31,26 +31,26 @@ test_that("ntrade errors", {
     ntrade(trade, 
            filter_IDs = 1:3, 
            filter_period=NULL, 
-           summarize_ntrade = NULL),
+           summarise_result = NULL),
     "Error: The selected 'filter_IDs' must be in 'country_IDs' in trade data"
   )
   expect_no_error(
     nt <- ntrade(trade, 
                  filter_IDs = c("AL", "ES", "IT"), 
                  filter_period=NULL, 
-                 summarize_ntrade = NULL)
+                 summarise_result = NULL)
   )
   expect_equal(nrow(nt), 3)
   expect_error(
     ntrade(trade,
            filter_period=1:3,
-           summarize_ntrade = NULL),
+           summarise_result = NULL),
     "Error: The selected period 'filter_period' must be in 'time_period' in trade data."
   )
   expect_error(
     ntrade(trade,
-           summarize_ntrade = "Mean"),
-    paste0("Error: 'summarize_ntrade' must be a character vector specifying valid functions:\n",
+           summarise_result = "Mean"),
+    paste0("Error: 'summarise_result' must be a character vector specifying valid functions:\n",
            "'mean', 'sd', 'median', or 'quantile(p)' where p is a probability between 0 and 1."),
     fixed=TRUE
   )
