@@ -91,12 +91,12 @@ Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
 2. **Custom redistribution using user-uploaded data**
 
    - **Overview:** This option provides users with the flexibility to perform a personalised 
-   redistribution based on custom data. Users can upload their own dataset containing 
+   redistribution based on custom data. Users can upload their own data frame containing 
    specific values for each NUTS2 region.
    
    - **How it works:** Users upload a file containing the NUTS2 codes along with the 
    corresponding values from which $N_{trade}$ will be proportionally redistributed 
-   (e.g., consumption data). The application will then use this custom dataset to redistribute 
+   (e.g., consumption data). The application will then use this custom data frame to redistribute 
    the $N_{trade_i}$ value for a country $i$ to its respective NUTS2 regions $k$ proportionally 
    according to the value of each region $k$. Thus, the redistributed quantity for each region $k$ 
    is calculated as $N_{trade_k} = N_{trade_i} \cdot (Value_k / Value_i)$.
