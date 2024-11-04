@@ -3,57 +3,46 @@
 \docType{data}
 \name{datatrade_NorthAm}
 \alias{datatrade_NorthAm}
-\title{datatrade_NorthAm data}
+\title{Example Trade Data for Northern America}
 \format{
-List of 3 dataframes:
-
+A list of three data frames:
 \describe{
-\itemize{
-\item \code{extra_import} A data frame external import with 296 rows and 4 columns:
-
-\tabular{ll}{
-  \code{reporter} \tab Country IDs.\cr
-  \tab \cr
-  \code{partner} \tab Time period.\cr
-  \tab \cr
-  \code{time_period} \tab Time period.\cr
-  \tab \cr
-  \code{value} \tab External import from countries where the pest is present.\cr
-}
-}
-\itemize{
-\item \code{intra_trade} A data frame internal trade with 2664 rows and 4 columns:
-
-\tabular{ll}{
-  \code{reporter} \tab Country IDs.\cr
-  \tab \cr
-  \code{partner} \tab Time period.\cr
-  \tab \cr
-  \code{time_period} \tab Time period.\cr
-  \tab \cr
-  \code{value} \tab External import from countries where the pest is present.\cr
-}
-}
-\itemize{
-\item \code{internal_production} A data frame internal production with 74 rows 
-and 3 columns:
-
-\tabular{ll}{
-  \code{reporter} \tab Country IDs.\cr
-  \tab \cr
-  \code{time_period} \tab Time period.\cr
-  \tab \cr
-  \code{value} \tab External import from countries where the pest is present.\cr
-}
-}
+  \item{extra_import}{Data on imports from countries outside of Northern America. 
+   A data frame with 100 rows and 4 columns:
+     \describe{
+       \item{reporter}{ID of the receiving country in a two-letter country code (e.g., "US", "CA").}
+       \item{partner}{ID of the exporting country, coded as "CNTR_1" to "CNTR_5" to represent specific 
+       non-Northern American countries.}
+       \item{time_period}{Time period of trade, in three-month periods ("January-March",
+       "April-June", "July-September", "October-December").}
+       \item{value}{Quantity of the commodity imported.}
+     }}
+  \item{intra_trade}{Data on internal trade within Northern American countries. 
+   A data frame with 80 rows and 4 columns:
+     \describe{
+       \item{reporter}{ID of the receiving country in a two-letter code (e.g., "US", "CA").}
+       \item{partner}{ID of the exporting country in a two-letter code (e.g., "US", "CA").}
+       \item{time_period}{Time period of trade, in three-month periods ("January-March",
+       "April-June", "July-September", "October-December").}
+       \item{value}{Quantity of the commodity imported.}
+     }}
+  \item{internal_production}{Data on the internal production of the commodity within Northern America. 
+   A data frame with 20 rows and 3 columns:
+     \describe{
+       \item{reporter}{ID of the producing country in a two-letter code (e.g., "US", "CA").}
+       \item{time_period}{Time period of trade, in three-month periods ("January-March",
+       "April-June", "July-September", "October-December").}
+       \item{value}{Quantity of the commodity produced.}
+     }}
 }
 }
 \usage{
 datatrade_NorthAm
 }
 \description{
-NUTS codes (Nomenclature of territorial units for statistics) for the European 
-countries, including European Union Member States, 
-EFTA countries, and candidate countries and potential candidates.
+`datatrade_NorthAm` simulated trade data for a commodity within Northern America.
+This dataset illustrates the trade and production flow of a commodity that is a potential 
+pathway for the entry of a pest into Northern American countries in a year expressed 
+in three-month periods.
 }
 \keyword{datasets}
