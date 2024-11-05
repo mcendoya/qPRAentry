@@ -15,20 +15,26 @@ trade_data(
 }
 \arguments{
 \item{extra_total}{A data frame containing the total quantity of commodity imported
-from third countries. It must contain the following columns: \code{reporter}, 
-\code{partner}, \code{value} and \code{time_period}.}
+from third countries (pest-free and pest-present countries). It must contain the 
+following columns: \code{reporter} (importing country), \code{partner} (exporting country), 
+\code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).}
 
-\item{extra_pest}{A data frame containing the quantity of commodity imported by
+\item{extra_pest}{A data frame containing the quantity of commodity imported 
 from third countries where the pest is present. It must contain the following columns: 
-\code{reporter}, \code{partner}, \code{value} and \code{time_period}.}
+\code{reporter} (importing country), \code{partner} (exporting country), 
+\code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).
+The quantity of imported commodity detailed in this data frame must also be included 
+in the \code{extra_total} data frame.}
 
-\item{intra_trade}{A data frame containing the quantity of commodity imported
-and exported among the countries of interest.  It must contain the following columns: 
-\code{reporter}, \code{partner}, \code{value} and \code{time_period}.}
+\item{intra_trade}{A data frame containing the quantity of commodity traded between 
+countries of interest. It must contain the following columns: 
+\code{reporter} (importing country), \code{partner} (exporting country), 
+\code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).}
 
-\item{internal_production}{A data frame containing the quantity of commodity
-produced by each country of interest. It must contain the following columns: 
-\code{reporter}, \code{value} and \code{time_period}.}
+\item{internal_production}{A data frame containing the quantity of the commodity 
+produced domestically within each country of interest. It must contain the following columns: 
+\code{reporter} (producing country), \code{value} (quantity of commodity) and 
+\code{time_period} (time period of production).}
 
 \item{filter_IDs}{A vector containing the country IDs to filter (identification codes 
 of the countries of interest). By default, it is set to \code{NULL}, meaning all 
@@ -86,14 +92,25 @@ partner in order not to exceed the total available commodity in each ID.
 }
 }
 \description{
-This function prepares trade databases by providing the total available commodity
-for each country of interest based on the provided data.
+Prepares trade databases for each country of interest based on the provided data.
+This function generates objects of class \code{TradeData} required to be used 
+in the other functions in the package.
 }
 \details{
-Trade flow from reporter to partner.
-Total available = extra total + internal production.
-Missing values as zeros.
-Proportional internal export when intra export is higher than the total available.
+The function combines external imports from third countries, internal trade between 
+the countries of interest and internal production data. It calculates the total amount 
+of product available per country in each time period as the sum of external imports 
+(from pest-free and pest-present countries) and internal production. 
+
+Note that the data to be incorporated must contain the columns \code{reporter}, 
+\code{partner} (except for internal_production), \code{value}, and \code{time_period}.
+The trade flow is considered from partner to reporter, i.e., reporter as importer 
+and partner as exporter.
+
+Trade imbalances are adjusted, so that in case the internal export 
+for a given country exceeds the total quantity available in that country, the internal 
+export is recalculated proportionally based on the total available. 
+Missing values are treated as zeros.
 }
 \examples{
 ## Example with simulated trade data for Northern America

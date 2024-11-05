@@ -1,20 +1,27 @@
 #' Prepare Trade Databases
 #'
-#' This function prepares trade databases by providing the total available commodity
-#' for each country of interest based on the provided data.
-#'
+#' Prepares trade databases for each country of interest based on the provided data.
+#' This function generates objects of class \code{TradeData} required to be used 
+#' in the other functions in the package.
+#' 
 #' @param extra_total A data frame containing the total quantity of commodity imported
-#' from third countries. It must contain the following columns: \code{reporter}, 
-#' \code{partner}, \code{value} and \code{time_period}.
-#' @param extra_pest A data frame containing the quantity of commodity imported by
+#' from third countries (pest-free and pest-present countries). It must contain the 
+#' following columns: \code{reporter} (importing country), \code{partner} (exporting country), 
+#' \code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).
+#' @param extra_pest A data frame containing the quantity of commodity imported 
 #' from third countries where the pest is present. It must contain the following columns: 
-#' \code{reporter}, \code{partner}, \code{value} and \code{time_period}.
-#' @param intra_trade A data frame containing the quantity of commodity imported
-#' and exported among the countries of interest.  It must contain the following columns: 
-#' \code{reporter}, \code{partner}, \code{value} and \code{time_period}.
-#' @param internal_production A data frame containing the quantity of commodity
-#' produced by each country of interest. It must contain the following columns: 
-#' \code{reporter}, \code{value} and \code{time_period}.
+#' \code{reporter} (importing country), \code{partner} (exporting country), 
+#' \code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).
+#' The quantity of imported commodity detailed in this data frame must also be included 
+#' in the \code{extra_total} data frame.
+#' @param intra_trade A data frame containing the quantity of commodity traded between 
+#' countries of interest. It must contain the following columns: 
+#' \code{reporter} (importing country), \code{partner} (exporting country), 
+#' \code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).
+#' @param internal_production A data frame containing the quantity of the commodity 
+#' produced domestically within each country of interest. It must contain the following columns: 
+#' \code{reporter} (producing country), \code{value} (quantity of commodity) and 
+#' \code{time_period} (time period of production).
 #' @param filter_IDs A vector containing the country IDs to filter (identification codes 
 #' of the countries of interest). By default, it is set to \code{NULL}, meaning all 
 #' \code{reporter} countries in the data frames will be considered.
@@ -23,10 +30,24 @@
 #' all time periods in the data frames will be considered.
 #' 
 #'
-#' @details Trade flow from reporter to partner.
-#' Total available = extra total + internal production.
-#' Missing values as zeros.
-#' Proportional internal export when intra export is higher than the total available.
+#' @details The function combines external imports from third countries, internal trade between 
+#' the countries of interest and internal production data. It calculates the total amount 
+#' of product available per country in each time period as the sum of external imports 
+#' (from pest-free and pest-present countries) and internal production. 
+#' 
+#' Note that the data to be incorporated must contain the columns \code{reporter}, 
+#' \code{partner} (except for \code{internal_production}), \code{value}, and \code{time_period}.
+#' The trade flow is considered from partner to reporter, i.e., reporter as importer 
+#' and partner as exporter.
+#' 
+#' Time periods can be specified in any way, both numeric and character formatting is supported. 
+#' For example, it can be expressed as years, months, specific periods, seasons, etc.
+#' 
+#' Trade imbalances are adjusted, so that in case the internal export 
+#' for a given country exceeds the total quantity available in that country, the internal 
+#' export is recalculated proportionally based on the total available. 
+#' Missing values are treated as zeros.
+#'
 #'
 #' @return An object of class \code{TradeData} is returned containing the following list of dataframes:
 #'
