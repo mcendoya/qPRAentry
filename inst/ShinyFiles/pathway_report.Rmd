@@ -38,7 +38,7 @@ NUTS_lev <- params$nuts_level #selected NUTS (depending on the Excel Ntrade file
 
 ```{r}
 # function to print the model equation on multiple lines
-split_equation <- function(eq, width = 80) {
+split_equation <- function(eq, width = 70) {
   parts <- strsplit(eq, "(?<=\\*|\\/|\\+|\\-)", perl = TRUE)[[1]]
   output <- ""
   line_length <- 0
@@ -58,7 +58,7 @@ split_equation <- function(eq, width = 80) {
 }
 
 # width: width of the line
-model_def_split <- split_equation(model_def, width=110)
+model_def_split <- split_equation(model_def, width=100)
 ```
 
 

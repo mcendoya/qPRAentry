@@ -87,8 +87,6 @@ An object of class \code{TradeData} is returned containing the following list of
   \code{export_prop} \tab Proportion of internal export to total available according
   to the specified proportion for each partner.\cr
 }
-The quantity of exported commodity (\code{value}) is multiplied by \code{export_prop} of each
-partner in order not to exceed the total available commodity in each ID.
 }
 }
 \description{
@@ -103,9 +101,12 @@ of product available per country in each time period as the sum of external impo
 (from pest-free and pest-present countries) and internal production. 
 
 Note that the data to be incorporated must contain the columns \code{reporter}, 
-\code{partner} (except for internal_production), \code{value}, and \code{time_period}.
+\code{partner} (except for \code{internal_production}), \code{value}, and \code{time_period}.
 The trade flow is considered from partner to reporter, i.e., reporter as importer 
 and partner as exporter.
+
+Time periods can be specified in any way, both numeric and character formatting is supported. 
+For example, it can be expressed as years, months, specific periods, seasons, etc.
 
 Trade imbalances are adjusted, so that in case the internal export 
 for a given country exceeds the total quantity available in that country, the internal 
