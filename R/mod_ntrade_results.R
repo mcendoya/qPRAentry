@@ -104,7 +104,7 @@ mod_ntrade_results_server <- function(id, trade_done, time_period, units, TradeD
     output$trade_table <- DT::renderDataTable({
       numeric_columns <- names(Nt())[which(sapply(Nt(), is.numeric))]
       DT::datatable(Nt(), options = list(dom = 'ft', pageLength = -1)) %>%
-        DT::formatRound(columns = numeric_columns, digits=2) %>%
+        DT::formatRound(columns = numeric_columns, digits=4) %>%
         DT::formatStyle(columns = "NUTS0", target = "cell", backgroundColor = "#F7080880") %>%
         DT::formatStyle(columns = numeric_columns, target = "cell", backgroundColor = "#F7080820")
     })

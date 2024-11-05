@@ -214,7 +214,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
 
     output$Ninf_table <- DT::renderDataTable({
       DT::datatable(Ninf_solve(), options = list(dom = 'ft', pageLength = -1)) %>%
-        DT::formatRound(columns = 2:length(Ninf_solve()), digits=2) %>%
+        DT::formatRound(columns = 2:length(Ninf_solve()), digits=4) %>%
         DT::formatStyle(columns = "NUTS_ID", target = "cell", backgroundColor = "#F7080880") %>%
         DT::formatStyle(columns = c("Mean","SD","Q0.05","Median","Q0.95"), target = "cell", 
                         backgroundColor = "#F7080820")
@@ -223,7 +223,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
     output$NinfEU_table <- DT::renderDataTable({
       DT::datatable(Ninf_EU(), rownames = c("EU"),
                     options = list(dom = 't', pageLength = -1)) %>%
-        DT::formatRound(columns = 1:length(Ninf_EU()), digits=2)
+        DT::formatRound(columns = 1:length(Ninf_EU()), digits=4)
     })
 
     output$NUTSmap <- ggiraph::renderGirafe({
