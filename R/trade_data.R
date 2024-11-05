@@ -91,8 +91,6 @@
 #'   \code{export_prop} \tab Proportion of internal export to total available according
 #'   to the specified proportion for each partner.\cr
 #' }
-#' The quantity of exported commodity (\code{value}) is multiplied by \code{export_prop} of each
-#' partner in order not to exceed the total available commodity in each ID.
 #' }
 #'
 #' @export
