@@ -109,18 +109,18 @@
 #' # Internal production data
 #' internal_production  <- datatrade_NorthAm$internal_production
 #' # Generate trade data (TradeData object)
-#' trade_NA <- trade_data(extra_total = extra_total,
-#'                        extra_pest = extra_pest,
-#'                        intra_trade = intra_trade,
-#'                        internal_production = internal_production)
-#' head(trade_NA$total_trade)
-#' head(trade_NA$intra_trade)
+#' trade_NorthAm <- trade_data(extra_total = extra_total,
+#'                             extra_pest = extra_pest,
+#'                             intra_trade = intra_trade,
+#'                             internal_production = internal_production)
+#' head(trade_NorthAm$total_trade)
+#' head(trade_NorthAm$intra_trade)
 #' # Plot the total available quantity of commodity available in each country
-#' plot_countries(data = trade_NA$total_trade,
-#'                IDs_column = "IDs", 
-#'                values_column = "total_available") +
+#' plot_countries(data = trade_NorthAm$total_trade,
+#'                IDs_col = "country_IDs", 
+#'                values_col = "total_available") +
 #'   xlim(-180,-20) + ylim(0,90)
-#'   
+#' 
 #' ## Example with simulated trade data for Europe 
 #' # with selected countries and a specific time period
 #' # Load data
@@ -144,10 +144,9 @@
 #'                        filter_period = 2020)
 #' # Plot the total available quantity of commodity available in each country
 #' plot_countries(data = trade_EU$total_trade, 
-#'                IDs_column = "IDs", 
-#'                values_column = "total_available") +
-#'   xlim(-40,50) + ylim(25,70)
-#'
+#'                IDs_col = "country_IDs", 
+#'                values_col = "total_available") +
+#'   xlim(-30,50) + ylim(25,70)
 #'   
 trade_data <- function(extra_total, extra_pest, intra_trade, internal_production,
                        filter_IDs = NULL, filter_period = NULL){
