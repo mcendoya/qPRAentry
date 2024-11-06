@@ -114,7 +114,7 @@ for (i in seq_along(param_names)) {
   par_name <- tex_to_expr(param_names[i])
   # Histogram
   hist(dist_result[[i]], 
-       main = bquote(.(par_name) ~ "~" ~ .(par_settings[i])),
+       main = bquote(atop(.(par_name), .(par_settings[i]))),
        xlab = "",
        probability = TRUE, 
        breaks = "fd", 
@@ -140,6 +140,10 @@ The summary of the overall results for all the selected NUTS are shown below.
 knitr::kable(Ninf_EU, caption = "NPFP results for all the selected NUTS", digits = 4) 
 
 ```
+
+Based on the median NPFP, there would be 1 entry event in the whole territory every 
+`r round(1/Ninf_EU["Median"])` years, with a 90% interval between `r round(1/Ninf_EU["Q0.05"])` 
+and `r round(1/Ninf_EU["Q0.95"])` years.
 
 The map below shows the median $\mathit{NPFP}$ values by NUTS`r NUTS_lev`.
 
