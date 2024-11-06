@@ -97,6 +97,7 @@
 #'
 #' @examples
 #' ## Example with simulated trade data for Northern America
+#' library(dplyr)
 #' # Load data
 #' data("datatrade_NorthAm")
 #' # Total extra-import data: data contains imports from 5 third countries (column partner). 
@@ -116,6 +117,7 @@
 #' head(trade_NorthAm$total_trade)
 #' head(trade_NorthAm$intra_trade)
 #' # Plot the total available quantity of commodity available in each country
+#' library(ggplot2)
 #' plot_countries(data = trade_NorthAm$total_trade,
 #'                IDs_col = "country_IDs", 
 #'                values_col = "total_available") +

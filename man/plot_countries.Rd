@@ -48,6 +48,8 @@ of the aesthetics such as colors, legend title, and title.
 \examples{
 ## Example with CNTR_CODE (2-letter country code)
 # Country codes from the giscoR package
+library(giscoR)
+data("gisco_countrycode")
 IDs  <- gisco_countrycode$CNTR_CODE[gisco_countrycode$continent=="Africa"]
 # Values simulation
 df <- data.frame(IDs = IDs,
@@ -58,22 +60,27 @@ plot_countries(data = df,
                values_col = "value",
                countrycode = "CNTR_CODE")
 # Changing colors and adding other ggplot2 options
+library(ggplot2)
 pl <- plot_countries(data = df,
                      IDs_col = "IDs",
                      values_col = "value",
                      countrycode = "CNTR_CODE",
-                     colors = c("white", "lightblue", "darkblue"))
+                     colors = c("white", "lightblue", "darkblue"),
+                     title = "Plot African countries",
+                     legend_title = "units")
 pl + 
   xlim(-40, 60) + ylim(-40, 40) +
   theme_bw()
 
 ## Example with ISO3_CODE (3-letter country code)
 # Country codes from the giscoR package
+# Random countries and values
 df_ISO3 <- data.frame(IDs = sample(gisco_countrycode$ISO3_CODE, 20),
                       value = runif(20))
 plot_countries(data = df_ISO3,
                IDs_col = "IDs",
                values_col = "value",
-               countrycode = "ISO3_CODE")
-
+               countrycode = "ISO3_CODE",
+               title = "Plot countries using ISO3 codes")
+               
 }
