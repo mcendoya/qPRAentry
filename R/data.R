@@ -1,21 +1,3 @@
-#' NUTS_CODES data
-#'
-#' NUTS codes (Nomenclature of territorial units for statistics) for the European 
-#' countries, including European Union Member States, 
-#' EFTA countries, and candidate countries and potential candidates. 
-#'
-#' @format
-#' A data frame with 335 rows and 3 columns:
-#' \describe{
-#'   \item{CNTR_CODE}{2 letter country codes (NUTS0 level), identical to the 
-#'   ISO 3166-1 alpha-2 code}
-#'   \item{NUTS2_CODE}{4 alphanumeric region codes (NUTS2 level)}
-#'   \item{CNTR_NAME}{Country name}
-#' }
-#' 
-#' @source <https://ec.europa.eu/eurostat/web/nuts>
-"NUTS_CODES"
-
 #' Example Trade Data for the European Union
 #'
 #' `datatrade_EU` simulated trade data for a commodity within the European Union (EU).

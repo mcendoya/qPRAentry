@@ -16,44 +16,58 @@ ntrade_redist(
 )
 }
 \arguments{
-\item{ntrade_data}{A data frame with the quantity of potentially infested commodities
-imported from third countries where the pest is present. It can be calculated
-using \code{\link{ntrade}} function.}
+\item{ntrade_data}{A data frame containing the quantity of potentially infested 
+commodities imported from third countries where the pest is present. This data can 
+be generated using \code{\link{ntrade}} function.}
 
-\item{ntrade_nuts_col}{Column name in \code{ntrade_data} with the NUTS0 codes.}
+\item{ntrade_nuts_col}{A string specifying the column name in \code{ntrade_data} 
+with the NUTS0 codes.}
 
-\item{ntrade_values_col}{Column name, or vector with the name of multiple columns,
-in \code{ntrade_data} with the \eqn{N_{trade}} values
-(quantity of potentially infested commodity imports) to be redistributed.}
+\item{ntrade_values_col}{A string or vector specifying the column name(s) in 
+\code{ntrade_data} with the \eqn{N_{trade}} values (quantity of potentially 
+infested commodity imports) to be redistributed.}
 
-\item{to_nuts}{Numeric. NUTS level for redistribution (1, 2 or 3).}
+\item{to_nuts}{A numeric value (1, 2, or 3) specifying the NUTS level for redistribution.
+Default 2, indicating redistribution to NUTS2.}
 
-\item{redist_data}{Data frame to proportionally distribute \eqn{N_{trade}}.
-By default NULL: redistribution based on population
-(Eurostat data - <https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3>).}
+\item{redist_data}{A data frame to provide custom proportions for redistributing 
+\eqn{N_{trade}}. Default \code{"population"}, indicating redistribution based on 
+\link[https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3]{population 
+data from Eurostat}.}
 
-\item{redist_nuts_col}{Column name in \code{redist_data} with the destination
-NUTS codes in the redistribution. Same NUTS level as set in \code{to_nuts}.}
+\item{redist_nuts_col}{A string specifying the column name in \code{redist_data} 
+that contains the destination NUTS codes. The NUTS level should correspond to the 
+value specified in  \code{to_nuts}. \code{NULL} (default) if a data frame is not 
+incorporated in \code{redist_data}.}
 
-\item{redist_values_col}{Column name in \code{redist_data} with the with the values
-according to which to proportionally redistribute \eqn{N_{trade}}.}
+\item{redist_values_col}{A string specifying the column name in \code{redist_data} 
+with the values for proportional redistribution. This will define the weights 
+used for redistributing \eqn{N_{trade}}.
+\code{NULL} (default) if a data frame is not incorporated in \code{redist_data}.}
 
-\item{population_year}{Year of population data. By default 2023.
-Available years can be found at
-<https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3>.
-Multiple years can be entered by a numeric vector, the average population of
-the different years will be used.}
+\item{population_year}{A numeric value specifying the year of population data 
+to use in the redistribution. only necessary if \code{"population"} is specified in 
+\code{redist_data} (default is 2023). If multiple years are provided, the average 
+population across those years will be used. Available years can be found at
+\link[https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3]{population 
+data from Eurostat population data}.}
 }
 \value{
-A data frame with the quantity of commodity redistributed.
+A data frame with the redistributed quantity of potentially infested 
+commodities across the specified NUTS level.
 }
 \description{
 Redistribution of the quantity of potentially infested commodities (\eqn{N_{trade}})
-of each NUTS0 (country) among smaller territorial units (NUTS1, NUTS2 or NUTS3).
+from country-level (NUTS0) data to smaller territores (NUTS1, NUTS2 or NUTS3).
+See \link[https://ec.europa.eu/eurostat/web/nuts]{NUTS - Nomenclature of territorial 
+units for statistics}.
 }
 \details{
-NUTS stands for nomenclature of territorial units for statistics.
-\eqn{N_{trade}} can be generated using the \code{\link{ntrade}} function.
+This function enables redistribution of trade data from national-level NUTS0 
+to smaller territorial units (NUTS1, NUTS2, or NUTS3), either proportionally 
+based on population data from Eurostat or using user-supplied redistribution proportions. 
+Population data for redistribution is automatically fetched for the specified time 
+period from the Eurostat database.
 }
 \examples{
 \dontrun{

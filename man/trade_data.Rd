@@ -48,44 +48,52 @@ all time periods in the data frames will be considered.}
 An object of class \code{TradeData} is returned containing the following list of dataframes:
 
 \itemize{
-\item \code{total_trade} A data frame with one row for each ID and each time period with 9 variables:
+\item \code{total_trade} \verb{ } A data frame with one row for each ID and each time period with 9 variables:
 
-\tabular{ll}{
-  \code{country_IDs} \tab Country IDs.\cr
+\tabular{lll}{
+  \code{country_IDs} \tab \verb{ } \tab IDs of the countries of interest.\cr
   \tab \cr
-  \code{time_period} \tab Time period.\cr
+  \code{time_period} \tab \verb{ } \tab Time period.\cr
   \tab \cr
-  \code{extra_total} \tab Total external import.\cr
+  \code{extra_total} \tab \verb{ } \tab Total imports from third countries. \cr
   \tab \cr
-  \code{extra_pest} \tab External import from countries where the pest is present.\cr
+  \code{extra_pest} \tab \verb{ } \tab Imports from third countries where the pest of 
+  interest is present.\cr
   \tab \cr
-  \code{intra_import} \tab Internal import between IDs.\cr
+  \code{intra_import} \tab \verb{ } \tab Internal import from the countries of 
+  interest.\cr
   \tab \cr
-  \code{intra_export} \tab Internal export between IDs.\cr
+  \code{intra_export} \tab \verb{ } \tab Internal export to the countries of 
+  interest.\cr
   \tab \cr
-  \code{internal_production} \tab Internal production.\cr
+  \code{internal_production} \tab \verb{ } \tab Internal production in the countries 
+  of interest.\cr
   \tab \cr
-  \code{total_available} \tab Total available.\cr
+  \code{total_available} \tab \verb{ } \tab Total available quantity in the countries 
+  of interest.\cr
   \tab \cr
-  \code{export_prop} \tab Proportion of internal export to the total available.
-  [0, 1) if \code{intra_export} > \code{total_available}, otherwise 
-  1 (\code{intra_export} <= \code{total_available}).\cr
+  \code{export_prop} \tab \verb{ } \tab Proportion of internal export to the total 
+  available commodity. A value of 1 indicates that internal export is less than 
+  or equal to the total available commodity; a value less than 1 [0, 1) indicates 
+  that internal export exceeds the total available.\cr
 }
 }
 \itemize{
-\item \code{intra_trade} A data frame with values of trade commodity between IDs:
+\item \code{intra_trade} \verb{ } A data frame with values of trade commodity between 
+countries of interest:
 
-\tabular{ll}{
-  \code{reporter} \tab Country IDs importing.\cr
+\tabular{lll}{
+  \code{reporter} \tab \verb{ } \tab Importing country ID.\cr
   \tab \cr
-  \code{partner} \tab Country IDs exporting.\cr
+  \code{partner} \tab \verb{ } \tab Exporting country ID.\cr
   \tab \cr
-  \code{time_period} \tab Time period.\cr
+  \code{time_period} \tab \verb{ } \tab Time period.\cr
   \tab \cr
-  \code{value} \tab Quantity of commodity.\cr
+  \code{value} \tab \verb{ } \tab Quantity of the commodity traded.\cr
   \tab \cr
-  \code{export_prop} \tab Proportion of internal export to total available according
-  to the specified proportion for each partner.\cr
+  \code{export_prop} \tab \verb{ } \tab Proportion of internal export to the total 
+  available commodity for each trading partner according to the proportion for 
+  each partner (\code{export_prop} in \code{total_trade}).\cr
 }
 }
 }

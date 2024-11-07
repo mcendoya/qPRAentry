@@ -1,46 +1,58 @@
 #' Ntrade calculation
 #'
 #' This function calculates the quantity of potentially infested imported commodity
-#' (\eqn{N_{trade}}) from third countries where the pest is present.
+#' (\eqn{N_{trade}}) from third countries where the pest is present, based on the 
+#' provided trade datasets (processed with the \code{\link{trade_data}} function). 
 #'
-#' The calculation of \eqn{N_{trade_i}} for each country of interest \eqn{i}
-#' is based on the equation:
-#' \deqn{N_{trade_i} = ExtraPest_i - ExtraPest_i \sum \frac{IntraExp_{ij}}{Total_i}
-#' + \sum ExtraPest_j \frac{IntraExp_{ji}}{Total_j},}
+#' The \eqn{N_{trade}} value represents the amount of potentially infested commodity left 
+#' within each country after adjusting for both direct imports from pest-affected 
+#' third countries and intra-country trade. The calculation of \eqn{N_{trade_i}} for each 
+#' country of interest \eqn{i} is based on the equation:
+#' \deqn{N_{trade_i} = ExtraPest_i - ExtraPest_i \sum_{j \neq i} R_{ij} + 
+#' \sum_{j \neq i} ExtraPest_j R_{ji},}
 #' where:
 #' \itemize{
-#' \item \eqn{N_{trade_i}}: quantity of commodity from third countries remaining in
-#' Member State \eqn{i} (\eqn{MS_i}), taking into account the direct importation from
-#' a non-EU country where the pest is present, the re-exportation to other member states,
-#' the indirect importation of the non-EU commodity from other member states.
-#' \item \eqn{ExtraPest_i}: quantity of non-EU commodity imported (during the period
-#' of time considered) by \eqn{MS_i} from countries where the pest is present (direct import).
-#' \item \eqn{ExtraPest_j}: quantity of non-EU commodity imported (during the period
-#' of time considered) by \eqn{MS_j} from countries where the pest is present (direct import).
-#' \item \eqn{IntraExp_{ij}}: the quantity of commodity exported from \eqn{MS_i} to
-#' \eqn{MS_j} (all origins confounded).
-#' \item \eqn{IntraExp_{ji}}: the quantity of commodity exported from \eqn{MS_j} to
-#' \eqn{MS_i} (all origins confounded).
-#' \item \eqn{Total_i} or \eqn{Total_j}: total quantity of commodities available
-#' in the \eqn{MS_i} or \eqn{MS_j}.
+#' \item \eqn{N_{trade_i}}: quantity of commodity from third countries remaining in 
+#' country \eqn{i}, taking into account the direct importation from third countries 
+#' where the pest is present, the re-exportation to other countries of interest, 
+#' and the indirect importation of the commodity from other countries of interest.
+#' \item \eqn{ExtraPest_i} and \eqn{ExtraPest_j}: quantity of commodity imported by  
+#' country \eqn{i} and country \eqn{j} from third countries where the pest is present 
+#' (direct import), during the period of time considered.
+#' \item \eqn{R_{ij}} and \eqn{R_{ji}}: proportion of intra-regional trade relative 
+#' to the total available quantity in the exporting country defined as: 
+#' \deqn{R_{ij} = IntraExp_{ij}/(IP_i + ExtraTotal_i), \\
+#' R_{ji} = IntraExp_{ji}/(IP_j + ExtraTotal_j).}
+#' Specifically, \eqn{R_{ij}} indicates the proportion of the commodity that is exported 
+#' from country \eqn{i} to country \eqn{j} (\eqn{IntraExp_{ij}}), while \eqn{R_{ji}} 
+#' indicates the proportion exported from country \eqn{j} to country \eqn{i} (\eqn{IntraExp_{ji}}), 
+#' in both cases out of the total available commodity in the exporter country. The total 
+#' available quantity is considered as tha sum of the internal production of the country 
+#' (\eqn{IP}) and the total quantity imported from third countries (\eqn{ExtraTotal}).
+#' Thus, the quantity of \eqn{ExtraPest_i} re-exported from country \eqn{i} to all countries 
+#' \eqn{j} is approximated by \eqn{ExtraPest_i \sum_{j \neq i} R_{ij}}, and the quantity 
+#' of \eqn{ExtraPest_j} re-exported from all countries \eqn{j} to country \eqn{i} as
+#' \eqn{\sum_{j \neq i} ExtraPest_j R_{ji}}.
 #' }
 #'
-#' @param trade_data An object of class `TradeData` that can be the output of \code{\link{trade_data}}.
+#' @param trade_data An object of class \code{TradeData} that can be the output of \code{\link{trade_data}}.
 #' @param filter_IDs A vector containing the country IDs to filter (identification codes 
 #' of the countries of interest). By default, it is set to \code{NULL}, meaning all 
 #' \code{reporter} countries in the data frames will be considered.
 #' @param filter_period A vector specifying the time periods to filter, based on 
 #' the \code{time_period} column. By default, it is set to \code{NULL}, meaning 
 #' all time periods in the data frames will be considered.
-#' @param summarise_result A character vector specifying functions to summarise the \eqn{N_{trade}} result
-#'   for the selected time periods (\code{filter_period}). It accepts the expressions \code{"mean"} for the mean, 
-#'   \code{"sd"} for the standard deviation, "median" for the median value and
-#'   \code{"quantile(p)"} where \code{p} is the probability for the quantiles to the given probabilities. See examples.
+#' @param summarise_result A character vector specifying functions to summarise the 
+#' \eqn{N_{trade}} result for the selected time periods (\code{filter_period}). 
+#' It accepts the expressions \code{"mean"} for the mean, \code{"sd"} for the standard 
+#' deviation, \code{"median"} for the median value and \code{"quantile(p)"} where 
+#' \code{p} is the probability for the quantiles to the given probabilities. See examples.
 #'
-#' @return A data frame with the quantity of commodity imported by each countrie of interest 
-#' from countries or regions where the pest is present. The result is returned for each 
-#' time period if \code{summarise_result} is not specified (default is NULL). 
-#' If a summary function is specified, the result will be summarised accordingly.
+#' @return A data frame with the quantity of commodity imported by each country of interest 
+#' (\code{country_IDs}) from countries or regions where the pest is present. The result 
+#' is returned for each time period if \code{summarise_result} is not specified 
+#' (default is \code{NULL}). If a summary function is specified, the result will be 
+#' summarised accordingly.
 #'
 #' @export
 #'
@@ -58,24 +70,25 @@
 #' # Internal production data
 #' internal_production  <- datatrade_NorthAm$internal_production
 #' # Generate trade data (TradeData object)
-#' trade_NA <- trade_data(extra_total = extra_total,
-#'                        extra_pest = extra_pest,
-#'                        intra_trade = intra_trade,
-#'                        internal_production = internal_production)
+#' trade_NorthAm <- trade_data(extra_total = extra_total,
+#'                             extra_pest = extra_pest,
+#'                             intra_trade = intra_trade,
+#'                             internal_production = internal_production)
 #' # Calculation of the Ntrade for each time period
-#' ntrade_NA <- ntrade(trade_data = trade_NA)
-#' head(ntrade_NA)
+#' ntrade_NorthAm <- ntrade(trade_data = trade_NorthAm)
+#' head(ntrade_NorthAm)
 #' # Ntrade summary for the time periods
-#' ntrade_NA_summary <- ntrade(trade_data = trade_NA,
-#'                             summarise_result = c("mean", "sd", 
-#'                                                  "quantile(0.025)", 
-#'                                                  "median",
-#'                                                  "quantile(0.975)"))
-#' head(ntrade_NA_summary)
+#' ntrade_NorthAm_summary <- ntrade(trade_data = trade_NorthAm,
+#'                                  summarise_result = c("mean", "sd", 
+#'                                                       "quantile(0.025)", 
+#'                                                       "median",
+#'                                                       "quantile(0.975)"))
+#' head(ntrade_NorthAm_summary)
 #' # Plot the median of Ntrade
-#' plot_countries(data = ntrade_NA_summary,
-#'                IDs_column = "country_IDs", 
-#'                values_column = "median") +
+#' library(ggplot2)
+#' plot_countries(data = ntrade_NorthAm_summary,
+#'                IDs_col = "country_IDs", 
+#'                values_col = "median") +
 #'   xlim(-180,-20) + ylim(0,90)
 #' 
 #' ## Example with simulated trade data for Europe 
@@ -99,8 +112,8 @@
 #'                     summarise_result = c("mean", "sd"))
 #' # Plot Ntrade mean
 #' plot_countries(data = ntrade_EU, 
-#'                IDs_column="country_IDs", 
-#'                values_column="mean") +
+#'                IDs_col="country_IDs", 
+#'                values_col="mean") +
 #'   xlim(-40,50) + ylim(25,70)
 #' # Ntrade for selected countries and a specific time period
 #' # Sample 5 countries from trade data
@@ -111,8 +124,8 @@
 #' head(ntrade_EU_s)
 #' # Plot Ntrade result
 #' plot_countries(data = ntrade_EU_s, 
-#'                IDs_column="country_IDs", 
-#'                values_column="Ntrade_2020") +
+#'                IDs_col="country_IDs", 
+#'                values_col="Ntrade_2020") +
 #'   xlim(-40,50) + ylim(25,70)
 #' 
 ntrade <- function(trade_data, filter_IDs = NULL, filter_period=NULL, summarise_result = NULL){
