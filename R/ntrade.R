@@ -171,7 +171,9 @@ ntrade <- function(trade_data, filter_IDs = NULL, filter_period=NULL, summarise_
       IDj <- country_IDs[country_IDs != i]
       for(j in IDj){
         intraExp_ij <- intra_df$value[intra_df$partner==i & intra_df$reporter==j]
-        dfR$Rij[dfR$IDi==i & dfR$IDj == j] <- intraExp_ij/total_i
+        if(total_i>0){
+          dfR$Rij[dfR$IDi==i & dfR$IDj == j] <- intraExp_ij/total_i
+        }
       }
     }
     dfR <- dfR %>%

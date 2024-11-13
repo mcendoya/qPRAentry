@@ -169,7 +169,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
     })
 
     observeEvent(input$NUTS2_proportion,{
-      df <- read_file(input$NUTS2_proportion$datapath)
+      df <- load_csv(input$NUTS2_proportion$datapath)
       shinyWidgets::updatePickerInput(session = session,
                                       inputId = "colname_NUTS2",
                                       choices = sort(colnames(df)))
@@ -188,7 +188,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
         redist_values_col <- NULL
         tp <- input$population_year
       }else if(input$output_NUTS2=="Custom Data"){
-        redist_data <- read_file(input$NUTS2_proportion$datapath)
+        redist_data <- load_csv(input$NUTS2_proportion$datapath)
         redist_nuts_col <- input$colname_NUTS2
         redist_values_col <- input$colname_values
         tp <- NULL

@@ -76,7 +76,7 @@ mod_pathway_ntrade_server <- function(id){
     
     session$userData$ntrade_reactive <- eventReactive(input$ntrade_data,{
       output$message <- renderText({NULL})
-      df <- tryCatch({read_file(input$ntrade_data$datapath)
+      df <- tryCatch({load_csv(input$ntrade_data$datapath)
       }, error = function(e) {
         output$message <- renderText({e$message})
         return(NULL)
@@ -193,7 +193,7 @@ mod_pathway_ntrade_server <- function(id){
     
     output$data_table <- DT::renderDataTable({
       req(!is.null(input$ntrade_data))
-      df <- read_file(input$ntrade_data$datapath)
+      df <- load_csv(input$ntrade_data$datapath)
       numeric_columns <- names(df)[which(sapply(df, is.numeric))]
       DT::datatable(df, options = list(dom = 't', pageLength = -1)) %>%
         DT::formatRound(columns = numeric_columns, digits=2)

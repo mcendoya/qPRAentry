@@ -1,31 +1,3 @@
-read_file <- function(filepath) {
-  # Common separators
-  seps <- c(",", ";", "\t", "")
-  # Try read
-  for(sep in seps) {
-    t <- try(read.csv(filepath, sep = sep), silent = TRUE)
-    # If error try wit row.names = NULL
-    if("try-error" %in% class(t)) {
-      t <- try(read.csv(filepath, sep = sep, row.names = NULL), silent = TRUE)
-      # If error try with the next sep
-      if("try-error" %in% class(t)) {
-        next
-      }
-      # If there is a column "row.names", adjust column names
-      if("row.names" %in% colnames(t)) {
-        colnames(t) <- colnames(t)[2:ncol(t)]
-        t <- t[, 1:(ncol(t)-1)]
-      }
-    }
-    # If no error and there are more than one column
-    if(ncol(t) > 1) {
-      return(t)
-    }
-  }
-  # If all fails
-  stop("Error: The file could not be read. Check file format (.csv recommended).")
-}
-
 # EU map (from giscoR pkg)
 get_EUmap <- function(nuts) {
   suppressWarnings(

@@ -98,7 +98,7 @@ mod_ntrade_data_server <- function(id){
     session$userData$ExtraTotal_reactive <- eventReactive(input$ExtraTotal,{
       output$message <- renderText({NULL})
       df <- tryCatch({
-        read_file(input$ExtraTotal$datapath)
+        load_csv(input$ExtraTotal$datapath)
       }, error = function(e) {
         output$message <- renderText({e$message})
         return(NULL)
@@ -108,7 +108,7 @@ mod_ntrade_data_server <- function(id){
     session$userData$ExtraPest_reactive <- eventReactive(input$ExtraPest,{
       output$message <- renderText({NULL})
       df <- tryCatch({
-        read_file(input$ExtraPest$datapath)
+        load_csv(input$ExtraPest$datapath)
       }, error = function(e) {
         output$message <- renderText({e$message})
         return(NULL)
@@ -118,7 +118,7 @@ mod_ntrade_data_server <- function(id){
     session$userData$IntraEU_reactive <- eventReactive(input$IntraEU,{
       output$message <- renderText({NULL})
       df <- tryCatch({
-        read_file(input$IntraEU$datapath)
+        load_csv(input$IntraEU$datapath)
       }, error = function(e) {
         output$message <- renderText({e$message})
         return(NULL)
@@ -128,7 +128,7 @@ mod_ntrade_data_server <- function(id){
     session$userData$IP_reactive <- eventReactive(input$IP,{
       output$message <- renderText({NULL})
       df <- tryCatch({
-        read_file(input$IP$datapath)
+        load_csv(input$IP$datapath)
       }, error = function(e) {
         output$message <- renderText({e$message})
         return(NULL)
