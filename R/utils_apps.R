@@ -2,7 +2,7 @@
 get_EUmap <- function(nuts) {
   suppressWarnings(
     suppressMessages(
-      giscoR::gisco_get_nuts(nuts_level = nuts) %>%
+      giscoR::gisco_get_nuts(year = year, nuts_level = nuts) %>%
         st_crop(xmin=-40,ymin=20,xmax=50,ymax=70)
     ))
 }

@@ -22,6 +22,25 @@ mod_ntrade_data_ui <- function(id){
                                                       placement = "right",
                                                       html="true",
                                                       container ="body")
+                         ),
+                       # years available in giscoR::gisco_get_nuts()
+                       selectInput(ns("nuts_yr"), 
+                                    label = "NUTS classification year:", 
+                                    selected = "2016",
+                                   choices = c("2003", 
+                                               "2006", 
+                                               "2010", 
+                                               "2013", 
+                                               "2016", 
+                                               "2021",
+                                               "2024")) %>%
+                         bsplus::shinyInput_label_embed(
+                           bsplus::shiny_iconlink("question-circle", class= "help-btn") %>%
+                             bsplus::bs_embed_popover(title = text_nuts_yr$title, 
+                                                      content = text_nuts_yr$content,
+                                                      placement = "right",
+                                                      html="true",
+                                                      container ="body")
                          )
                    ),
                    div(style = "border-bottom:2px solid grey",
@@ -94,7 +113,16 @@ mod_ntrade_data_server <- function(id){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     
-    # data
+    # NUTS codes
+    NUTS_CODES <- eventReactive(input$nuts_yr,{
+      NUTS0_CODES <- cached_get_EUmap(year = nuts_yr, nuts=0) %>%
+        st_drop_geometry() %>% 
+        select(CNTR_CODE, NAME_LATN) %>% 
+        rename(CNTR_NAME = NAME_LATN)
+      return(NUTS0_CODES)
+    })
+   
+     # data
     session$userData$ExtraTotal_reactive <- eventReactive(input$ExtraTotal,{
       output$message <- renderText({NULL})
       df <- tryCatch({
@@ -249,7 +277,9 @@ mod_ntrade_data_server <- function(id){
     }
     
     #data_errors
-    data_message <- function(df, partner=FALSE, extra_partner=FALSE, input_parner=NULL){
+    data_message <- function(df, NUTS_CODES,
+                             partner=FALSE, extra_partner=FALSE, 
+                             input_parner=NULL){
       m <- c()
       if(!all(df$reporter %in% NUTS_CODES$CNTR_CODE)){
         m <- c(m, data_errors$reporter)
@@ -276,6 +306,7 @@ mod_ntrade_data_server <- function(id){
     
     # read data and rename colnames
     ExtraTotal_df <- eventReactive(input$done_ExtraTotal,{
+      NUTS_CODES <- NUTS_CODES()
       tryCatch({
         df <- session$userData$ExtraTotal_reactive()
         m <- columns_null("ExtraTotal")
@@ -291,7 +322,7 @@ mod_ntrade_data_server <- function(id){
             .
           }}
         # data errors
-        m <- data_message(df, extra_partner = TRUE,
+        m <- data_message(df, NUTS_CODES, extra_partner = TRUE,
                           input_parner = input$extra_partner_ExtraTotal)
         if (!is.null(m)) { stop(m) }
         df <- df %>%
@@ -306,6 +337,7 @@ mod_ntrade_data_server <- function(id){
     })
     
     ExtraPest_df <- eventReactive(input$done_ExtraPest,{
+      NUTS_CODES <- NUTS_CODES()
       tryCatch({
         df <- session$userData$ExtraPest_reactive()
         m <- columns_null("ExtraPest")
@@ -321,7 +353,8 @@ mod_ntrade_data_server <- function(id){
             .
           }}
         # data errors
-        m <- data_message(df, extra_partner = TRUE,
+        m <- data_message(df, NUTS_CODES,
+                          extra_partner = TRUE,
                           input_parner = input$extra_partner_ExtraPest)
         if (!is.null(m)) { stop(m) }
         df <- df %>%
@@ -336,6 +369,7 @@ mod_ntrade_data_server <- function(id){
     })
     
     IntraEU_df <- eventReactive(input$done_IntraEU,{
+      NUTS_CODES <- NUTS_CODES()
       tryCatch({
         df <- session$userData$IntraEU_reactive()
         m <- columns_null("IntraEU")
@@ -361,7 +395,7 @@ mod_ntrade_data_server <- function(id){
           }}
         
         #data errors
-        m <- data_message(df, partner=TRUE)
+        m <- data_message(df, NUTS_CODES, partner=TRUE)
         if (!is.null(m)) { stop(m) }
         df <- df %>%
           mutate(value = value * input$unitsIntraEU)
@@ -374,6 +408,7 @@ mod_ntrade_data_server <- function(id){
     })
     
     IP_df <- eventReactive(input$done_IP,{
+      NUTS_CODES <- NUTS_CODES()
       tryCatch({
         df <- session$userData$IP_reactive()
         m <- columns_null("IP", partner = FALSE)
@@ -389,7 +424,7 @@ mod_ntrade_data_server <- function(id){
             .
           }}
         #data_errors
-        m <- data_message(df)
+        m <- data_message(df, NUTS_CODES)
         if (!is.null(m)) { stop(m) }
         df <- df %>%
           mutate(value = value * input$unitsIP)
@@ -516,15 +551,6 @@ mod_ntrade_data_server <- function(id){
     # Enable plot buttons
     observe({
       if(all_btns()=="all"){
-        # shinyjs::enable("ExtraTotal_plot")
-        # addClass("ExtraTotal_plot", class="enable")
-        # 
-        # shinyjs::enable("IntraEU_plot")
-        # addClass("IntraEU_plot", class="enable")
-        # 
-        # shinyjs::enable("IP_plot")
-        # addClass("IP_plot", class="enable")
-        
         shinyjs::enable("trade_done")
         addClass("trade_done", class="enable")
         
@@ -666,6 +692,7 @@ mod_ntrade_data_server <- function(id){
     
     return(
       list(
+        nuts_yr = reactive(input$nuts_yr),
         trade_done = reactive(input$trade_done),
         time_period = reactive(input$time_period),
         units = reactive(input$units),

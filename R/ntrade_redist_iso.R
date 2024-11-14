@@ -1,5 +1,5 @@
 utils::globalVariables(c(
-  "TIME_PERIOD", "geo", "values", "NUTS0",
+  "TIME_PERIOD", "geo", "values",
   "values_redistribution", "proportion",
   "Ntrade_proportional", ":="
 ))

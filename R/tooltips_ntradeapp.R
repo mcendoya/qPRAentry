@@ -79,6 +79,13 @@ text_units <- list(title = HTML('<p>Units (weight) for <i>N<sub>trade</sub></i><
                                   (this can be done in the corresponding <q>units</q> 
                                   field when uploading each data frame).</p>")
                                     )
+# NUTS year info
+text_nuts_yr <- list(title = HTML('<p>NUTS classification year</p>'),
+                   content = HTML("<p>Please check that the NUTS codes in your data 
+                   correspond to the NUTS classification selected. Otherwise an error will 
+                   be displayed. See <a href='https://ec.europa.eu/eurostat/web/nuts/history'>
+                   Eurostat-NUTS</a> for further information.</p>")
+)
 # time info
 text_time <- list(title = "Trade data time periods",
                   content = HTML("<p>Once the trade data are uploaded, the available 
