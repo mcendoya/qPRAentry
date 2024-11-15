@@ -7,11 +7,14 @@ ntradeapp_server <- function(input, output, session) {
   data_vals <- mod_ntrade_data_server("ntrade_data")
 
   Nt_result <- mod_ntrade_results_server("ntrade_results",
+                                         nuts_yr = data_vals$nuts_yr, 
+                                         NUTS_CODES = data_vals$NUTS_CODES,
                                          trade_done = data_vals$trade_done,
                                          time_period = data_vals$time_period,
                                          units = data_vals$units,
                                          TradeData = data_vals$TradeData)
   mod_ntrade_redistribution_server("ntrade_redistribution",
+                                   nuts_yr = data_vals$nuts_yr, 
                                    Nt = Nt_result,
                                    time_period = data_vals$time_period,
                                    units = data_vals$units)

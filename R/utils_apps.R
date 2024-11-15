@@ -1,9 +1,15 @@
 # EU map (from giscoR pkg)
-get_EUmap <- function(nuts) {
+get_EUmap <- function(year, nuts) {
   suppressWarnings(
     suppressMessages(
       giscoR::gisco_get_nuts(year = year, nuts_level = nuts) %>%
-        st_crop(xmin=-40,ymin=20,xmax=50,ymax=70)
+        st_crop(xmin=-40,ymin=20,xmax=50,ymax=70) %>% 
+        select(NUTS_ID, CNTR_CODE) %>% 
+        left_join(select(
+          giscoR::gisco_get_countries() %>% st_drop_geometry(), 
+          CNTR_ID, NAME_ENGL),
+          by = join_by(CNTR_CODE == CNTR_ID)) %>% 
+        rename(CNTR_NAME = NAME_ENGL)
     ))
 }
 

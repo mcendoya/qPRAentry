@@ -4,10 +4,12 @@
 \alias{get_population_data}
 \title{Population data}
 \usage{
-get_population_data(nuts)
+get_population_data(nuts_level, nuts_filter = NULL)
 }
 \arguments{
-\item{nuts}{Numeric, NUTS level to obtain population data}
+\item{nuts_level}{Numeric, NUTS level to obtain population data}
+
+\item{nuts_filter}{Character, NUTS codes to filter}
 }
 \value{
 A data frame with population data for each NUTS level

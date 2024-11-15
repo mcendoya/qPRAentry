@@ -115,10 +115,8 @@ mod_ntrade_data_server <- function(id){
     
     # NUTS codes
     NUTS_CODES <- eventReactive(input$nuts_yr,{
-      NUTS0_CODES <- cached_get_EUmap(year = nuts_yr, nuts=0) %>%
-        st_drop_geometry() %>% 
-        select(CNTR_CODE, NAME_LATN) %>% 
-        rename(CNTR_NAME = NAME_LATN)
+      NUTS0_CODES <- cached_get_EUmap(year = input$nuts_yr, nuts=0) %>%
+        st_drop_geometry()
       return(NUTS0_CODES)
     })
    
@@ -696,6 +694,7 @@ mod_ntrade_data_server <- function(id){
         trade_done = reactive(input$trade_done),
         time_period = reactive(input$time_period),
         units = reactive(input$units),
+        NUTS_CODES = NUTS_CODES,
         TradeData = TradeData
       )
     )

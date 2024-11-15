@@ -35,11 +35,13 @@ mod_ntrade_results_ui <- function(id){
 #' ntrade_results Server Functions
 #'
 #' @noRd
-mod_ntrade_results_server <- function(id, trade_done, time_period, units, TradeData){
+mod_ntrade_results_server <- function(id, nuts_yr, NUTS_CODES, trade_done, 
+                                      time_period, units, TradeData){
   country_IDs <- q0.05 <- q0.95 <- CNTR_CODE <- CNTR_NAME <- NUTS_ID <- Median <- NULL
   moduleServer(id, function(input, output, session){
     ns <- session$ns
     Nt <- eventReactive(trade_done(),{
+      NUTS_CODES <- NUTS_CODES()
       trade <- TradeData()
       if(length(time_period())>1){
         res <- ntrade(trade_data = trade,
@@ -68,9 +70,7 @@ mod_ntrade_results_server <- function(id, trade_done, time_period, units, TradeD
 
     # EU NUTS0 map (from giscoR pkg)
     EU00 <- eventReactive(trade_done(),{
-      NUTS0_map <- cached_get_EUmap(nuts=0) %>% 
-        left_join(select(NUTS_CODES, CNTR_CODE, CNTR_NAME)%>% distinct(),
-                  by="CNTR_CODE")
+      NUTS0_map <- cached_get_EUmap(nuts_yr(), nuts=0)
       NUTS0_map
     })
     

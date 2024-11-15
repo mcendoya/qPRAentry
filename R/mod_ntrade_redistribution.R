@@ -78,7 +78,7 @@ mod_ntrade_redistribution_ui <- function(id){
 #'
 #' @noRd
 #'
-mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
+mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units){
   CNTR_NAME <- NUTS2 <- NUTS2_CODE <- NUTS_ID <- Median <- CNTR_CODE <- NULL
   moduleServer(id, function(input, output, session){
     ns <- session$ns
@@ -157,8 +157,8 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
             Sys.sleep(0.5) 
             incProgress(1/5)
           }
-        
-        df <- cached_get_eurostat_data(nuts = 2) 
+
+        df <- cached_get_eurostat_data(nuts_level = 2) 
           
         shinyWidgets::updatePickerInput(session = session,
                                         inputId = "population_year",
@@ -207,12 +207,15 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
           redist_data = redist_data,
           redist_nuts_col = redist_nuts_col,
           redist_values_col = redist_values_col,
-          population_year = tp
+          population_year = tp,
+          nuts_year = nuts_yr()
         )
+        
         Nt_r <- Nt_r %>% 
           left_join(select(Nt, NUTS0, CNTR_NAME), by="NUTS0") %>% 
           select(!NUTS0) %>% 
           relocate(NUTS2, CNTR_NAME)
+
         return(Nt_r)
       },error = function(e) {
         output$message <- renderText({e$message})
@@ -240,9 +243,7 @@ mod_ntrade_redistribution_server <- function(id, Nt, time_period, units){
     
     # EU NUTS2 map (from giscoR pkg)
     EU02 <- eventReactive(input$redistribution_done,{
-      NUTS2map <- cached_get_EUmap(nuts=2) %>% 
-            left_join(select(NUTS_CODES, NUTS2_CODE, CNTR_NAME), 
-                      by=join_by(NUTS_ID==NUTS2_CODE))
+      NUTS2map <- cached_get_EUmap(nuts_yr(), nuts=2)
       NUTS2map
     })
     

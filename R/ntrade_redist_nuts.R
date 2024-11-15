@@ -44,6 +44,7 @@ utils::globalVariables(c(
 #' population across those years will be used. Available years can be found at
 #' \link[https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3]{population 
 #' data from Eurostat population data}.
+#' @param nuts_year Default 2016. One of '2003','2006','2010','2013','2016','2021','2024'.
 #'
 #' @return A data frame with the redistributed quantity of potentially infested 
 #' commodities across the specified NUTS level.
@@ -62,7 +63,16 @@ utils::globalVariables(c(
 ntrade_redist <- function(ntrade_data, ntrade_nuts_col, ntrade_values_col, 
                           to_nuts = 2, redist_data = "population", 
                           redist_nuts_col = NULL, redist_values_col = NULL,
-                          population_year = 2023) {
+                          population_year = 2023, nuts_year = 2016) {
+  
+  # check nuts year
+  if (!nuts_year %in% c('2003','2006','2010','2013','2016','2021','2024')) {
+    stop("Error: nuts_year not available. Try '2003','2006','2010','2013','2016','2021', or '2024'")
+  }
+  
+  NUTS_CODES <- cached_get_EUmap(year = nuts_year, nuts = to_nuts) %>%
+    st_drop_geometry()
+  
   # check data.frame
   if (!is.data.frame(ntrade_data)) {
     stop("Error: 'ntrade_data' must be data.frame.")
@@ -112,14 +122,16 @@ ntrade_redist <- function(ntrade_data, ntrade_nuts_col, ntrade_values_col,
     if (any(sapply(redist_data[, redist_values_col], function(x) x[!is.na(x)] < 0))) {
       stop("Error: Invalid 'value' detected. Negative values 'redist_values_col' in 'redist_data'.")
     }
-    # check nuts2 codes
-    if (!all(redist_data[[redist_nuts_col]] %in% NUTS_CODES$NUTS2_CODE)) {
-      stop("Error: 'redist_nuts_col' in 'redist_data' does not contain NUTS2 codes.")
+    # check nuts codes
+    if (!all(redist_data[[redist_nuts_col]] %in% NUTS_CODES$NUTS_ID)) {
+      stop("Error: 'redist_nuts_col' in 'redist_data' does not contain NUTS codes.")
     }
   }
+
   
   if (is.null(redist_data)) {
-    redist_df <- cached_get_eurostat_data(to_nuts) %>%
+    redist_df <- cached_get_eurostat_data(nuts_level=to_nuts, 
+                                          nuts_filter = NUTS_CODES$NUTS_ID) %>%
       filter(TIME_PERIOD %in% population_year)
     if (length(unique(redist_df$TIME_PERIOD)) > 1) {
       redist_df <- redist_df %>%

@@ -12,7 +12,7 @@
 #' @importFrom eurostat get_eurostat
 #' @importFrom memoise memoise
 #' @importFrom purrr imap map map2 partial pmap_dfr reduce
-#' @importFrom sf st_as_sf st_crop
+#' @importFrom sf st_as_sf st_crop st_drop_geometry
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom shinyjs addClass disable disabled enable html removeClass runjs useShinyjs
 #' @importFrom shinyWidgets dropMenu hideDropMenu pickerInput radioGroupButtons updatePickerInput

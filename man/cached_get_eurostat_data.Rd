@@ -4,7 +4,7 @@
 \alias{cached_get_eurostat_data}
 \title{Cached function to memoize the retrieval of Eurostat data.}
 \usage{
-cached_get_eurostat_data(nuts)
+cached_get_eurostat_data(nuts_level, nuts_filter = NULL)
 }
 \value{
 A memoized version of `get_population_data`.

@@ -133,14 +133,15 @@ missing_intra <- function(data, IDs) {
 #' 
 #' This internal function download Eurostat population data
 #'
-#' @param nuts Numeric, NUTS level to obtain population data
+#' @param nuts_level Numeric, NUTS level to obtain population data
+#' @param nuts_filter Character, NUTS codes to filter
 #'
 #' @return A data frame with population data for each NUTS level
 #' 
 #' @keywords internal
-get_population_data <- function(nuts) {
+get_population_data <- function(nuts_level, nuts_filter=NULL) {
   sex <- age <- NULL
-  length_nuts <- nuts + 2 # NUTS characters
+  length_nuts <- nuts_level + 2 # NUTS characters
   df <- eurostat::get_eurostat("demo_r_pjangrp3", time_format = "num") %>%
     filter(
       sex == "T" &
@@ -148,8 +149,10 @@ get_population_data <- function(nuts) {
       age == "TOTAL" &
       nchar(geo) == length_nuts
     )
-  filter_nuts <- giscoR::gisco_get_nuts(nuts_level=nuts)$NUTS_ID
-  df <- df %>% filter(geo %in% filter_nuts)
+  if(!is.null(nuts_filter)){
+    df <- df %>% filter(geo %in% nuts_filter)
+  }
+
   return(df)
 }
 
