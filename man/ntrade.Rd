@@ -38,7 +38,7 @@ summarised accordingly.
 \description{
 This function calculates the quantity of potentially infested imported commodity
 (\eqn{N_{trade}}) from third countries where the pest is present, based on the 
-provided trade datasets (processed with the \code{\link{trade_data}} function).
+provided trade datasets (output of the \code{\link{trade_data}} function).
 }
 \details{
 The \eqn{N_{trade}} value represents the amount of potentially infested commodity left 
@@ -103,7 +103,7 @@ head(ntrade_NorthAm_summary)
 # Plot the median of Ntrade
 library(ggplot2)
 plot_countries(data = ntrade_NorthAm_summary,
-               IDs_col = "country_IDs", 
+               iso_col = "country_IDs", 
                values_col = "median") +
   xlim(-180,-20) + ylim(0,90)
 
@@ -128,7 +128,7 @@ ntrade_EU <- ntrade(trade_data = trade_EU,
                     summarise_result = c("mean", "sd"))
 # Plot Ntrade mean
 plot_countries(data = ntrade_EU, 
-               IDs_col="country_IDs", 
+               iso_col="country_IDs", 
                values_col="mean") +
   xlim(-40,50) + ylim(25,70)
 # Ntrade for selected countries and a specific time period
@@ -140,7 +140,7 @@ ntrade_EU_s <- ntrade(trade_data = trade_EU,
 head(ntrade_EU_s)
 # Plot Ntrade result
 plot_countries(data = ntrade_EU_s, 
-               IDs_col="country_IDs", 
+               iso_col="country_IDs", 
                values_col="Ntrade_2020") +
   xlim(-40,50) + ylim(25,70)
 

@@ -6,8 +6,8 @@
 \usage{
 pathway_model(
   ntrade_data,
-  IDs_column,
-  values_column,
+  IDs_col,
+  values_col,
   expression,
   parameters,
   niter = 100
@@ -18,18 +18,20 @@ pathway_model(
 imported from third countries where the pest is present. It can be calculated
 using \code{\link{ntrade}} function.}
 
-\item{IDs_column}{Column name in \code{ntrade_data} with the country IDs of interest.}
+\item{IDs_col}{Column name in \code{ntrade_data} with the country IDs of interest.}
 
-\item{values_column}{Column name in \code{ntrade_data} with the \eqn{N_{trade}} values
+\item{values_col}{Column name in \code{ntrade_data} with the \eqn{N_{trade}} values
 (quantity of potentially infested commodity imports) to be used in the pathway model.}
 
-\item{expression}{Equation for the pathway model in the form of a string of characters.
-This model must not include \eqn{N_{trade}}, since it is added multiplicatively to the
-entered model by default. This equation is then added multiplicatively to:
-\deqn{N_{inf_i} = N_{trade_i} \cdot \; ...}}
+\item{expression}{A string of characters representing the equation for the pathway model.
+This expression must not include \eqn{N_{trade}}, since it is added multiplicatively to the
+entered equation by default. This equation is then added multiplicatively to:
+\deqn{NPFP = N_{trade_i} \cdot \; ...}}
 
-\item{parameters}{List with the names of the parameters included in \code{expression}
-and the distribution of each one of them. The available distributions are:
+\item{parameters}{Named list specifying the distributions for each parameter 
+included in \code{expression}. Each list element should be a list containing 
+the distribution name (e.g., \code{dist = "norm"}) and its arguments (e.g., 
+\code{mean = 0, sd = 1}). The available distributions are:
 \tabular{ll}{
 "beta" \tab   see \code{\link[stats]{rbeta}}\cr
   \tab \cr
@@ -67,13 +69,13 @@ Default 100 iterations.}
 }
 \value{
 A dataframe with the statistics (mean, SD, minimum, first quartile, 
-median, third quartile, and maximum) of founder population \eqn{N_{inf}} for each
+median, third quartile, and maximum) of founder population \eqn{NPFP} for each
 country or region and for the total. [To be completed]
 }
 \description{
 Estimate the amount of infested commodities that can enter into the
 countries of interest imported from third countries where the pest is present,
-and produce founder populations that can establish and spread.
+and produce the number of potential founder populations (NPFP) that can establish and spread.
 }
 \examples{
 \dontrun{
@@ -81,13 +83,13 @@ and produce founder populations that can establish and spread.
 eq <- "(1/p1)*p2*p3"
 # distribution for each parameter
 parameters <- list(
-  p1 = list(dist = "beta", args = list(shape1 = 0.5, shape2 = 1)),
-  p2 = list(dist = "gamma", args = list(shape = 1.5, scale = 100)),
-  p3 = list(dist = "norm", args = list(mean = 5, sd = 2))
+  p1 = list(dist = "beta", shape1 = 0.5, shape2 = 1),
+  p2 = list(dist = "gamma", shape = 1.5, scale = 100),
+  p3 = list(dist = "norm", mean = 5, sd = 2)
 )
 res <- pathway_model(ntrade_data = Nt_df,
-                     IDs_column = "IDs",
-                     values_column = "value",
+                     IDs_col = "IDs",
+                     values_col = "value",
                      expression = eq,
                      parameters = parameters,
                      niter = 100)

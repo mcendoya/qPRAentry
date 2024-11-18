@@ -9,6 +9,7 @@ plot_nuts(
   nuts_col,
   values_col,
   nuts_level = 2,
+  nuts_year = "2016",
   colors = NULL,
   na_value = "grey",
   title = NULL,
@@ -18,30 +19,79 @@ plot_nuts(
 \arguments{
 \item{data}{A data frame containing the values to be plotted on the map.}
 
-\item{nuts_col}{Column name in \code{data} containing NUTS2 codes.}
+\item{nuts_col}{A string specifying the column name in \code{data} containing NUTS codes.}
 
-\item{values_col}{Column name in \code{data} with the values to be plotted.}
+\item{values_col}{A string specifying the column name in \code{data} with the values to be plotted.}
 
-\item{nuts_level}{Numeric. NUTS level to plot (0 = countries, 1 = groups of regions,
-2 = regions, or 3 = provinces or districts). Default is 2.}
+\item{nuts_level}{A numeric value (0, 1, 2, or 3) specifying the NUTS level to plot. 
+Default is 2 indicating NUTS2. See \link[https://ec.europa.eu/eurostat/web/nuts]{NUTS 
+- Nomenclature of territorialunits for statistics}.}
+
+\item{nuts_year}{Year of NUTS classification. One of '2003','2006','2010','2013',
+'2016' (default),'2021', or '2024'. See 
+\link[https://ec.europa.eu/eurostat/web/nuts/history]{NUTS - History}.}
 
 \item{colors}{Optional vector of colors used in the gradient scale.}
 
 \item{na_value}{Color for missing values (default is "grey").}
 
-\item{title}{A title for the plot (default is NULL).}
+\item{title}{A title for the plot (default is \code{NULL}).}
 
-\item{legend_title}{A title for the legend. Default NULL, name in the \code{values_col}.}
+\item{legend_title}{A title for the legend. Default \code{NULL}, name in the 
+\code{values_col}.}
 }
 \value{
 A ggplot object with the plotted NUTS regions.
 }
 \description{
-This function plots NUTS2 region values on a map using data provided and allows customization
+This function plots NUTS region values on a map using data provided and allows customization
 of the aesthetics such as colors, legend title, and title.
 }
-\examples{
-\dontrun{
-plot_nuts(data = nt_redistrib, nuts_col = "NUTS2", values_col="mean")
+\details{
+This function extracts a \code{\link{sf}} object from the package \code{\link{giscoR}}.
+It uses the \code{\link{ggplot2}} package for the representation. Supports adding 
+other \code{ggplot2} options (see examples).
 }
+\examples{
+## Example plot at NUTS0 level (country level)
+# Simulated data trade in European countries
+data("datatrade_EU")
+# Mean of internal production for each country
+library(dplyr)
+data_plot <- datatrade_EU$internal_production \%>\% 
+  group_by(reporter) \%>\% 
+  summarise(mean_value = mean(value))
+
+head(data_plot)
+
+#Plot
+pl <- plot_nuts(data = data_plot,
+                nuts_col = "reporter",
+                values_col = "mean_value",
+                nuts_level = 0)
+pl
+
+## Example plot at NUTS1 level (codes extracted from 'giscoR' package)
+library(dplyr)
+library(giscoR)
+data_plot <- gisco_get_nuts(nuts_level=1) \%>\% 
+  select(NUTS_ID) \%>\% 
+  # simulate values for each NUTS1
+  mutate(values = abs(rnorm(nrow(.), 0, 1000)))
+
+#Plot
+pl <- plot_nuts(data = data_plot,
+                nuts_col = "NUTS_ID",
+                values_col = "values",
+                nuts_level = 1,
+                colors = c("white", "lightblue", "darkblue"),
+                title = "NUTS1",
+                legend_title = "units")
+
+# Changing colors and adding other ggplot2 options
+library(ggplot2)
+pl + 
+  xlim(-40, 50) + ylim(20, 70) +
+  theme_bw()
+
 }

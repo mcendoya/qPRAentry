@@ -2,20 +2,22 @@
 #'
 #' Estimate the amount of infested commodities that can enter into the
 #' countries of interest imported from third countries where the pest is present,
-#' and produce founder populations that can establish and spread.
+#' and produce the number of potential founder populations (NPFP) that can establish and spread.
 #'
 #' @param ntrade_data A data frame with the quantity of potentially infested commodities
 #' imported from third countries where the pest is present. It can be calculated
 #' using \code{\link{ntrade}} function.
-#' @param IDs_column Column name in \code{ntrade_data} with the country IDs of interest.
-#' @param values_column Column name in \code{ntrade_data} with the \eqn{N_{trade}} values
+#' @param IDs_col Column name in \code{ntrade_data} with the country IDs of interest.
+#' @param values_col Column name in \code{ntrade_data} with the \eqn{N_{trade}} values
 #' (quantity of potentially infested commodity imports) to be used in the pathway model.
-#' @param expression Equation for the pathway model in the form of a string of characters.
-#' This model must not include \eqn{N_{trade}}, since it is added multiplicatively to the
-#' entered model by default. This equation is then added multiplicatively to:
-#' \deqn{N_{inf_i} = N_{trade_i} \cdot \; ...}
-#' @param parameters List with the names of the parameters included in \code{expression}
-#' and the distribution of each one of them. The available distributions are:
+#' @param expression A string of characters representing the equation for the pathway model.
+#' This expression must not include \eqn{N_{trade}}, since it is added multiplicatively to the
+#' entered equation by default. This equation is then added multiplicatively to:
+#' \deqn{NPFP = N_{trade_i} \cdot \; ...}
+#' @param parameters Named list specifying the distributions for each parameter 
+#' included in \code{expression}. Each list element should be a list containing 
+#' the distribution name (e.g., \code{dist = "norm"}) and its arguments (e.g., 
+#' \code{mean = 0, sd = 1}). The available distributions are:
 #' \tabular{ll}{
 #' "beta" \tab   see \code{\link[stats]{rbeta}}\cr
 #'   \tab \cr
@@ -51,7 +53,7 @@
 #' Default 100 iterations.
 #'
 #' @return A dataframe with the statistics (mean, SD, minimum, first quartile, 
-#' median, third quartile, and maximum) of founder population \eqn{N_{inf}} for each
+#' median, third quartile, and maximum) of founder population \eqn{NPFP} for each
 #' country or region and for the total. [To be completed]
 #'
 #' @export
@@ -62,13 +64,13 @@
 #' eq <- "(1/p1)*p2*p3"
 #' # distribution for each parameter
 #' parameters <- list(
-#'   p1 = list(dist = "beta", args = list(shape1 = 0.5, shape2 = 1)),
-#'   p2 = list(dist = "gamma", args = list(shape = 1.5, scale = 100)),
-#'   p3 = list(dist = "norm", args = list(mean = 5, sd = 2))
+#'   p1 = list(dist = "beta", shape1 = 0.5, shape2 = 1),
+#'   p2 = list(dist = "gamma", shape = 1.5, scale = 100),
+#'   p3 = list(dist = "norm", mean = 5, sd = 2)
 #' )
 #' res <- pathway_model(ntrade_data = Nt_df,
-#'                      IDs_column = "IDs",
-#'                      values_column = "value",
+#'                      IDs_col = "IDs",
+#'                      values_col = "value",
 #'                      expression = eq,
 #'                      parameters = parameters,
 #'                      niter = 100)
@@ -76,12 +78,12 @@
 #' # Total
 #' res %>% filter(IDs == "Total")
 #' }
-pathway_model <- function(ntrade_data, IDs_column, values_column,
+pathway_model <- function(ntrade_data, IDs_col, values_col,
                           expression, parameters, niter=100){
   
   # Check if the specified columns exist in the dataframe
-  if (!all(c(IDs_column, values_column) %in% names(ntrade_data))) {
-    stop("The dataframe must contain the columns specified in IDs_column and values_column")
+  if (!all(c(IDs_col, values_col) %in% names(ntrade_data))) {
+    stop("The dataframe must contain the columns specified in IDs_col and values_col")
   }
   # Check if parameters is a list
   if (!is.list(parameters)) {
@@ -89,17 +91,16 @@ pathway_model <- function(ntrade_data, IDs_column, values_column,
   }
   
   # Check if parameter names are in the expression
-  
   if(!all(sapply(names(parameters), function(x) grepl(x, expression)))){
-    stop("The parameters in the expression do not match the parameters specified in the distributions")
+    stop("The parameters in 'expression' do not match the parameters specified in 'parameters'")
   }
   
   param_samples <- lapply(parameters, function(distr) {
     dist_name <- paste0("r", distr$dist)
     if (!exists(dist_name)) {
-      stop(paste("The distribution function", dist_name, "does not exist"))
+      stop(paste("The distribution function", dist_name, "is not valid"))
     }
-    do.call(dist_name, c(list(niter), distr$args))
+    do.call(dist_name, c(list(niter), dist[-1]))
   })
   
   names(param_samples) <- names(parameters)
@@ -119,20 +120,20 @@ pathway_model <- function(ntrade_data, IDs_column, values_column,
   
   res_df <- map2(res_samp, 1:niter,
                  function(x, i){
-                   res <- ntrade_data[values_column] * x
+                   res <- ntrade_data[values_col] * x
                    setNames(res, paste0("res", i))
                  }) %>%
     bind_cols() %>% 
-    bind_cols(select(ntrade_data, !!IDs_column)) %>%
-    relocate(!!IDs_column)
+    bind_cols(select(ntrade_data, !!IDs_col)) %>%
+    relocate(!!IDs_col)
   
   total_df <- res_df %>%
     summarise(across(where(is.numeric), sum)) %>% 
-    mutate(!!IDs_column := "Total")
+    mutate(!!IDs_col := "Total")
   
   res_df <- res_df %>% 
     bind_rows(total_df) %>% 
-    rowwise(!!IDs_column) %>% 
+    rowwise(!!IDs_col) %>% 
     summarise(Mean = mean(c_across(where(is.numeric))),
               SD = sd(c_across(where(is.numeric))),
               Min = min(c_across(where(is.numeric))),

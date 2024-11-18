@@ -70,7 +70,8 @@ mod_ntrade_results_server <- function(id, nuts_yr, NUTS_CODES, trade_done,
 
     # EU NUTS0 map (from giscoR pkg)
     EU00 <- eventReactive(trade_done(),{
-      NUTS0_map <- cached_get_EUmap(nuts_yr(), nuts=0)
+      NUTS0_map <- cached_get_EUmap(nuts_yr(), nuts=0) %>% 
+        st_crop(xmin=-40,ymin=20,xmax=50,ymax=70)
       NUTS0_map
     })
     

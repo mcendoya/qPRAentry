@@ -19,7 +19,8 @@ pathwayapp_server <- function(input, output, session) {
                              param_names = model$parameters,
                              par_settings = parameters$par_settings,
                              dist_result = parameters$dist_result,
-                             ntrade_df = ntrade_data$ntrade_df)
+                             ntrade_df = ntrade_data$ntrade_df,
+                             nuts_yr = ntrade_data$nuts_yr)
 
   shinyjs::disable(selector = 'a[data-value="tab2"]')
   shinyjs::disable(selector = 'a[data-value="tab3"]')

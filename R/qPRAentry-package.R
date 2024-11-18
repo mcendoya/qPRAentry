@@ -1,5 +1,4 @@
 #' @import dplyr
-#' @import ggplot2
 #' @import rmarkdown
 #' @import knitr
 #' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
@@ -7,6 +6,9 @@
 #' @importFrom DT datatable formatRound formatStyle
 #' @importFrom graphics hist lines
 #' @importFrom ggiraph geom_col_interactive geom_sf_interactive girafe girafeOutput opts_hover opts_selection renderGirafe
+#' @importFrom ggplot2 aes element_text ggplot ggtitle guides guide_legend labs theme unit xlab ylab ylim
+#' @importFrom ggplot2 geom_sf geom_col geom_errorbar position_dodge
+#' @importFrom ggplot2 scale_fill_manual scale_fill_gradientn
 #' @importFrom bsplus shinyInput_label_embed shiny_iconlink bs_embed_popover use_bs_popover
 #' @importFrom giscoR gisco_get_countries gisco_get_nuts
 #' @importFrom eurostat get_eurostat

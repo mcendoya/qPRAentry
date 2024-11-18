@@ -199,10 +199,10 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
         nt_values <- paste0("Ntrade_",time_period())
       }
       tryCatch({
-        Nt_r <- ntrade_redist(
-          ntrade_data = Nt,
-          ntrade_nuts_col = "NUTS0",
-          ntrade_values_col = nt_values,
+        Nt_r <- redist_nuts(
+          data = Nt,
+          nuts_col = "NUTS0",
+          values_col = nt_values,
           to_nuts = 2,
           redist_data = redist_data,
           redist_nuts_col = redist_nuts_col,
@@ -243,7 +243,8 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
     
     # EU NUTS2 map (from giscoR pkg)
     EU02 <- eventReactive(input$redistribution_done,{
-      NUTS2map <- cached_get_EUmap(nuts_yr(), nuts=2)
+      NUTS2map <- cached_get_EUmap(nuts_yr(), nuts=2) %>% 
+        st_crop(xmin=-40,ymin=20,xmax=50,ymax=70)
       NUTS2map
     })
     
@@ -378,6 +379,7 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
         # Set up parameters to pass to Rmd document
         params <- list(time_period = time_period(),
                        units = units(),
+                       nuts_yr = nuts_yr(),
                        Nt_result = Nt(),
                        Nt_redist = Nt_redist(),
                        data_redistribution = input$output_NUTS2,

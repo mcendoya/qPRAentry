@@ -170,3 +170,19 @@ get_population_data <- function(nuts_level, nuts_filter=NULL) {
 #' 
 #' @keywords internal
 cached_get_eurostat_data <- memoise::memoise(get_population_data)
+
+# EU map (from giscoR pkg)
+get_EUmap <- function(year, nuts) {
+  suppressWarnings(
+    suppressMessages(
+      giscoR::gisco_get_nuts(year = year, nuts_level = nuts) %>%
+        select(NUTS_ID, CNTR_CODE) %>% 
+        left_join(select(
+          giscoR::gisco_get_countries() %>% st_drop_geometry(), 
+          CNTR_ID, NAME_ENGL),
+          by = join_by(CNTR_CODE == CNTR_ID)) %>% 
+        rename(CNTR_NAME = NAME_ENGL)
+    ))
+}
+
+cached_get_EUmap <- memoise::memoise(get_EUmap)

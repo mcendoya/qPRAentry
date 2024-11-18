@@ -1,77 +1,93 @@
-#' Plot trade values on a map
+#' Plot values on a map at country level
 #'
 #' This function plots country values on a map using data provided and allows customization
-#' of the aesthetics such as colors, legend title, and title.
+#' of the aesthetics such as colors, legend title, and title. 
+#' 
+#' This function extracts a \code{\link{sf}} object from the package \code{\link{giscoR}}.
+#' It uses the \code{\link{ggplot2}} package for the representation. Supports adding 
+#' other \code{ggplot2} options (see examples).
 #'
 #' @param data A data frame containing the values to be plotted on the map.
-#' @param IDs_col Column name in \code{data} with the country codes.
-#' CNTR_ID from \code{\link[giscoR]{giscoR}} package .
-#' [To be completed]
-#' @param values_col Column name in \code{data} with the values to be plotted.
-#' @param countrycode Country code in \code{IDs_col}. Possible values are "CNTR_CODE" 
-#' (2-letter code of each country), or "ISO3_CODE" (3-letter code of each country). 
-#' Default is "CNTR_CODE", for Europe the same as NUTS codes (country level), 
-#' United Kingdom as "UK" and Greece as "EL". 
-#' See \code{\link[giscoR]{gisco_countrycode}} for details on country codes.
+#' @param iso_col A string specifying the column name in \code{data} 
+#' with the ISO 3166-1 (alpha-2) country codes. See 
+#' \link[https://www.iso.org/iso-3166-country-codes.html]{ISO 3166 Maintenance Agency} 
+#' for details on country codes.
+#' @param values_col A string specifying the column name in \code{data} with the values to be plotted.
 #' @param colors Optional vector of colors used in the gradient scale.
 #' @param na_value Color for missing values (default is "grey").
-#' @param title A title for the plot (default is NULL).
-#' @param legend_title A title for the legend. Default NULL, name in the \code{values_col}.
+#' @param title A title for the plot (default is \code{NULL}).
+#' @param legend_title A title for the legend. Default \code{NULL}, name in the \code{values_col}.
 #'
-#' @return A ggplot object with the plotted countries.
+#' @return A \code{ggplot} object with the plotted countries.
 #'
 #' @examples
-#' ## Example with CNTR_CODE (2-letter country code)
-#' # Country codes from the giscoR package
-#' library(giscoR)
-#' data("gisco_countrycode")
-#' IDs  <- gisco_countrycode$CNTR_CODE[gisco_countrycode$continent=="Africa"]
-#' # Values simulation
-#' df <- data.frame(IDs = IDs,
-#'                  value = runif(length(IDs)))
-#' # Plot
-#' plot_countries(data = df,
-#'                IDs_col = "IDs",
-#'                values_col = "value",
-#'                countrycode = "CNTR_CODE")
+#' # Simulated data trade in Northern America
+#' data("datatrade_NorthAm")
+#' # Mean of internal production for each country
+#' library(dplyr)
+#' data_plot <- datatrade_NorthAm$internal_production %>% 
+#'   group_by(reporter) %>% 
+#'   summarise(mean_value = mean(value))
+#' 
+#' head(data_plot)
+#' 
+#' #Plot
+#' pl <- plot_countries(data = data_plot,
+#'                      iso_col = "reporter",
+#'                      values_col = "mean_value")
+#' pl
+#' 
 #' # Changing colors and adding other ggplot2 options
 #' library(ggplot2)
-#' pl <- plot_countries(data = df,
-#'                      IDs_col = "IDs",
-#'                      values_col = "value",
-#'                      countrycode = "CNTR_CODE",
+#' pl <- plot_countries(data = data_plot,
+#'                      iso_col = "reporter",
+#'                      values_col = "mean_value",
 #'                      colors = c("white", "lightblue", "darkblue"),
-#'                      title = "Plot African countries",
+#'                      title = "Plot internal production",
 #'                      legend_title = "units")
 #' pl + 
-#'   xlim(-40, 60) + ylim(-40, 40) +
+#'   xlim(-170, -20) + ylim(10, 90) +
 #'   theme_bw()
-#' 
-#' ## Example with ISO3_CODE (3-letter country code)
-#' # Country codes from the giscoR package
-#' # Random countries and values
-#' df_ISO3 <- data.frame(IDs = sample(gisco_countrycode$ISO3_CODE, 20),
-#'                       value = runif(20))
-#' plot_countries(data = df_ISO3,
-#'                IDs_col = "IDs",
-#'                values_col = "value",
-#'                countrycode = "ISO3_CODE",
-#'                title = "Plot countries using ISO3 codes")
 #'                
 #' @export
 #' 
-plot_countries <- function(data, IDs_col, values_col,
-                       countrycode = "CNTR_CODE",
-                       colors = NULL, na_value = "grey",
-                       title=NULL, legend_title=NULL){
+plot_countries <- function(data, iso_col, values_col,
+                           colors = NULL, na_value = "grey",
+                           title=NULL, legend_title=NULL){
   
-  if(countrycode == "CNTR_CODE"){
-    countrycode <- "CNTR_ID"
+  if(any(class(data) == "sf")){
+    data <- data %>% st_drop_geometry()
   }
+  # check data.frame
+  if (!is.data.frame(data)) {
+    stop("Error: 'data' must be data.frame.")
+  }
+  # Check if the specified columns exist in the dataframe
+  if (!all(c(iso_col, values_col) %in% names(data))) {
+    stop("The dataframe 'data' must contain the columns specified in iso_col and values_col")
+  }
+
+  map <- gisco_get_countries() 
+  
+  # check value numeric
+  if (!is.numeric(data[[values_col]])) {
+    stop("Error: 'values_col' in 'data' must be numeric.")
+  }
+  
+  if ("GR" %in% unique(data[[iso_col]])) {
+    data[[iso_col]][data[[iso_col]] == "GR"] <- "EL"
+  }
+  if ("GB" %in% unique(data[[iso_col]])) {
+    data[[iso_col]][data[[iso_col]] == "GB"] <- "UK"
+  }
+  # check country codes
+  if (!all(data[[iso_col]] %in% map$CNTR_ID)) {
+    stop("Error: 'iso_col' in 'data' does not contain ISO 3166-1 (alpha-2) country codes.")
+  }
+
   legend_title <- ifelse(is.null(legend_title), values_col, legend_title)
-  map <- gisco_get_countries()
   map <- map %>%
-    left_join(data, by = join_by(!!countrycode==!!IDs_col)) %>%
+    left_join(data, by = join_by(CNTR_ID==!!iso_col)) %>%
     st_as_sf()
   if(is.null(colors)){
     colors <- c('#ffff96', '#e58938', '#a0042a')

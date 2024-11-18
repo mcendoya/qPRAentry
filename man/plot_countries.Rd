@@ -2,13 +2,12 @@
 % Please edit documentation in R/plot_countries.R
 \name{plot_countries}
 \alias{plot_countries}
-\title{Plot trade values on a map}
+\title{Plot values on a map at country level}
 \usage{
 plot_countries(
   data,
-  IDs_col,
+  iso_col,
   values_col,
-  countrycode = "CNTR_CODE",
   colors = NULL,
   na_value = "grey",
   title = NULL,
@@ -18,69 +17,60 @@ plot_countries(
 \arguments{
 \item{data}{A data frame containing the values to be plotted on the map.}
 
-\item{IDs_col}{Column name in \code{data} with the country codes.
-CNTR_ID from \code{\link[giscoR]{giscoR}} package .
-[To be completed]}
+\item{iso_col}{A string specifying the column name in \code{data} 
+with the ISO 3166-1 (alpha-2) country codes. See 
+\link[https://www.iso.org/iso-3166-country-codes.html]{ISO 3166 Maintenance Agency} 
+for details on country codes.}
 
-\item{values_col}{Column name in \code{data} with the values to be plotted.}
-
-\item{countrycode}{Country code in \code{IDs_col}. Possible values are "CNTR_CODE" 
-(2-letter code of each country), or "ISO3_CODE" (3-letter code of each country). 
-Default is "CNTR_CODE", for Europe the same as NUTS codes (country level), 
-United Kingdom as "UK" and Greece as "EL". 
-See \code{\link[giscoR]{gisco_countrycode}} for details on country codes.}
+\item{values_col}{A string specifying the column name in \code{data} with the values to be plotted.}
 
 \item{colors}{Optional vector of colors used in the gradient scale.}
 
 \item{na_value}{Color for missing values (default is "grey").}
 
-\item{title}{A title for the plot (default is NULL).}
+\item{title}{A title for the plot (default is \code{NULL}).}
 
-\item{legend_title}{A title for the legend. Default NULL, name in the \code{values_col}.}
+\item{legend_title}{A title for the legend. Default \code{NULL}, name in the \code{values_col}.}
 }
 \value{
-A ggplot object with the plotted countries.
+A \code{ggplot} object with the plotted countries.
 }
 \description{
 This function plots country values on a map using data provided and allows customization
 of the aesthetics such as colors, legend title, and title.
 }
+\details{
+This function extracts a \code{\link{sf}} object from the package \code{\link{giscoR}}.
+It uses the \code{\link{ggplot2}} package for the representation. Supports adding 
+other \code{ggplot2} options (see examples).
+}
 \examples{
-## Example with CNTR_CODE (2-letter country code)
-# Country codes from the giscoR package
-library(giscoR)
-data("gisco_countrycode")
-IDs  <- gisco_countrycode$CNTR_CODE[gisco_countrycode$continent=="Africa"]
-# Values simulation
-df <- data.frame(IDs = IDs,
-                 value = runif(length(IDs)))
-# Plot
-plot_countries(data = df,
-               IDs_col = "IDs",
-               values_col = "value",
-               countrycode = "CNTR_CODE")
+# Simulated data trade in Northern America
+data("datatrade_NorthAm")
+# Mean of internal production for each country
+library(dplyr)
+data_plot <- datatrade_NorthAm$internal_production \%>\% 
+  group_by(reporter) \%>\% 
+  summarise(mean_value = mean(value))
+
+head(data_plot)
+
+#Plot
+pl <- plot_countries(data = data_plot,
+                     iso_col = "reporter",
+                     values_col = "mean_value")
+pl
+
 # Changing colors and adding other ggplot2 options
 library(ggplot2)
-pl <- plot_countries(data = df,
-                     IDs_col = "IDs",
-                     values_col = "value",
-                     countrycode = "CNTR_CODE",
+pl <- plot_countries(data = data_plot,
+                     iso_col = "reporter",
+                     values_col = "mean_value",
                      colors = c("white", "lightblue", "darkblue"),
-                     title = "Plot African countries",
+                     title = "Plot internal production",
                      legend_title = "units")
 pl + 
-  xlim(-40, 60) + ylim(-40, 40) +
+  xlim(-170, -20) + ylim(10, 90) +
   theme_bw()
-
-## Example with ISO3_CODE (3-letter country code)
-# Country codes from the giscoR package
-# Random countries and values
-df_ISO3 <- data.frame(IDs = sample(gisco_countrycode$ISO3_CODE, 20),
-                      value = runif(20))
-plot_countries(data = df_ISO3,
-               IDs_col = "IDs",
-               values_col = "value",
-               countrycode = "ISO3_CODE",
-               title = "Plot countries using ISO3 codes")
                
 }

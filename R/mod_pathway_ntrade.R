@@ -24,6 +24,25 @@ mod_pathway_ntrade_ui <- function(id){
       br(),
       tagList(sidebarLayout(
         sidebarPanel(width = 6,
+                     # years available in giscoR::gisco_get_nuts()
+                     selectInput(ns("nuts_yr"), 
+                                 label = "NUTS classification year:", 
+                                 selected = "2016",
+                                 choices = c("2003", 
+                                             "2006", 
+                                             "2010", 
+                                             "2013", 
+                                             "2016", 
+                                             "2021",
+                                             "2024")) %>%
+                       bsplus::shinyInput_label_embed(
+                         bsplus::shiny_iconlink("question-circle", class= "help-btn") %>%
+                           bsplus::bs_embed_popover(title = text_nuts_yr$title, 
+                                                    content = text_nuts_yr$content,
+                                                    placement = "right",
+                                                    html="true",
+                                                    container ="body")
+                       ),
                      h4("$N_{trade}$ data file (CSV)", style = "color:#327FB0"),
                      fileInput(ns("ntrade_data"),
                                label=NULL,
@@ -202,6 +221,7 @@ mod_pathway_ntrade_server <- function(id){
   
     return(
       list(
+        nuts_yr = reactive(input$nuts_yr),
         ntrade_data = reactive(input$ntrade_data),
         nuts = reactive(input$nuts),
         values = reactive(input$values),

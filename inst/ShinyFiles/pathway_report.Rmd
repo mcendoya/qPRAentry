@@ -4,6 +4,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
 bibliography: references.bib
 params:
+  nuts_yr: NA
   ntrade: NA
   model_def: NA
   param_names: NA
@@ -24,6 +25,7 @@ knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE,
 ```
 
 ```{r}
+nuts_yr <- params$nuts_yr # NUTS classification year
 ntrade <- params$ntrade # Ntrade data
 model_def <- params$model_def # model equation
 param_names <- params$param_names # parameter names

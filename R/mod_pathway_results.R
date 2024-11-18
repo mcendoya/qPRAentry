@@ -43,7 +43,7 @@ mod_pathway_results_ui <- function(id){
 #' @noRd
 mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
                                        param_names, par_settings, dist_result, 
-                                       ntrade_df){
+                                       ntrade_df, nuts_yr){
   NUTS_ID <- value <- CNTR_CODE <- NULL
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -156,11 +156,8 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
 
     # EU NUTS0 map (from giscoR pkg)
     EU00 <- eventReactive(dist_done(),{
-      map <- suppressWarnings(
-        suppressMessages(
-          giscoR::gisco_get_nuts(nuts_level = nuts_level()) %>%
-            st_crop(xmin=-40,ymin=20,xmax=50,ymax=70)
-        ))
+      map <- cached_get_EUmap(year = nuts_yr(), nuts = nuts_level()) %>% 
+        st_crop(xmin=-40,ymin=20,xmax=50,ymax=70)
       return(map)
     })
 
@@ -298,6 +295,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         file.copy(rmdPath, tempReport, overwrite = TRUE)
         # Set up parameters to pass to Rmd document
         params <- list(ntrade = ntrade_df(),
+                       nuts_yr = nuts_yr(),
                        model_def = model_def(),
                        param_names = param_names(),
                        nuts_level = nuts_level(),

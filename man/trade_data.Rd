@@ -98,7 +98,7 @@ countries of interest:
 }
 }
 \description{
-Prepares trade databases for each country of interest based on the provided data.
+Prepares trade data for each country of interest based on the provided data.
 This function generates objects of class \code{TradeData} required to be used 
 in the other functions in the package.
 }
@@ -111,7 +111,13 @@ of product available per country in each time period as the sum of external impo
 Note that the data to be incorporated must contain the columns \code{reporter}, 
 \code{partner} (except for \code{internal_production}), \code{value}, and \code{time_period}.
 The trade flow is considered from partner to reporter, i.e., reporter as importer 
-and partner as exporter.
+and partner as exporter. For the IDs of countries of interest (i.e., in the the columns 
+\code{reporter} of the four trade dataframes and in the column \column{partner} 
+of \code{intra_trade}) it is recommended to use the the ISO 3166-1 codes 
+(\link[https://www.iso.org/iso-3166-country-codes.html]{ISO 3166 Maintenance Agency}) 
+or NUTS0 codes in case of European countries (\link[https://ec.europa.eu/eurostat/web/nuts]{NUTS - 
+Nomenclature of territorial units for statistics}) for further use in other functions 
+of the \code{qPRAentry} package.
 
 Time periods can be specified in any way, both numeric and character formatting is supported. 
 For example, it can be expressed as years, months, specific periods, seasons, etc.
@@ -145,7 +151,7 @@ head(trade_NorthAm$intra_trade)
 # Plot the total available quantity of commodity available in each country
 library(ggplot2)
 plot_countries(data = trade_NorthAm$total_trade,
-               IDs_col = "country_IDs", 
+               iso_col = "country_IDs", 
                values_col = "total_available") +
   xlim(-180,-20) + ylim(0,90)
 
@@ -172,7 +178,7 @@ trade_EU <- trade_data(extra_total = extra_total,
                        filter_period = 2020)
 # Plot the total available quantity of commodity available in each country
 plot_countries(data = trade_EU$total_trade, 
-               IDs_col = "country_IDs", 
+               iso_col = "country_IDs", 
                values_col = "total_available") +
   xlim(-30,50) + ylim(25,70)
   
