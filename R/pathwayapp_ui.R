@@ -29,7 +29,8 @@ pathwayapp_ui <- function(request){
              tabPanel("Info ",
                       class="intro",
                       icon = icon("book-open", "fa-pull-right"),
-                      includeMarkdown(system.file("ShinyFiles/Info_pathway.md", package = "qPRAentry"))
+                      includeMarkdown(system.file("ShinyFiles/Info_pathway.md", 
+                                                  package = "qPRAentry"))
              ),
              tabPanel("Pathway model",
                       icon = icon("chart-line", "fa-pull-right"),

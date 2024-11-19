@@ -13,14 +13,14 @@ mod_pathway_results_ui <- function(id){
     fluidRow(
       column(1),
       column(10,
-             HTML('<p class="custom-text"><br>View the pathway model results (<i>NPFP</i>) 
-             in table or map format.<br><br> 
-             <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the 
-             <strong>"Download results"</strong> 
-             button to download a zip folder including the <i>NPFP</i> 
-             data and the final report.<br><br> 
-             You can also return to the previous tabs to review or 
-                  change the input data.<br></p>'),
+             HTML('<p class="custom-text"><br>View the pathway model results 
+                  (<i>NPFP</i>) in table or map format.<br><br> 
+                  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> 
+                  Click on the <strong>"Download results"</strong> button to download 
+                  a zip folder including the <i>NPFP</i> data and the final report.
+                  <br><br> 
+                  You can also return to the previous tabs to review or change 
+                  the input data.<br></p>'),
              br(),
              downloadButton(ns("downloadAll"), "Download results", class="enable"),
              br(),br(),
@@ -70,7 +70,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         # check if the variables are in the equation
         missing_vars <- setdiff(variables, used_vars)
         
-        # Si hay variables que no están en la ecuación, mostrar un error
+        # If there are variables that are not in the equation
         if (length(missing_vars) > 0) {
           stop(paste("Error: the following variables are not in the equation:", 
                      paste(missing_vars, collapse = ", ")))
@@ -181,8 +181,9 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
           if(nuts_level()==2){
             fluidRow(
               column(6,
-                     HTML('<p class="custom-text">Place your cursor over the map to display the values. 
-                 Click on a country to zoom in for a closer view.<br></p>'),
+                     HTML('<p class="custom-text">Place your cursor over the map 
+                          to display the values. Click on a country to zoom in for 
+                          a closer view.<br></p>'),
                      br(),
                      ggiraph::girafeOutput(ns("NUTSmap")) %>%
                        shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
@@ -197,7 +198,8 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
             fluidRow(
               column(3),
               column(6, align="center",
-                     HTML('<p class="custom-text">Place your cursor over the map to display the values.<br></p>'),
+                     HTML('<p class="custom-text">Place your cursor over the map 
+                          to display the values.<br></p>'),
                      br(),
                      ggiraph::girafeOutput(ns("NUTSmap")) %>%
                        shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
@@ -212,8 +214,10 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
     output$Ninf_table <- DT::renderDataTable({
       DT::datatable(Ninf_solve(), options = list(dom = 'ft', pageLength = -1)) %>%
         DT::formatRound(columns = 2:length(Ninf_solve()), digits=4) %>%
-        DT::formatStyle(columns = "NUTS_ID", target = "cell", backgroundColor = "#F7080880") %>%
-        DT::formatStyle(columns = c("Mean","SD","Q0.05","Median","Q0.95"), target = "cell", 
+        DT::formatStyle(columns = "NUTS_ID", target = "cell", 
+                        backgroundColor = "#F7080880") %>%
+        DT::formatStyle(columns = c("Mean","SD","Q0.05","Median","Q0.95"), 
+                        target = "cell", 
                         backgroundColor = "#F7080820")
     })
 

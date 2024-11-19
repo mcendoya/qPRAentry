@@ -3,19 +3,21 @@
 #' This function plots NUTS region values on a map using data provided and allows customization
 #' of the aesthetics such as colors, legend title, and title.
 #' 
-#' This function extracts a \code{\link{sf}} object from the package \code{\link{giscoR}}.
-#' It uses the \code{\link{ggplot2}} package for the representation. Supports adding 
-#' other \code{ggplot2} options (see examples).
+#' This function extracts a [sf] object from the package [giscoR].
+#' It uses the [ggplot2] package for the representation. Supports adding 
+#' other [ggplot2] options (see examples).
 #'
 #' @param data A data frame containing the values to be plotted on the map.
-#' @param nuts_col A string specifying the column name in \code{data} containing NUTS codes.
-#' @param values_col A string specifying the column name in \code{data} with the values to be plotted.
+#' @param nuts_col A string specifying the column name in \code{data} containing 
+#' NUTS codes.
+#' @param values_col A string specifying the column name in \code{data} with the 
+#' values to be plotted.
 #' @param nuts_level A numeric value (0, 1, 2, or 3) specifying the NUTS level to plot. 
-#' Default is 2 indicating NUTS2. See \link[https://ec.europa.eu/eurostat/web/nuts]{NUTS 
-#' - Nomenclature of territorialunits for statistics}.
+#' Default is 2 indicating NUTS2. See 
+#' [NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
 #' @param nuts_year Year of NUTS classification. One of '2003','2006','2010','2013',
 #' '2016' (default),'2021', or '2024'. See 
-#' \link[https://ec.europa.eu/eurostat/web/nuts/history]{NUTS - History}.
+#' [NUTS - History](https://ec.europa.eu/eurostat/web/nuts/history).
 #' @param colors Optional vector of colors used in the gradient scale.
 #' @param na_value Color for missing values (default is "grey").
 #' @param title A title for the plot (default is \code{NULL}).
@@ -81,16 +83,18 @@ plot_nuts <- function(data, nuts_col, values_col,
   }
   # Check if the specified columns exist in the dataframe
   if (!all(c(nuts_col, values_col) %in% names(data))) {
-    stop("The dataframe 'data' must contain the columns specified in nuts_col and values_col")
+    stop(paste(strwrap("The dataframe 'data' must contain the columns specified 
+                       in 'nuts_col' and 'values_col'"), collapse=" "))
   }
   
   # check nuts year
   if (!nuts_year %in% c('2003','2006','2010','2013','2016','2021','2024')) {
-    stop("Error: nuts_year not available. Try '2003','2006','2010','2013','2016','2021', or '2024'")
+    stop(paste(strwrap("Error: nuts_year not available. Try '2003', '2006', '2010', 
+                       '2013', '2016', '2021', or '2024'"), collapse=" "))
   }
   # check nuts_level
-  if (!nuts_level %in% c(1, 2, 3) || !is.numeric(nuts_level)) {
-    stop("Error: 'to nuts' must be numeric, 0, 1, 2 or 3 NUTS level.")
+  if (!nuts_level %in% c(0, 1, 2, 3) || !is.numeric(nuts_level)) {
+    stop("Error: 'nuts_level' must be numeric, 0, 1, 2 or 3 NUTS level.")
   }
   NUTS_CODES <- cached_get_EUmap(year = nuts_year, nuts = nuts_level) 
 
@@ -106,9 +110,10 @@ plot_nuts <- function(data, nuts_col, values_col,
     data[[nuts_col]][data[[nuts_col]] == "GB"] <- "UK"
   }
   # check country codes
-  if (!all(data[[nuts_col]] %in% NUTS_CODES$NUTS_ID)) {
+  if (!any(data[[nuts_col]] %in% NUTS_CODES$NUTS_ID)) {
     stop("Error: 'nuts_col' in 'data' does not contain NUTS codes.")
   }
+  
   NUTS_ID <- NULL
   legend_title <- ifelse(is.null(legend_title), values_col, legend_title)
   map <- NUTS_CODES %>%

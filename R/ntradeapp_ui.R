@@ -29,7 +29,8 @@ ntradeapp_ui <- function(request){
       tabPanel("Info ",
                class="intro",
                icon = icon("book-open", "fa-pull-right"),
-               includeMarkdown(system.file("ShinyFiles/Info_ntrade.md", package = "qPRAentry"))
+               includeMarkdown(system.file("ShinyFiles/Info_ntrade.md", 
+                                           package = "qPRAentry"))
       ),
       tabPanel("$N_{trade}$ ",
                icon = icon("chart-line", "fa-pull-right"),

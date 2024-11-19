@@ -14,9 +14,11 @@ mod_ntrade_data_ui <- function(id){
       sidebarPanel(width=3,
                    style='background: #ffff;',
                    div(style = "border-bottom:2px solid grey",
-                       textInput(ns("units"), label = "$N_{trade}$ units:", value = "tons") %>%
+                       textInput(ns("units"), label = "$N_{trade}$ units:", 
+                                 value = "tons") %>%
                          bsplus::shinyInput_label_embed(
-                           bsplus::shiny_iconlink("question-circle", class= "help-btn") %>%
+                           bsplus::shiny_iconlink("question-circle", 
+                                                  class= "help-btn") %>%
                              bsplus::bs_embed_popover(title = text_units$title, 
                                                       content = text_units$content,
                                                       placement = "right",
@@ -35,7 +37,8 @@ mod_ntrade_data_ui <- function(id){
                                                "2021",
                                                "2024")) %>%
                          bsplus::shinyInput_label_embed(
-                           bsplus::shiny_iconlink("question-circle", class= "help-btn") %>%
+                           bsplus::shiny_iconlink("question-circle", 
+                                                  class= "help-btn") %>%
                              bsplus::bs_embed_popover(title = text_nuts_yr$title, 
                                                       content = text_nuts_yr$content,
                                                       placement = "right",
@@ -47,10 +50,12 @@ mod_ntrade_data_ui <- function(id){
                        br(),
                        strong("Trade data:"),
                        # ExtraEU
-                       data_input(ns, "ExtraTotal", "Extra-EU import total", extra=TRUE),
+                       data_input(ns, "ExtraTotal", "Extra-EU import total", 
+                                  extra=TRUE),
                        br(),
                        data_input(ns, "ExtraPest",
-                                  HTML("Extra-EU import from countries<br/> where the pest is present"),
+                                  HTML("Extra-EU import from countries<br/> where 
+                                       the pest is present"),
                                   extra=TRUE),
                        br(),
                        # IntraEU
@@ -71,7 +76,8 @@ mod_ntrade_data_ui <- function(id){
                      options = list(`actions-box` = TRUE)
                    ) %>% 
                      bsplus::shinyInput_label_embed(
-                       bsplus::shiny_iconlink("question-circle", class= "help-btn") %>%
+                       bsplus::shiny_iconlink("question-circle", 
+                                              class= "help-btn") %>%
                          bsplus::bs_embed_popover(title = text_time$title, 
                                                   content = text_time$content,
                                                   placement = "right",
@@ -79,7 +85,8 @@ mod_ntrade_data_ui <- function(id){
                                                   container ="body")
                      ),
                    br(),
-                   shinyjs::disabled(actionButton(ns("trade_done"), "See $N_{trade}$ results"))
+                   shinyjs::disabled(actionButton(ns("trade_done"), 
+                                                  "See $N_{trade}$ results"))
       ), #sidebarPanel
       mainPanel(width=9,
                 fluidRow(
@@ -96,8 +103,10 @@ mod_ntrade_data_ui <- function(id){
                 # Plots
                 fluidRow(
                   div(class = "dual-plot-container",
-                      div(class = "dual-plot-column-large", ggiraph::girafeOutput(ns("dataPlot"))),
-                      div(class = "dual-plot-column-small", plotOutput(ns("MSplot")))
+                      div(class = "dual-plot-column-large", 
+                          ggiraph::girafeOutput(ns("dataPlot"))),
+                      div(class = "dual-plot-column-small", 
+                          plotOutput(ns("MSplot")))
                   )
                 )
       )#mainPanel
@@ -482,12 +491,15 @@ mod_ntrade_data_server <- function(id){
       df <- ExtraTotal_df()
       if (is.null(df)) {
         updateActionButton(session, "ExtraTotal_menu",
-                           label= '<h5><strong style="color:#327FB0;">Extra-EU import total</strong></h5>') #remove check icon
+                           label= '<h5><strong style="color:#327FB0;">
+                           Extra-EU import total</strong></h5>') #remove check icon
         return(NULL)  # Do nothing if there is an error
       } else {
         updateActionButton(session, "ExtraTotal_menu",
-                           label= '<h5><strong style="color:#327FB0;">Extra-EU import total</strong>&nbsp;&nbsp;
-                       <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></h5>') #check icon
+                           label= '<h5><strong style="color:#327FB0;">
+                           Extra-EU import total</strong>&nbsp;&nbsp;
+                           <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
+                           </i></h5>') #check icon
         output$message <- renderText({NULL})  # Clear message
         update_time_periods("ExtraTotal", session)
       }
@@ -496,14 +508,17 @@ mod_ntrade_data_server <- function(id){
       df <- ExtraPest_df()
       if (is.null(df)) {
         updateActionButton(session, "ExtraPest_menu",
-                           label= '<h5><strong style="color:#327FB0;">Extra-EU import from
-                       countries<br/> where the pest is present</strong></h5>')#remove check icon
+                           label= '<h5><strong style="color:#327FB0;">
+                           Extra-EU import from countries<br/> 
+                           where the pest is present</strong></h5>')#remove check icon
         return(NULL)  # Do nothing if there is an error
       } else {
         updateActionButton(session, "ExtraPest_menu",
-                           label= '<h5><strong style="color:#327FB0;">Extra-EU import from
-                       countries<br/> where the pest is present</strong>&nbsp;&nbsp;
-                       <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></h5>')#check icon
+                           label= '<h5><strong style="color:#327FB0;">
+                           Extra-EU import from countries<br/> where the pest 
+                           is present</strong>&nbsp;&nbsp;
+                           <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
+                           </i></h5>')#check icon
         output$message <- renderText({NULL})  # Clear message
         update_time_periods("ExtraPest", session)
       }
@@ -512,12 +527,15 @@ mod_ntrade_data_server <- function(id){
       df <- IntraEU_df()
       if (is.null(df)) {
         updateActionButton(session, "IntraEU_menu",
-                           label= '<h5><strong style="color:#327FB0;">Intra-EU import</strong></h5>')#remove check icon
+                           label= '<h5><strong style="color:#327FB0;">
+                           Intra-EU import</strong></h5>')#remove check icon
         return(NULL)  # Do nothing if there is an error
       } else {
         updateActionButton(session, "IntraEU_menu",
-                           label= '<h5><strong style="color:#327FB0;">Intra-EU import</strong>&nbsp;&nbsp;
-                       <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></h5>')#check icon
+                           label= '<h5><strong style="color:#327FB0;">
+                           Intra-EU import</strong>&nbsp;&nbsp;
+                           <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
+                           </i></h5>')#check icon
         output$message <- renderText({NULL})  # Clear message
         update_time_periods("IntraEU", session)
       }
@@ -526,12 +544,15 @@ mod_ntrade_data_server <- function(id){
       df <- IP_df()
       if (is.null(df)) {
         updateActionButton(session, "IP_menu",
-                           label= '<h5><strong style="color:#327FB0;">Internal production</strong></h5>')#remove check icon
+                           label= '<h5><strong style="color:#327FB0;">
+                           Internal production</strong></h5>')#remove check icon
         return(NULL)  # Do nothing if there is an error
       } else {
         updateActionButton(session, "IP_menu",
-                           label= '<h5><strong style="color:#327FB0;">Internal production</strong>&nbsp;&nbsp;
-                       <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></h5>')#check icon
+                           label= '<h5><strong style="color:#327FB0;">
+                           Internal production</strong>&nbsp;&nbsp;
+                           <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
+                           </i></h5>')#check icon
         output$message <- renderText({NULL})  # Clear message
         update_time_periods("IP", session)
       }
@@ -554,12 +575,14 @@ mod_ntrade_data_server <- function(id){
         
         output$plot_buttons <- renderUI({
           sidebarPanel(width = 11,
-                       HTML('<p class="custom-text">Use the buttons <strong>"Plot Extra-EU Import"</strong>, 
-                       <strong>"Plot Intra-EU Trade"</strong>, or <strong>"Plot Internal Production"</strong> 
-                       to change the trade data visualization.<br> 
-                       Place your cursor over the bars to to view mean 
-                       and standard deviation for each country.<br>
-                       Click on the bars to view the values for each country over time.<br></p>'),
+                       HTML('<p class="custom-text">Use the buttons <strong>
+                            "Plot Extra-EU Import"</strong>, <strong>"Plot Intra-EU 
+                            Trade"</strong>, or <strong>"Plot Internal Production"</strong> 
+                            to change the trade data visualization.<br> 
+                            Place your cursor over the bars to to view mean and 
+                            standard deviation for each country.<br> 
+                            Click on the bars to view the values for each country 
+                            over time.<br></p>'),
                        fluidRow(
                          column(4, align = "center",
                                 actionButton(ns("ExtraTotal_plot"),
@@ -597,7 +620,8 @@ mod_ntrade_data_server <- function(id){
                                                           filter_period = input$time_period)
                                        },
                                        message = function(m) {
-                                         shinyjs::html(id = "message", html = m$message, add = TRUE)
+                                         shinyjs::html(id = "message", 
+                                                       html = m$message, add = TRUE)
                                        })
                                        return(df)
                                      },error = function(e) {

@@ -28,14 +28,16 @@ text_trade_data <- function(data, partner=TRUE){
           <li><strong>Values:</strong> Column with the quantity of the imported commodity.</li>')
   }else if(data == "IP"){
     data_name <- "Internal production"
-    columns <- c('<li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) for
-          the EU countries that are producing the commodity.</li>
-          <li><strong>Values:</strong> Column with the quantity of the commodity produced.</li>')
+    columns <- c('<li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) 
+                 for the EU countries that are producing the commodity.</li>
+                 <li><strong>Values:</strong> Column with the quantity of the commodity 
+                 produced.</li>')
   }
   
   if(partner){
-    partner_countries <- c('<li><strong><strong>Partner countries</strong></strong>: Choose the partner countries 
-          from the values available in the "Partner" column.</li>')
+    partner_countries <- c('<li><strong><strong>Partner countries</strong></strong>: 
+                           Choose the partner countries from the values available 
+                           in the "Partner" column.</li>')
   }else{
     partner_countries <- ''
   }
@@ -46,11 +48,12 @@ text_trade_data <- function(data, partner=TRUE){
           <strong>', data_name, '</strong> and follow these steps:
           <ul class="custom-text" style="margin-right:10px;">
           <li><strong>Data file</strong>: Upload your data file in CSV format.</li>
-          <li><strong>Data units</strong>: Verify unit conversion. The values in the "Values" column will be
-          multiplied by the conversion factor you provide to match the required units. 
-          For example, if your data is in kilograms and you need the final values in tons,
-          enter 0.001 as the conversion factor.</li>
-          <li><strong>Column names</strong>: Assign the appropriate columns from your dataset:</br>
+          <li><strong>Data units</strong>: Verify unit conversion. The values in the 
+          "Values" column will be multiplied by the conversion factor you provide 
+          to match the required units. For example, if your data is in kilograms 
+          and you need the final values in tons, enter 0.001 as the conversion factor.</li>
+          <li><strong>Column names</strong>: Assign the appropriate columns from 
+          your dataset:</br>
           <ul style="margin-right:20px;">',
       columns,
       '<li><strong>Time period:</strong> Select the column that identifies the 
@@ -65,9 +68,10 @@ text_trade_data <- function(data, partner=TRUE){
 
 text_dataDone <- HTML(
   '<p class="custom-text">Note: If you make any changes to the trade data
-  (such as updating data, selecting different columns, adjusting units, or modifying partners), 
-  please press <strong>Done</strong> again to apply the changes.<br><br> 
-  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on <strong>"See <i>N<sub>trade</sub></i> results"</strong> to go to the Results tab.<br></p>'
+  (such as updating data, selecting different columns, adjusting units, or modifying 
+  partners), please press <strong>Done</strong> again to apply the changes.<br><br> 
+  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on <strong>"See 
+  <i>N<sub>trade</sub></i> results"</strong> to go to the Results tab.<br></p>'
 )
 
 # units info
@@ -93,41 +97,57 @@ text_time <- list(title = "Trade data time periods",
                                  included in the <i>N<sub>trade</sub></i> calculation.</p>"))
 # data errors
 data_errors <- list(
-  reporter = paste0("Error: The selected column for 'Reporter' does not contain NUTS Country codes. ",
-                    "Please choose a different column with valid NUTS codes (2-letter code country level)."),
-  partner = paste0("Error: The selected column for 'Partner' does not contain NUTS Country codes. ",
-                   "Please choose a different column with valid NUTS codes (2-letter code country level)."),
-  values_num = paste0("Error: The selected column for 'Values' does not contain numerical data. ",
-                      "Please choose a different column containing numbers."),
-  values_neg = paste0("Error: Invalid values detected. The 'Values' variable contains negative values, ",
-                      "which are not interpretable as quantities. Please review and correct these values."),
-  extra_partner = paste0("Error: You must select at least one partner for extra trade."))
+  reporter = paste(strwrap("Error: The selected column for 'Reporter' does not contain 
+                           NUTS Country codes. Please choose a different column with 
+                           valid NUTS codes (2-letter code country level)."), 
+                   collapse=" "),
+  partner = paste(strwrap("Error: The selected column for 'Partner' does not contain 
+                          NUTS Country codes. Please choose a different column with 
+                          valid NUTS codes (2-letter code country level)."), 
+                  collapse=" "),
+  values_num = paste(strwrap("Error: The selected column for 'Values' does not contain 
+                             numerical data. Please choose a different column containing 
+                             numbers."), collapse=" "),
+  values_neg = paste(strwrap("Error: Invalid values detected. The 'Values' variable 
+                             contains negative values, which are not interpretable 
+                             as quantities. Please review and correct these values."), 
+                     collapse=" "),
+  extra_partner = paste(strwrap("Error: You must select at least one partner for 
+                                extra trade."), collapse=" ")
+  )
 
 # Redistribution tab
-text_NtradeValue <- HTML('<p class="custom-text">Select the <i>N<sub>trade</sub></i> value for redistribution.</p>')
+text_NtradeValue <- HTML('<p class="custom-text">Select the <i>N<sub>trade</sub></i> 
+                         value for redistribution.</p>')
 text_DataRedistribution <- HTML(
-  '<p class="custom-text">To proportionally redistribute <i>N<sub>trade</sub></i> to NUTS2 regions, select either:
+  '<p class="custom-text">To proportionally redistribute <i>N<sub>trade</sub></i> 
+  to NUTS2 regions, select either:
   <ul class="custom-text" style="margin-right:10px;">
-  <li><strong>Population (Eurostat):</strong> This option uses the Eurostat population data to proportionally redistribute <i>N<sub>trade</sub></i> based on the population size in each NUTS2 region.</li>
-  <li><strong>Custom Data:</strong> This option allows the user to upload a custom dataset that can serve as the basis for the redistribution 
+  <li><strong>Population (Eurostat):</strong> This option uses the Eurostat population 
+  data to proportionally redistribute <i>N<sub>trade</sub></i> based on the population 
+  size in each NUTS2 region.</li>
+  <li><strong>Custom Data:</strong> This option allows the user to upload a custom 
+  dataset that can serve as the basis for the redistribution 
   (e.g., consumption data at the NUTS2 level).</li>
   </ul></p>'
 )
 
-text_PopulationYear <- HTML('<p class="custom-text">Select one or more years of population data for redistribution.
-                    It may take a few seconds for the available years of population data to load. 
-                    If multiple years are selected, the redistribution will be based on the average population across those years.
-                    <ul class="custom-text" style="margin-right:10px;">
-                      <li>Once the years are selected, click on <strong>"See <i>N<sub>trade</sub></i> redistribution"</strong> to proceed.</li>
-                    </ul></p>')
+text_PopulationYear <- HTML('<p class="custom-text">Select one or more years of 
+                            population data for redistribution. If multiple years 
+                            are selected, the redistribution will be based on the 
+                            average population across those years. 
+                            <ul class="custom-text" style="margin-right:10px;">
+                            <li>Once the years are selected, click on <strong>"See 
+                            <i>N<sub>trade</sub></i> redistribution"</strong> to 
+                            proceed.</li></ul></p>')
 
-text_MyData <- HTML('<p class="custom-text">Upload the data in CSV format by following these steps:
-          <ul class="custom-text" style="margin-right:10px;">
-          <li>Select the appropriate column names:</li>
-          <ul style="margin-right:20px;">
-          <li><strong>NUTS2:</strong> Column containing the NUTS2 codes for regions</li>
-          <li><strong>Values:</strong> Column containing the values for proportional redistribution of <i>N<sub>trade</sub></i></li>
-          </ul>
-          <li>Click on <strong>"See <i>N<sub>trade</sub></i> redistribution"</strong> to proceed.</li>
-          </ul>
-          </p>')
+text_MyData <- HTML('<p class="custom-text">Upload the data in CSV format by following 
+                    these steps:<ul class="custom-text" style="margin-right:10px;">
+                    <li>Select the appropriate column names:</li>
+                    <ul style="margin-right:20px;">
+                    <li><strong>NUTS2:</strong> Column containing the NUTS2 codes 
+                    for regions</li><li><strong>Values:</strong> Column containing 
+                    the values for proportional redistribution of <i>N<sub>trade</sub></i>
+                    </li></ul>
+                    <li>Click on <strong>"See <i>N<sub>trade</sub></i> 
+                    redistribution"</strong> to proceed.</li></ul></p>')

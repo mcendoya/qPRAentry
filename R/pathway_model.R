@@ -1,83 +1,110 @@
 #' Pathway model
-#'
+#' 
+#' @description
 #' Estimate the amount of infested commodities that can enter into the
 #' countries of interest imported from third countries where the pest is present,
-#' and produce the number of potential founder populations (NPFP) that can establish and spread.
+#' and produce the number of potential founder populations (\eqn{NPFP}) that can establish 
+#' and spread.
+#' 
+#' @details
+#' ### IDs - country or region identification codes:
+#' The use of ISO 3166 (alpha-2) codes 
+#' ([ISO 3166 Maintenance Agency](https://www.iso.org/iso-3166-country-codes.html)), 
+#' or NUTS codes in the case of European countries 
+#' [NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts), 
+#' as country or region identifiers (\code{IDs_col}) is recommended 
+#' for subsequent compatibility with other functions of the  [qPRAentry] package.
+#' 
+#' ### Parameter distributions:
+#' The following distributions are supported. For details on their parameters, refer 
+#' to the linked R documentation:
 #'
+#' \tabular{lll}{
+#' **Distribution** \tab \verb{ } \tab**Documentation** \cr
+#' "beta"    \tab \verb{ } \tab [rbeta()] (Beta distribution) \cr
+#' "binom"   \tab \verb{ } \tab [rbinom()] (Binomial distribution) \cr
+#' "cauchy"  \tab \verb{ } \tab [rcauchy()] (Cauchy distribution) \cr
+#' "chisq"   \tab \verb{ } \tab [rchisq()] (Chi-squared distribution) \cr
+#' "exp"     \tab \verb{ } \tab [rexp()] (Exponential distribution) \cr
+#' "f"       \tab \verb{ } \tab [rf()] (F distribution) \cr
+#' "gamma"   \tab \verb{ } \tab [rgamma()] (Gamma distribution) \cr
+#' "geom"    \tab \verb{ } \tab [rgeom()] (Geometric distribution) \cr
+#' "lnorm"   \tab \verb{ } \tab [rlnorm()] (Log-normal distribution) \cr
+#' "nbinom"  \tab \verb{ } \tab [rnbinom()] (Negative Binomial distribution) \cr
+#' "norm"    \tab \verb{ } \tab [rnorm()] (Normal distribution) \cr
+#' "pois"    \tab \verb{ } \tab [rpois()] (Poisson distribution) \cr
+#' "t"       \tab \verb{ } \tab [rt()] (Student's t distribution) \cr
+#' "unif"    \tab \verb{ } \tab [runif()] (Uniform distribution) \cr
+#' "weibull" \tab \verb{ } \tab [rweibull()] (Weibull distribution) \cr
+#' }
+#' 
+#' For example, to specify a normal distribution with mean 0 and standard deviation 1:\cr
+#' \code{list(dist = "norm", mean = 0, sd = 1)}
+#'
+#' Ensure that all parameters required by the chosen distribution are included.
+#' 
 #' @param ntrade_data A data frame with the quantity of potentially infested commodities
 #' imported from third countries where the pest is present. It can be calculated
-#' using \code{\link{ntrade}} function.
-#' @param IDs_col Column name in \code{ntrade_data} with the country IDs of interest.
-#' @param values_col Column name in \code{ntrade_data} with the \eqn{N_{trade}} values
-#' (quantity of potentially infested commodity imports) to be used in the pathway model.
+#' using [ntrade()] function.
+#' @param IDs_col A string specifying the column name in \code{ntrade_data} with the 
+#' country or region IDs of interest. See details on 
+#' **IDs - country or region identification codes**.
+#' @param values_col A string specifying the column name in \code{ntrade_data} with 
+#' the \eqn{N_{trade}} values (quantity of potentially infested commodity imports) 
+#' to be used in the pathway model.
 #' @param expression A string of characters representing the equation for the pathway model.
 #' This expression must not include \eqn{N_{trade}}, since it is added multiplicatively to the
 #' entered equation by default. This equation is then added multiplicatively to:
-#' \deqn{NPFP = N_{trade_i} \cdot \; ...}
-#' @param parameters Named list specifying the distributions for each parameter 
-#' included in \code{expression}. Each list element should be a list containing 
-#' the distribution name (e.g., \code{dist = "norm"}) and its arguments (e.g., 
-#' \code{mean = 0, sd = 1}). The available distributions are:
-#' \tabular{ll}{
-#' "beta" \tab   see \code{\link[stats]{rbeta}}\cr
-#'   \tab \cr
-#' "binom" \tab  see \code{\link[stats]{rbinom}}\cr
-#'   \tab \cr
-#' "cauchy" \tab  see \code{\link[stats]{rcauchy}}\cr
-#'   \tab \cr
-#' "chisq" \tab  see \code{\link[stats]{rchisq}}\cr
-#'   \tab \cr
-#' "exp" \tab    see \code{\link[stats]{rexp}}\cr
-#'   \tab \cr
-#' "f"  \tab     see \code{\link[stats]{rf}}\cr
-#'   \tab \cr
-#' "gamma" \tab  see \code{\link[stats]{rgamma}}\cr
-#'   \tab \cr
-#' "geom" \tab   see \code{\link[stats]{rgeom}}\cr
-#'   \tab \cr
-#' "lnorm" \tab  see \code{\link[stats]{rlnorm}}\cr
-#'   \tab \cr
-#' "nbinom" \tab  see \code{\link[stats]{rnbinom}}\cr
-#'   \tab \cr
-#' "norm"  \tab  see \code{\link[stats]{rnorm}}\cr
-#'   \tab \cr
-#' "pois" \tab   see \code{\link[stats]{rpois}}\cr
-#'   \tab \cr
-#' "t"  \tab     see \code{\link[stats]{rt}}\cr
-#'   \tab \cr
-#' "unif" \tab   see \code{\link[stats]{runif}}\cr
-#'   \tab \cr
-#' "weibull" \tab see \code{\link[stats]{rweibull}}\cr
+#' \deqn{NPFP = N_{trade_i} \cdot \; ``expression"}
+#' @param parameters A named list specifying the distributions for each parameter 
+#' used in \code{expression}. Each element of the list must be another list containing:
+#' \itemize{
+#'   \item \code{dist}: A string indicating the distribution name (e.g., "norm", "beta").
+#'   \item Additional arguments required by the specified distribution (e.g., \code{mean}, 
+#'   \code{sd} for "norm").
 #' }
+#' See the **Parameter distributions** section for a list of available distributions 
+#' and examples on how to specify them.
 #' @param niter The number of iterations to generate random samples from the distributions.
 #' Default 100 iterations.
 #'
 #' @return A dataframe with the statistics (mean, SD, minimum, first quartile, 
-#' median, third quartile, and maximum) of founder population \eqn{NPFP} for each
-#' country or region and for the total. [To be completed]
+#' median, third quartile, and maximum) resulting from the iterations of number of 
+#' founder populations \eqn{NPFP} for each country/region and for the total (i.e., 
+#' the results for the set of all countries/regions).
 #'
+#' @seealso [ntrade()]
+#' 
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # pathway model equation (is multiplied by Ntrade value)
-#' eq <- "(1/p1)*p2*p3"
-#' # distribution for each parameter
+#' ## Example using Northern American countries and ntrade simulated data
+#' data("datatrade_NorthAm")
+#' # Extract country IDs and simulate ntrade data
+#' IDs <- datatrade_NorthAm$internal_production$reporter
+#' df <- data.frame(IDs = IDs,
+#'                  ntrade_values = abs(rnorm(length(IDs), 10000, 2000)))
+#' # Expression for the pathway model using 3 parameters
+#' eq <- "(1/P1)*P2*P3"
+#' # Distribution for each parameter
 #' parameters <- list(
-#'   p1 = list(dist = "beta", shape1 = 0.5, shape2 = 1),
-#'   p2 = list(dist = "gamma", shape = 1.5, scale = 100),
-#'   p3 = list(dist = "norm", mean = 5, sd = 2)
+#'   P1 = list(dist = "beta", shape1 = 0.5, shape2 = 1),
+#'   P2 = list(dist = "gamma", shape = 1.5, scale = 100),
+#'   P3 = list(dist = "lnorm", mean = 5, sd = 2)
 #' )
-#' res <- pathway_model(ntrade_data = Nt_df,
-#'                      IDs_col = "IDs",
-#'                      values_col = "value",
-#'                      expression = eq,
-#'                      parameters = parameters,
-#'                      niter = 100)
-#' head(res)
-#' # Total
-#' res %>% filter(IDs == "Total")
-#' }
+#' # Run pathway_model()
+#' res_pathway <- pathway_model(ntrade_data = df,
+#'                              IDs_col = "IDs",
+#'                              values_col = "ntrade_values",
+#'                              expression = eq,
+#'                              parameters = parameters,
+#'                              niter = 100)
+#' head(res_pathway)
+#' # summary of the total for all countries
+#' res_pathway[res_pathway$IDs == "Total",]
+#' # plot
+#' plot_countries(res_pathway, "IDs", "Median")
+#' 
 pathway_model <- function(ntrade_data, IDs_col, values_col,
                           expression, parameters, niter=100){
   
@@ -100,7 +127,7 @@ pathway_model <- function(ntrade_data, IDs_col, values_col,
     if (!exists(dist_name)) {
       stop(paste("The distribution function", dist_name, "is not valid"))
     }
-    do.call(dist_name, c(list(niter), dist[-1]))
+    do.call(dist_name, c(list(niter), distr[-1]))
   })
   
   names(param_samples) <- names(parameters)

@@ -9,20 +9,20 @@ load_csv(filepath, dec = ".", encoding = getOption("encoding"))
 \arguments{
 \item{filepath}{A string specifying the path to the CSV file (.csv extension).}
 
-\item{dec}{A character specifying the decimal separator to use. 
+\item{dec}{A character specifying the decimal separator to use.
 Default is "." (period).}
 
-\item{encoding}{A string specifying the encoding of the file. Default is the native 
-system encoding set by \code{getOption("encoding")}. For more details on encoding 
+\item{encoding}{A string specifying the encoding of the file. Default is the native
+system encoding set by \code{getOption("encoding")}. For more details on encoding
 see \link[base]{file}.}
 }
 \value{
 A data frame containing the data from the CSV file.
 }
 \description{
-This function is designed to read CSV files containing more than one column of 
-data. It attempts to read a CSV file, automatically detecting common separators 
-(comma, semicolon, tab), while allowing users to specify encoding and decimal 
+This function is designed to read CSV files containing more than one column of
+data. It attempts to read a CSV file, automatically detecting common separators
+(comma, semicolon, tab), while allowing users to specify encoding and decimal
 separators as required.
 }
 \examples{

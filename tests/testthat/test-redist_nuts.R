@@ -2,8 +2,10 @@ test_that("redist_nuts should return a data frame", {
   skip_on_cran()
   test_data <- datatrade_EU
   suppressMessages(
-    trade <- trade_data(extra_total = test_data$extra_import %>% filter(partner=="Extra_Total"), 
-                        extra_pest = test_data$extra_import %>% filter(partner!="Extra_Total"),
+    trade <- trade_data(extra_total = test_data$extra_import %>% 
+                          filter(partner=="Extra_Total"), 
+                        extra_pest = test_data$extra_import %>% 
+                          filter(partner!="Extra_Total"),
                         intra_trade = test_data$intra_trade, 
                         internal_production = test_data$internal_production))
   suppressMessages(
@@ -21,8 +23,10 @@ test_that("redist_nuts with redist_data should return a data frame", {
   skip_on_cran()
   test_data <- datatrade_EU
   suppressMessages(
-    trade <- trade_data(extra_total = test_data$extra_import %>% filter(partner=="Extra_Total"), 
-                        extra_pest = test_data$extra_import %>% filter(partner!="Extra_Total"),
+    trade <- trade_data(extra_total = test_data$extra_import %>% 
+                          filter(partner=="Extra_Total"), 
+                        extra_pest = test_data$extra_import %>% 
+                          filter(partner!="Extra_Total"),
                         intra_trade = test_data$intra_trade, 
                         internal_production = test_data$internal_production))
   suppressMessages(
@@ -48,8 +52,10 @@ test_that("ntrade_redist errors", {
   skip_on_cran()
   test_data <- datatrade_EU
   suppressMessages(
-    trade <- trade_data(extra_total = test_data$extra_import %>% filter(partner=="Extra_Total"), 
-                        extra_pest = test_data$extra_import %>% filter(partner!="Extra_Total"),
+    trade <- trade_data(extra_total = test_data$extra_import %>% 
+                          filter(partner=="Extra_Total"), 
+                        extra_pest = test_data$extra_import %>% 
+                          filter(partner!="Extra_Total"),
                         intra_trade = test_data$intra_trade, 
                         internal_production = test_data$internal_production))
   suppressMessages(
@@ -75,7 +81,9 @@ test_that("ntrade_redist errors", {
                            redist_data = df_redist,
                            redist_nuts_col = "NUTS_ID",
                            redist_values_col = "values_neg"),#negative values
-               "Error: Invalid 'value' detected. Negative values 'redist_values_col' in 'redist_data'.")
+               paste(strwrap("Error: Invalid 'value' detected. Negative values 
+                             'redist_values_col' in 'redist_data'."), collapse=" ")
+  )
   expect_error(redist_nuts(data=nt,
                            nuts_col="median",
                            values_col="median",
@@ -83,6 +91,35 @@ test_that("ntrade_redist errors", {
                            redist_data = df_redist,
                            redist_nuts_col = "NUTS_ID",
                            redist_values_col = "values"),
-               "Error: 'nuts_col' in 'data' does not contain NUTS0 Country codes (2-letter code country level).",
+               paste(strwrap("Error: 'nuts_col' in 'data' does not contain NUTS0 
+                             Country codes (2-letter code country level)."), 
+                     collapse=" "),
                fixed=TRUE)
+  expect_error(redist_nuts(data=nt,
+                           nuts_col="country_IDs",
+                           values_col="median",
+                           to_nuts = 2,
+                           redist_data = df_redist,
+                           redist_nuts_col = "NUTS_ID",
+                           redist_values_col = "values",
+                           nuts_year = 2018),
+               paste(strwrap("Error: nuts_year not available. Try '2003', '2006', 
+               '2010', '2013', '2016', '2021', or '2024'"), collapse=" "),
+               fixed=TRUE)
+  expect_error(redist_nuts(data=nt,
+                           nuts_col="country_IDs",
+                           values_col="median",
+                           to_nuts = 2,
+                           redist_data = "pop"),
+               paste(strwrap("Error: 'redist_data' must be 'population' (default option) 
+                             or a dataframe"), collapse=" "),
+               fixed=TRUE)
+  expect_error(redist_nuts(data=nt,
+                           nuts_col="country_IDs",
+                           values_col="median",
+                           to_nuts = 2,
+                           population_year = c(2010, 2014)),
+               paste(strwrap("Error: The years specified in population_year 
+                             are not available. Available years for population data 
+                             are: "), collapse=" "))
 })

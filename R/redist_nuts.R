@@ -5,24 +5,28 @@ utils::globalVariables(c(
 ))
 #' Data redistribution to NUTS subdivisions
 #'
-#' Value redistribution from country-level (NUTS0) data to smaller territores 
-#' (NUTS1, NUTS2 or NUTS3). See \link[https://ec.europa.eu/eurostat/web/nuts]{NUTS 
-#' - Nomenclature of territorialunits for statistics}.
-#'
+#' Redistribution of country-level (NUTS0) data value to smaller territores 
+#' (NUTS1, NUTS2 or NUTS3). See 
+#' [NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
+#' 
+#' @details 
 #' This function enables redistribution of values from national-level NUTS0 
 #' to smaller territorial units (NUTS1, NUTS2, or NUTS3), either proportionally 
-#' based on population data from Eurostat or using user-supplied redistribution proportions. 
+#' based on 
+#' [population data from Eurostat](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3) 
+#' or using user-supplied redistribution proportions. 
 #' Population data for redistribution is automatically fetched for the specified time 
 #' period from the Eurostat database.
 #' 
-#' Note that more than one column of values provided in the dataframe data can be 
-#' redistributed at the same time. The values in columns \code{values_col} and 
-#' \code{redist_values_col} must be numeric and positive.
+#' Note that more than one column of values provided in the dataframe \code{data} 
+#' can be redistributed at the same time. The values in columns \code{values_col} 
+#' and \code{redist_values_col} must be numeric and positive.
 #' 
+#' ### Common uses
 #' In the context of quantitative pest risk assessment (qPRA) at the entry step, 
 #' this function can be applied to redistribute the quantity of potentially infested 
-#' commodities (\eqn{N_{trade}}, see \code{\link{ntrade}}) or the number of potential 
-#' founder populations (\eqn{NPFP}, see \code{\link{pathway_model}}). For this purpose, 
+#' commodities (\eqn{N_{trade}}, see [ntrade()]) or the number of potential 
+#' founder populations (\eqn{NPFP}, see [pathway_model()]). For this purpose, 
 #' population or consumption data from subdivisions are often used for redistribution.
 #'
 #' @param data A data frame containing the data at the country-level to 
@@ -35,8 +39,8 @@ utils::globalVariables(c(
 #' Default 2, indicating redistribution to NUTS2.
 #' @param redist_data A data frame with values for each subdivision on which the 
 #' redistribution is to be performed. Default \code{"population"}, indicating redistribution 
-#' based on \link[https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3]{population 
-#' data from Eurostat}.
+#' based on 
+#' [population data from Eurostat](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3).
 #' @param redist_nuts_col A string specifying the column name in \code{redist_data} 
 #' that contains the destination NUTS codes. The NUTS level should correspond to the 
 #' value specified in  \code{to_nuts}. \code{NULL} (default) if a data frame is not 
@@ -46,20 +50,21 @@ utils::globalVariables(c(
 #' used the redistribution. \code{NULL} (default) if a data frame is not incorporated 
 #' in \code{redist_data} (i.e., \code{redist_data = "population"}).
 #' @param population_year A numeric value specifying the year of population data 
-#' to use in the redistribution. only necessary if \code{"population"} is specified in 
+#' to use in the redistribution. Only necessary if \code{"population"} is specified in 
 #' \code{redist_data} (default is 2023). If multiple years are provided, the average 
 #' population across those years will be used. Available years can be found at
-#' \link[https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3]{population 
-#' data from Eurostat population data}.
+#' [population data from Eurostat](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3).
 #' @param nuts_year Year of NUTS classification. One of '2003','2006','2010','2013',
 #' '2016' (default),'2021', or '2024'. See 
-#' \link[https://ec.europa.eu/eurostat/web/nuts/history]{NUTS - History}.
+#' [NUTS - History](https://ec.europa.eu/eurostat/web/nuts/history).
 #'
 #' @return A data frame with the redistributed values across the specified NUTS 
 #' level. The dataframe contains the columns \code{NUTSX} with the codes at the 
 #' selected NUTS level, \code{NUTS0} with the codes at country level, \code{proportion} with the 
 #' proportion according to which the values have been redistributed, and the columns 
 #' corresponding to the redistributed values with the same name specified in \code{values_col}.
+#' 
+#' @seealso [ntrade()], [pathway_model()]
 #' 
 #' @export
 #'
@@ -135,7 +140,8 @@ redist_nuts <- function(data, nuts_col, values_col,
 
   # check nuts year
   if (!nuts_year %in% c('2003','2006','2010','2013','2016','2021','2024')) {
-    stop("Error: nuts_year not available. Try '2003','2006','2010','2013','2016','2021', or '2024'")
+    stop(paste(strwrap("Error: nuts_year not available. Try '2003', '2006', '2010', 
+                       '2013', '2016', '2021', or '2024'"), collapse=" "))
   }
   
   # check to_nuts
@@ -151,7 +157,8 @@ redist_nuts <- function(data, nuts_col, values_col,
   }
   # check value not negative
   if (any(sapply(data[, values_col], function(x) x[!is.na(x)] < 0))) {
-    stop("Error: Invalid 'value' detected. Negative values 'values_col' in 'data' not interpretable as quantities.")
+    stop(paste(strwrap("Error: Invalid 'value' detected. Negative values 'values_col' 
+                       in 'data' not interpretable as quantities."), collapse =" "))
   }
   
   if ("GR" %in% unique(data[[nuts_col]])) {
@@ -161,8 +168,17 @@ redist_nuts <- function(data, nuts_col, values_col,
     data[[nuts_col]][data[[nuts_col]] == "GB"] <- "UK"
   }
   # check country codes
-  if (!all(data[[nuts_col]] %in% NUTS_CODES$CNTR_CODE)) {
-    stop("Error: 'nuts_col' in 'data' does not contain NUTS0 Country codes (2-letter code country level).")
+  if (!any(data[[nuts_col]] %in% NUTS_CODES$CNTR_CODE)) {
+    stop(paste(strwrap("Error: 'nuts_col' in 'data' does not contain NUTS0 Country 
+                       codes (2-letter code country level)."), collapse=" "))
+  }else if (!all(data[[nuts_col]] %in% NUTS_CODES$CNTR_CODE)){
+    data_codes_missing <- data[[nuts_col]][!data[[nuts_col]] %in% NUTS_CODES$CNTR_CODE]
+    warning(paste(
+      "The following NUTS0 codes are invalid or not available: ",
+      paste(data_codes_missing, collapse = ", "), 
+      paste(strwrap("Please, check column 'nuts_col' in 'data' or the NUTS 
+                    classification year argument 'nuts_year'"), collapse=" "),
+      sep = "\n"))
   }
   
   # Check redist_data
@@ -179,7 +195,9 @@ redist_nuts <- function(data, nuts_col, values_col,
       stop("Error: 'redist_data' must be data.frame.")
     }
     if (!all(c(redist_nuts_col, redist_values_col) %in% names(redist_data))) {
-      stop("The dataframe 'redist_data' must contain the columns specified in 'redist_nuts_col' and 'redist_values_col'")
+      stop(paste(strwrap("The dataframe 'redist_data' must contain the columns specified 
+                         in 'redist_nuts_col' and 'redist_values_col'"), 
+                 collapse=" "))
     }
     # check value numeric
     if (!all(sapply(redist_data[, redist_values_col], is.numeric))) {
@@ -187,18 +205,38 @@ redist_nuts <- function(data, nuts_col, values_col,
     }
     # check value not negative
     if (any(sapply(redist_data[, redist_values_col], function(x) x[!is.na(x)] < 0))) {
-      stop("Error: Invalid 'value' detected. Negative values 'redist_values_col' in 'redist_data'.")
+      stop(paste(strwrap("Error: Invalid 'value' detected. Negative values 
+                         'redist_values_col' in 'redist_data'."), collapse=" "))
     }
     # check nuts codes
-    if (!all(redist_data[[redist_nuts_col]] %in% NUTS_CODES$NUTS_ID)) {
+    if (!any(redist_data[[redist_nuts_col]] %in% NUTS_CODES$NUTS_ID)) {
       stop("Error: 'redist_nuts_col' in 'redist_data' does not contain NUTS codes.")
+    }else if (!all(redist_data[[redist_nuts_col]] %in% NUTS_CODES$NUTS_ID)){
+      redist_codes_missing <- 
+        redist_data[[redist_nuts_col]][!redist_data[[redist_nuts_col]] %in% NUTS_CODES$NUTS_ID]
+      warning(paste(
+        "The following NUTS codes are invalid or not available: ",
+        paste(redist_codes_missing, collapse = ", "), 
+        paste(strwrap("Please, check column 'redist_nuts_col' in 'redist_data' 
+                      or the NUTS classification year argument 'nuts_year'"), 
+              collapse=" "),
+        sep = "\n"))
     }
   }
   
   if (is.null(redist_data)) {
     redist_df <- cached_get_eurostat_data(nuts_level=to_nuts, 
-                                          nuts_filter = NUTS_CODES$NUTS_ID) %>%
-      filter(TIME_PERIOD %in% population_year)
+                                          nuts_filter = NUTS_CODES$NUTS_ID)
+    # check population_year
+    if(!all(population_year%in%unique(redist_df$TIME_PERIOD))){
+      stop(paste(
+        paste(
+          strwrap("Error: The years specified in population_year are not available.
+            Available years for population data are: "), collapse=" "),
+        paste(unique(redist_df$TIME_PERIOD), collapse=", "), collapse=" ")
+      )
+    }
+    redist_df <- redist_df %>% filter(TIME_PERIOD %in% population_year)
     if (length(unique(redist_df$TIME_PERIOD)) > 1) {
       redist_df <- redist_df %>%
         group_by(geo) %>%
@@ -219,7 +257,7 @@ redist_nuts <- function(data, nuts_col, values_col,
     mutate(NUTS0 = substr(geo, 1, 2)) %>%
     filter(NUTS0 %in% unique(data[[nuts_col]])) %>%
     group_by(NUTS0) %>%
-    mutate(proportion = values_redistribution / sum(values_redistribution)) %>% # Proportion per NUTS0
+    mutate(proportion = values_redistribution / sum(values_redistribution)) %>%
     ungroup(NUTS0)
   
   df <- redist_df %>%

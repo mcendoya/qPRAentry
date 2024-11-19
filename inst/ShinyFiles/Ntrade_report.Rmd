@@ -82,9 +82,12 @@ $N_{trade}$ has been calculated in `r units` for the following time-period: `r t
 
 ```{r, fig.width=8, fig.height=8}
 
-p <- plot_countries(Nt, "NUTS0", "Median", title = bquote(N[trade] ~ " Median"), legend_title=units) +
-   xlim(-20, 40) + ylim(35,70) +
-   theme_bw()+
+p <- plot_nuts(Nt, "NUTS0", "Median",
+               nuts_level = 0, nuts_year = nuts_yr,
+               title = bquote(N[trade] ~ " Median"), 
+               legend_title = units) +
+  xlim(-20, 40) + ylim(35,70) +
+  theme_bw()+
   theme(
      plot.title = element_text(size = 14),
      legend.title = element_text(size = 12)
@@ -124,37 +127,30 @@ proportionally to `r data_text`.
 if(data_redistribution=="Population"){
   data_text <- "population data from Eurostat"
   if(length(population_year)==1){
-    population_year_text <- paste0("The selected year for population data is ", population_year)
+    population_year_text <- paste0("The selected year for population data is ",
+                                   population_year)
   }else{
-    population_year_text <- paste0("The selected years for which the average population will be 
-                                 used as the basis for redistribution are: ", 
-                                   paste0(population_year, collapse=", "))
+    population_year_text <- 
+      paste0("The selected years for which the average population will be 
+             used as the basis for redistribution are: ", 
+             paste0(population_year, collapse=", "))
   }
 }else{
   data_text <- "user custom data"
   population_year_text <- NULL
 }
-
-
-
-
-#if(length(population_year)==1){
-#  population_year_text <- paste0("year for population data is ", population_year)
-#  }else{
-#  population_year_text <- paste0("years, for which the average population will be 
-#                                 used as the basis for redistribution, are: ", 
-#                                 paste0(population_year, collapse=", "))
-#}
-
 ```
 
 `r population_year_text`.
 
 ```{r, fig.width=8, fig.height=8}
 
-plot_nuts(Nt_redist, "NUTS2", "Median", title = bquote(N[trade] ~ " Median"), legend_title=units) +
-   xlim(-20, 40) + ylim(35,70) +
-   theme_bw()+
+plot_nuts(Nt_redist, "NUTS2", "Median", 
+          nuts_level = 2, nuts_year = nuts_yr,
+          title = bquote(N[trade] ~ " Median"), 
+          legend_title = units) +
+  xlim(-20, 40) + ylim(35,70) +
+  theme_bw()+
   theme(
      plot.title = element_text(size = 14),
      legend.title = element_text(size = 12)

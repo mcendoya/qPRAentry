@@ -20,16 +20,20 @@ ntradeapp_server <- function(input, output, session) {
                                    units = data_vals$units)
   shinyjs::disable(selector = 'a[data-value="tab2"]')
   shinyjs::disable(selector = 'a[data-value="tab3"]')
-  shinyjs::runjs("document.querySelector('a[data-value=\"tab2\"]').classList.add('disabled-tab');")
-  shinyjs::runjs("document.querySelector('a[data-value=\"tab3\"]').classList.add('disabled-tab');")
+  shinyjs::runjs(
+    "document.querySelector('a[data-value=\"tab2\"]').classList.add('disabled-tab');")
+  shinyjs::runjs(
+    "document.querySelector('a[data-value=\"tab3\"]').classList.add('disabled-tab');")
   
   observeEvent(data_vals$trade_done(),{
     shinyjs::enable(selector = 'a[data-value="tab2"]')
     shinyjs::enable(selector = 'a[data-value="tab3"]')
     
     # Remove CSS class from enable tabs
-    shinyjs::runjs("document.querySelector('a[data-value=\"tab2\"]').classList.remove('disabled-tab');")
-    shinyjs::runjs("document.querySelector('a[data-value=\"tab3\"]').classList.remove('disabled-tab');")
+    shinyjs::runjs(
+      "document.querySelector('a[data-value=\"tab2\"]').classList.remove('disabled-tab');")
+    shinyjs::runjs(
+      "document.querySelector('a[data-value=\"tab3\"]').classList.remove('disabled-tab');")
     updateTabsetPanel(session, "trade_tabs", selected = "tab2" )
   })
 

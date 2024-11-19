@@ -12,62 +12,63 @@ ntrade(
 )
 }
 \arguments{
-\item{trade_data}{An object of class \code{TradeData} that can be the output of \code{\link{trade_data}}.}
+\item{trade_data}{An object of class \code{TradeData} that can be the output of
+\code{\link[=trade_data]{trade_data()}}.}
 
-\item{filter_IDs}{A vector containing the country IDs to filter (identification codes 
-of the countries of interest). By default, it is set to \code{NULL}, meaning all 
+\item{filter_IDs}{A vector containing the country IDs to filter (identification codes
+of the countries of interest). By default, it is set to \code{NULL}, meaning all
 \code{reporter} countries in the data frames will be considered.}
 
-\item{filter_period}{A vector specifying the time periods to filter, based on 
-the \code{time_period} column. By default, it is set to \code{NULL}, meaning 
+\item{filter_period}{A vector specifying the time periods to filter, based on
+the \code{time_period} column. By default, it is set to \code{NULL}, meaning
 all time periods in the data frames will be considered.}
 
-\item{summarise_result}{A character vector specifying functions to summarise the 
-\eqn{N_{trade}} result for the selected time periods (\code{filter_period}). 
-It accepts the expressions \code{"mean"} for the mean, \code{"sd"} for the standard 
-deviation, \code{"median"} for the median value and \code{"quantile(p)"} where 
+\item{summarise_result}{A character vector specifying functions to summarise the
+\eqn{N_{trade}} result for the selected time periods (\code{filter_period}).
+It accepts the expressions \code{"mean"} for the mean, \code{"sd"} for the standard
+deviation, \code{"median"} for the median value and \code{"quantile(p)"} where
 \code{p} is the probability for the quantiles to the given probabilities. See examples.}
 }
 \value{
-A data frame with the quantity of commodity imported by each country of interest 
-(\code{country_IDs}) from countries or regions where the pest is present. The result 
-is returned for each time period if \code{summarise_result} is not specified 
-(default is \code{NULL}). If a summary function is specified, the result will be 
+A data frame with the quantity of commodity imported by each country of interest
+(\code{country_IDs}) from countries or regions where the pest is present. The result
+is returned for each time period if \code{summarise_result} is not specified
+(default is \code{NULL}). If a summary function is specified, the result will be
 summarised accordingly.
 }
 \description{
 This function calculates the quantity of potentially infested imported commodity
-(\eqn{N_{trade}}) from third countries where the pest is present, based on the 
-provided trade datasets (output of the \code{\link{trade_data}} function).
+(\eqn{N_{trade}}) from third countries where the pest is present, based on the
+provided trade datasets (output of the \code{\link[=trade_data]{trade_data()}} function).
 }
 \details{
-The \eqn{N_{trade}} value represents the amount of potentially infested commodity left 
-within each country after adjusting for both direct imports from pest-affected 
-third countries and intra-country trade. The calculation of \eqn{N_{trade_i}} for each 
+The \eqn{N_{trade}} value represents the amount of potentially infested commodity left
+within each country after adjusting for both direct imports from pest-affected
+third countries and intra-country trade. The calculation of \eqn{N_{trade_i}} for each
 country of interest \eqn{i} is based on the equation:
 \deqn{N_{trade_i} = ExtraPest_i - ExtraPest_i \sum_{j \neq i} R_{ij} + 
 \sum_{j \neq i} ExtraPest_j R_{ji},}
 where:
 \itemize{
-\item \eqn{N_{trade_i}}: quantity of commodity from third countries remaining in 
-country \eqn{i}, taking into account the direct importation from third countries 
-where the pest is present, the re-exportation to other countries of interest, 
+\item \eqn{N_{trade_i}}: quantity of commodity from third countries remaining in
+country \eqn{i}, taking into account the direct importation from third countries
+where the pest is present, the re-exportation to other countries of interest,
 and the indirect importation of the commodity from other countries of interest.
-\item \eqn{ExtraPest_i} and \eqn{ExtraPest_j}: quantity of commodity imported by  
-country \eqn{i} and country \eqn{j} from third countries where the pest is present 
+\item \eqn{ExtraPest_i} and \eqn{ExtraPest_j}: quantity of commodity imported by
+country \eqn{i} and country \eqn{j} from third countries where the pest is present
 (direct import), during the period of time considered.
-\item \eqn{R_{ij}} and \eqn{R_{ji}}: proportion of intra-regional trade relative 
-to the total available quantity in the exporting country defined as: 
+\item \eqn{R_{ij}} and \eqn{R_{ji}}: proportion of intra-regional trade relative
+to the total available quantity in the exporting country defined as:
 \deqn{R_{ij} = IntraExp_{ij}/(IP_i + ExtraTotal_i), \\
 R_{ji} = IntraExp_{ji}/(IP_j + ExtraTotal_j).}
-Specifically, \eqn{R_{ij}} indicates the proportion of the commodity that is exported 
-from country \eqn{i} to country \eqn{j} (\eqn{IntraExp_{ij}}), while \eqn{R_{ji}} 
-indicates the proportion exported from country \eqn{j} to country \eqn{i} (\eqn{IntraExp_{ji}}), 
-in both cases out of the total available commodity in the exporter country. The total 
-available quantity is considered as tha sum of the internal production of the country 
+Specifically, \eqn{R_{ij}} indicates the proportion of the commodity that is exported
+from country \eqn{i} to country \eqn{j} (\eqn{IntraExp_{ij}}), while \eqn{R_{ji}}
+indicates the proportion exported from country \eqn{j} to country \eqn{i} (\eqn{IntraExp_{ji}}),
+in both cases out of the total available commodity in the exporter country. The total
+available quantity is considered as tha sum of the internal production of the country
 (\eqn{IP}) and the total quantity imported from third countries (\eqn{ExtraTotal}).
-Thus, the quantity of \eqn{ExtraPest_i} re-exported from country \eqn{i} to all countries 
-\eqn{j} is approximated by \eqn{ExtraPest_i \sum_{j \neq i} R_{ij}}, and the quantity 
+Thus, the quantity of \eqn{ExtraPest_i} re-exported from country \eqn{i} to all countries
+\eqn{j} is approximated by \eqn{ExtraPest_i \sum_{j \neq i} R_{ij}}, and the quantity
 of \eqn{ExtraPest_j} re-exported from all countries \eqn{j} to country \eqn{i} as
 \eqn{\sum_{j \neq i} ExtraPest_j R_{ji}}.
 }
@@ -144,4 +145,7 @@ plot_countries(data = ntrade_EU_s,
                values_col="Ntrade_2020") +
   xlim(-40,50) + ylim(25,70)
 
+}
+\seealso{
+\code{\link[=trade_data]{trade_data()}}
 }

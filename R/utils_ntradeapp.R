@@ -123,8 +123,10 @@ plot_dataUpload <- function(df, dfName, timePeriod, yLab,
                text2 = paste0(country_IDs, "\nPest present: ", round(value,2)))
       
       pl <- ggplot(NULL, aes(country_IDs, value)) +
-        geom_col_interactive(aes(fill = "Total", tooltip=text1, data_id=country_IDs), data = Total, alpha = 0.5) +
-        geom_col_interactive(aes(fill= "Pest present", tooltip=text2, data_id=country_IDs), data = Pest, alpha = 0.7)
+        geom_col_interactive(aes(fill = "Total", tooltip=text1, data_id=country_IDs), 
+                             data = Total, alpha = 0.5) +
+        geom_col_interactive(aes(fill= "Pest present", tooltip=text2, data_id=country_IDs), 
+                             data = Pest, alpha = 0.7)
       
     }else{
       Total <- df %>%
@@ -138,10 +140,12 @@ plot_dataUpload <- function(df, dfName, timePeriod, yLab,
         mutate(text2 = paste0(country_IDs, " - Pest present\nMean: ", round(Mean,2),
                               "\nSD: ", round(SD,2)))
       pl <- ggplot(NULL, aes(country_IDs, Mean)) +
-        geom_col_interactive(aes(fill = "Total", tooltip=text1, data_id=country_IDs), data = Total, alpha = 0.5) +
+        geom_col_interactive(aes(fill = "Total", tooltip=text1, data_id=country_IDs), 
+                             data = Total, alpha = 0.5) +
         geom_errorbar(aes(ymin=Mean-SD, ymax=Mean+SD),
                       data = Total, width=.2, color="#6D6C6C") +
-        geom_col_interactive(aes(fill="Pest present", tooltip=text2, data_id=country_IDs), data = Pest, alpha = 0.7) +
+        geom_col_interactive(aes(fill="Pest present", tooltip=text2, data_id=country_IDs), 
+                             data = Pest, alpha = 0.7) +
         geom_errorbar(aes(ymin=Mean-SD, ymax=Mean+SD),
                       data = Pest, width=.2, color="#6D6C6C")
     }
@@ -156,7 +160,8 @@ plot_dataUpload <- function(df, dfName, timePeriod, yLab,
                      values_to='value')
       pl <- ggplot(intraEU, aes(country_IDs, value, fill=Trade, data_id=country_IDs))+
         geom_col_interactive(position = "dodge", alpha=0.7,
-                             aes(tooltip = paste0(country_IDs, "\n", Trade, ": ", round(value,2)))) +
+                             aes(tooltip = paste0(country_IDs, "\n", Trade, ": ", 
+                                                  round(value,2)))) +
         scale_fill_manual(values =c("#009E73", "orange"))
     }else{
       intraEU_mean <- df %>%
@@ -195,7 +200,8 @@ plot_dataUpload <- function(df, dfName, timePeriod, yLab,
     if(length(timePeriod)==1){
       pl <- ggplot(df, aes(country_IDs, internal_production, data_id=country_IDs)) +
         geom_col_interactive(alpha = 0.7, fill="#CAD100",
-                             aes(tooltip = paste0(country_IDs, ": ", round(internal_production,2)) ))
+                             aes(tooltip = paste0(country_IDs, ": ", 
+                                                  round(internal_production,2)) ))
     }else{
       df <- df %>%
         select(country_IDs, internal_production, time_period) %>%

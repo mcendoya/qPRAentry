@@ -13,16 +13,17 @@ Description: The package is meant to support risk  assessors in performing the e
     where a plant pest of interest is present and estimating the amount of a pest 
     entering a risk assessment area (in terms of founder populations 
     landing in each country/area/region). 
-    The package comprises two Shiny apps: one for computing
-    the potentially infected/infested quantity of commodities imported by a country of interest 
+    The package comprises two Shiny apps, one for computing the potentially 
+    infected/infested quantity of commodities imported by a country of interest 
     from third-countries where a plant pest is present and redistributing this 
     quantity across regions, and the other for executing the pathway model.
     The package and functions used are based on the work of the European Food 
     Safety Authority (EFSA PLH Panel et al., 2018) 
     <https://doi.org/10.2903/J.EFSA.2018.5350>.
-License: MIT + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
     bsplus,
@@ -44,6 +45,8 @@ Imports:
     stats,
     tidyr
 Suggests: 
+    rnaturalearth,
+    rnaturalearthhires,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: 

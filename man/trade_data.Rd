@@ -15,33 +15,33 @@ trade_data(
 }
 \arguments{
 \item{extra_total}{A data frame containing the total quantity of commodity imported
-from third countries (pest-free and pest-present countries). It must contain the 
-following columns: \code{reporter} (importing country), \code{partner} (exporting country), 
+from third countries (pest-free and pest-present countries). It must contain the
+following columns: \code{reporter} (importing country), \code{partner} (exporting country),
 \code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).}
 
-\item{extra_pest}{A data frame containing the quantity of commodity imported 
-from third countries where the pest is present. It must contain the following columns: 
-\code{reporter} (importing country), \code{partner} (exporting country), 
+\item{extra_pest}{A data frame containing the quantity of commodity imported
+from third countries where the pest is present. It must contain the following columns:
+\code{reporter} (importing country), \code{partner} (exporting country),
 \code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).
-The quantity of imported commodity detailed in this data frame must also be included 
+The quantity of imported commodity detailed in this data frame must also be included
 in the \code{extra_total} data frame.}
 
-\item{intra_trade}{A data frame containing the quantity of commodity traded between 
-countries of interest. It must contain the following columns: 
-\code{reporter} (importing country), \code{partner} (exporting country), 
+\item{intra_trade}{A data frame containing the quantity of commodity traded between
+countries of interest. It must contain the following columns:
+\code{reporter} (importing country), \code{partner} (exporting country),
 \code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).}
 
-\item{internal_production}{A data frame containing the quantity of the commodity 
-produced domestically within each country of interest. It must contain the following columns: 
-\code{reporter} (producing country), \code{value} (quantity of commodity) and 
+\item{internal_production}{A data frame containing the quantity of the commodity
+produced domestically within each country of interest. It must contain the following columns:
+\code{reporter} (producing country), \code{value} (quantity of commodity) and
 \code{time_period} (time period of production).}
 
-\item{filter_IDs}{A vector containing the country IDs to filter (identification codes 
-of the countries of interest). By default, it is set to \code{NULL}, meaning all 
+\item{filter_IDs}{A vector containing the country IDs to filter (identification codes
+of the countries of interest). By default, it is set to \code{NULL}, meaning all
 \code{reporter} countries in the data frames will be considered.}
 
-\item{filter_period}{A vector specifying the time periods to filter, based on 
-the \code{time_period} column. By default, it is set to \code{NULL}, meaning 
+\item{filter_period}{A vector specifying the time periods to filter, based on
+the \code{time_period} column. By default, it is set to \code{NULL}, meaning
 all time periods in the data frames will be considered.}
 }
 \value{
@@ -51,81 +51,94 @@ An object of class \code{TradeData} is returned containing the following list of
 \item \code{total_trade} \verb{ } A data frame with one row for each ID and each time period with 9 variables:
 
 \tabular{lll}{
-  \code{country_IDs} \tab \verb{ } \tab IDs of the countries of interest.\cr
-  \tab \cr
-  \code{time_period} \tab \verb{ } \tab Time period.\cr
-  \tab \cr
-  \code{extra_total} \tab \verb{ } \tab Total imports from third countries. \cr
-  \tab \cr
-  \code{extra_pest} \tab \verb{ } \tab Imports from third countries where the pest of 
-  interest is present.\cr
-  \tab \cr
-  \code{intra_import} \tab \verb{ } \tab Internal import from the countries of 
-  interest.\cr
-  \tab \cr
-  \code{intra_export} \tab \verb{ } \tab Internal export to the countries of 
-  interest.\cr
-  \tab \cr
-  \code{internal_production} \tab \verb{ } \tab Internal production in the countries 
-  of interest.\cr
-  \tab \cr
-  \code{total_available} \tab \verb{ } \tab Total available quantity in the countries 
-  of interest.\cr
-  \tab \cr
-  \code{export_prop} \tab \verb{ } \tab Proportion of internal export to the total 
-  available commodity. A value of 1 indicates that internal export is less than 
-  or equal to the total available commodity; a value less than 1 [0, 1) indicates 
-  that internal export exceeds the total available.\cr
+\code{country_IDs} \tab \verb{ } \tab IDs of the countries of interest.\cr
+\tab \cr
+\code{time_period} \tab \verb{ } \tab Time period.\cr
+\tab \cr
+\code{extra_total} \tab \verb{ } \tab Total imports from third countries. \cr
+\tab \cr
+\code{extra_pest} \tab \verb{ } \tab Imports from third countries where the pest of
+interest is present.\cr
+\tab \cr
+\code{intra_import} \tab \verb{ } \tab Internal import from the countries of
+interest.\cr
+\tab \cr
+\code{intra_export} \tab \verb{ } \tab Internal export to the countries of
+interest.\cr
+\tab \cr
+\code{internal_production} \tab \verb{ } \tab Internal production in the countries
+of interest.\cr
+\tab \cr
+\code{total_available} \tab \verb{ } \tab Total available quantity in the countries
+of interest.\cr
+\tab \cr
+\code{export_prop} \tab \verb{ } \tab Proportion of internal export to the total
+available commodity. A value of 1 indicates that internal export is less than
+or equal to the total available commodity; a value less than 1 [0, 1) indicates
+that internal export exceeds the total available.\cr
 }
 }
 \itemize{
-\item \code{intra_trade} \verb{ } A data frame with values of trade commodity between 
+\item \code{intra_trade} \verb{ } A data frame with values of trade commodity between
 countries of interest:
 
 \tabular{lll}{
-  \code{reporter} \tab \verb{ } \tab Importing country ID.\cr
-  \tab \cr
-  \code{partner} \tab \verb{ } \tab Exporting country ID.\cr
-  \tab \cr
-  \code{time_period} \tab \verb{ } \tab Time period.\cr
-  \tab \cr
-  \code{value} \tab \verb{ } \tab Quantity of the commodity traded.\cr
-  \tab \cr
-  \code{export_prop} \tab \verb{ } \tab Proportion of internal export to the total 
-  available commodity for each trading partner according to the proportion for 
-  each partner (\code{export_prop} in \code{total_trade}).\cr
+\code{reporter} \tab \verb{ } \tab Importing country ID.\cr
+\tab \cr
+\code{partner} \tab \verb{ } \tab Exporting country ID.\cr
+\tab \cr
+\code{time_period} \tab \verb{ } \tab Time period.\cr
+\tab \cr
+\code{value} \tab \verb{ } \tab Quantity of the commodity traded.\cr
+\tab \cr
+\code{export_prop} \tab \verb{ } \tab Proportion of internal export to the total
+available commodity for each trading partner according to the proportion for
+each partner (\code{export_prop} in \code{total_trade}).\cr
 }
 }
 }
 \description{
 Prepares trade data for each country of interest based on the provided data.
-This function generates objects of class \code{TradeData} required to be used 
-in the other functions in the package.
+This function generates objects of class \code{TradeData} required to be used
+in the \code{\link[=ntrade]{ntrade()}} function of the \link{qPRAentry} package.
 }
 \details{
-The function combines external imports from third countries, internal trade between 
-the countries of interest and internal production data. It calculates the total amount 
-of product available per country in each time period as the sum of external imports 
-(from pest-free and pest-present countries) and internal production. 
+The function combines external imports from third countries, internal trade between
+the countries of interest and internal production data. It calculates the total amount
+of product available per country in each time period as the sum of external imports
+(from pest-free and pest-present countries) and internal production.
+\subsection{Data columns:}{
 
-Note that the data to be incorporated must contain the columns \code{reporter}, 
+Note that the data to be incorporated must contain the columns \code{reporter},
 \code{partner} (except for \code{internal_production}), \code{value}, and \code{time_period}.
-The trade flow is considered from partner to reporter, i.e., reporter as importer 
-and partner as exporter. For the IDs of countries of interest (i.e., in the the columns 
-\code{reporter} of the four trade dataframes and in the column \column{partner} 
-of \code{intra_trade}) it is recommended to use the the ISO 3166-1 codes 
-(\link[https://www.iso.org/iso-3166-country-codes.html]{ISO 3166 Maintenance Agency}) 
-or NUTS0 codes in case of European countries (\link[https://ec.europa.eu/eurostat/web/nuts]{NUTS - 
-Nomenclature of territorial units for statistics}) for further use in other functions 
-of the \code{qPRAentry} package.
+The trade flow is considered from partner to reporter, i.e., reporter as importer
+and partner as exporter.
+}
 
-Time periods can be specified in any way, both numeric and character formatting is supported. 
+\subsection{IDs - country identification codes:}{
+
+For the IDs of countries of interest (i.e., in the the columns
+\code{reporter} of the four trade dataframes and in the column \code{partner}
+of \code{intra_trade}) it is recommended to use the the ISO 3166-1 (alpha-2) codes
+(\href{https://www.iso.org/iso-3166-country-codes.html}{ISO 3166 Maintenance Agency})
+or NUTS0 codes in case of European countries
+(\href{https://ec.europa.eu/eurostat/web/nuts}{NUTS - Nomenclature of territorial units for statistics})
+for subsequent compatibility with other functions of the \link{qPRAentry} package.
+}
+
+\subsection{Time periods:}{
+
+Time periods can be specified in any way, both numeric and character formatting is supported.
 For example, it can be expressed as years, months, specific periods, seasons, etc.
+}
 
-Trade imbalances are adjusted, so that in case the internal export 
-for a given country exceeds the total quantity available in that country, the internal 
-export is recalculated proportionally based on the total available. 
+\subsection{Trade adjustments:}{
+
+Trade imbalances are adjusted, so that in case the internal export
+for a given country exceeds the total quantity available in that country, the internal
+export is recalculated proportionally based on the total available.
 Missing values are treated as zeros.
+}
 }
 \examples{
 ## Example with simulated trade data for Northern America
@@ -182,4 +195,7 @@ plot_countries(data = trade_EU$total_trade,
                values_col = "total_available") +
   xlim(-30,50) + ylim(25,70)
   
+}
+\seealso{
+\code{\link[=load_csv]{load_csv()}}, \code{\link[=ntrade]{ntrade()}}
 }

@@ -2,7 +2,7 @@
 #'
 #' This function calculates the quantity of potentially infested imported commodity
 #' (\eqn{N_{trade}}) from third countries where the pest is present, based on the 
-#' provided trade datasets (output of the \code{\link{trade_data}} function). 
+#' provided trade datasets (output of the [trade_data()] function). 
 #'
 #' The \eqn{N_{trade}} value represents the amount of potentially infested commodity left 
 #' within each country after adjusting for both direct imports from pest-affected 
@@ -35,7 +35,8 @@
 #' \eqn{\sum_{j \neq i} ExtraPest_j R_{ji}}.
 #' }
 #'
-#' @param trade_data An object of class \code{TradeData} that can be the output of \code{\link{trade_data}}.
+#' @param trade_data An object of class \code{TradeData} that can be the output of 
+#' [trade_data()].
 #' @param filter_IDs A vector containing the country IDs to filter (identification codes 
 #' of the countries of interest). By default, it is set to \code{NULL}, meaning all 
 #' \code{reporter} countries in the data frames will be considered.
@@ -53,6 +54,8 @@
 #' is returned for each time period if \code{summarise_result} is not specified 
 #' (default is \code{NULL}). If a summary function is specified, the result will be 
 #' summarised accordingly.
+#' 
+#' @seealso [trade_data()]
 #'
 #' @export
 #'
@@ -128,7 +131,8 @@
 #'                values_col="Ntrade_2020") +
 #'   xlim(-40,50) + ylim(25,70)
 #' 
-ntrade <- function(trade_data, filter_IDs = NULL, filter_period=NULL, summarise_result = NULL){
+ntrade <- function(trade_data, filter_IDs = NULL, 
+                   filter_period=NULL, summarise_result = NULL){
   reporter <- partner <- IDi <- Rij <- NULL
   # Check if trade is of class TradeData and has required elements
   if (!inherits(trade_data, "TradeData")) {
@@ -141,15 +145,17 @@ ntrade <- function(trade_data, filter_IDs = NULL, filter_period=NULL, summarise_
   valid_summarise <- all(summarise_result %in% valid_functions | valid_quantile)
   
   if (!is.null(summarise_result) && !valid_summarise) {
-    stop(paste0("Error: 'summarise_result' must be a character vector specifying valid functions:\n",
-                "'mean', 'sd', 'median', or 'quantile(p)' where p is a probability between 0 and 1."))
+    stop(paste(strwrap("Error: 'summarise_result' must be a character vector specifying 
+                       valid functions: 'mean', 'sd', 'median', or 'quantile(p)' 
+                       where p is a probability between 0 and 1."), collapse=" "))
   }
   
   trade_df <- trade_data$total_trade
   intra_df <- trade_data$intra_trade
   country_IDs <- filter_IDs
   if(!is.null(country_IDs)){
-    if(!all(country_IDs%in% trade_df$country_IDs) || !all(country_IDs%in%intra_df$reporter)){
+    if(!all(country_IDs%in% trade_df$country_IDs) || 
+       !all(country_IDs%in%intra_df$reporter)){
       stop("Error: The selected 'filter_IDs' must be in 'country_IDs' in trade data")
     }
     trade_df <- trade_df %>% 
@@ -207,8 +213,10 @@ ntrade <- function(trade_data, filter_IDs = NULL, filter_period=NULL, summarise_
   }
 
   tp <- if (!is.null(filter_period)) {
-    if(!all(filter_period%in%trade_df$time_period) || !all(filter_period%in%intra_df$time_period)){
-      stop("Error: The selected period 'filter_period' must be in 'time_period' in trade data.")
+    if(!all(filter_period%in%trade_df$time_period) || 
+       !all(filter_period%in%intra_df$time_period)){
+      stop(paste(strwrap("Error: The selected period 'filter_period' must be in 
+                         'time_period' in trade data."), collapse=" "))
     }
     filter_period
   } else {

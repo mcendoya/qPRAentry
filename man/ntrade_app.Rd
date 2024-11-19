@@ -7,10 +7,15 @@
 ntrade_app()
 }
 \description{
-Shiny app for Ntrade
+Interactive application for the calculation and redistribution of the potentially
+infected/infested quantity of commodities imported by a country from third-countries
+where the pest is present (\eqn{N_{trade}}) for European countries.
 }
 \examples{
 \dontrun{
 ntrade_app()
 }
+}
+\seealso{
+\code{\link[=ntrade]{ntrade()}}, \code{\link[=redist_nuts]{redist_nuts()}}, \code{\link[=redist_iso]{redist_iso()}}
 }

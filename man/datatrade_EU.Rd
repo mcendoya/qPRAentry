@@ -7,39 +7,39 @@
 \format{
 A list of three data frames:
 \describe{
-  \item{extra_import}{Data on imports from countries outside of the EU. 
-   A data frame with 296 rows and 4 columns:
-     \describe{
-       \item{reporter}{ID of the receiving country in NUTS0 code (country level).}
-       \item{partner}{ID of the exporting countries, coded as "Extra_Total" for all external countries, 
-       and "CNTR_1", "CNTR_2", "CNTR_3" to indicate individual non-EU countries where
-       the pest is present.}
-       \item{time_period}{Time period of trade, with values 2020 and 2021.}
-       \item{value}{Quantity of the commodity imported.}
-     }}
-  \item{intra_trade}{Data on internal trade within EU member countries. 
-   A data frame with 2664 rows and 4 columns:
-     \describe{
-       \item{reporter}{ID of the receiving country in NUTS0 code.}
-       \item{partner}{ID of the exporting country in NUTS0 code.}
-       \item{time_period}{Time period of trade, with values 2020 and 2021.}
-       \item{value}{Quantity of the commodity imported.}
-     }}
-  \item{internal_production}{Data on the internal production of the commodity within the EU. 
-   A data frame with 74 rows and 3 columns:
-     \describe{
-       \item{reporter}{ID of the producing country in NUTS0 code.}
-       \item{time_period}{Time period of trade, in years (2020 and 2021).}
-       \item{value}{Quantity of the commodity produced.}
-     }}
+\item{extra_import}{Data on imports from countries outside of the EU.
+A data frame with 296 rows and 4 columns:
+\describe{
+\item{reporter}{ID of the receiving country in NUTS0 code (country level).}
+\item{partner}{ID of the exporting countries, coded as "Extra_Total" for all external countries,
+and "CNTR_1", "CNTR_2", "CNTR_3" to indicate individual non-EU countries where
+the pest is present.}
+\item{time_period}{Time period of trade, with values 2020 and 2021.}
+\item{value}{Quantity of the commodity imported.}
+}}
+\item{intra_trade}{Data on internal trade within EU member countries.
+A data frame with 2664 rows and 4 columns:
+\describe{
+\item{reporter}{ID of the receiving country in NUTS0 code.}
+\item{partner}{ID of the exporting country in NUTS0 code.}
+\item{time_period}{Time period of trade, with values 2020 and 2021.}
+\item{value}{Quantity of the commodity imported.}
+}}
+\item{internal_production}{Data on the internal production of the commodity within the EU.
+A data frame with 74 rows and 3 columns:
+\describe{
+\item{reporter}{ID of the producing country in NUTS0 code.}
+\item{time_period}{Time period of trade, in years (2020 and 2021).}
+\item{value}{Quantity of the commodity produced.}
+}}
 }
 }
 \usage{
 datatrade_EU
 }
 \description{
-`datatrade_EU` simulated trade data for a commodity within the European Union (EU).
-This dataset illustrates the trade and production flow of a commodity that is a potential 
+\code{datatrade_EU} simulated trade data for a commodity within the European Union (EU).
+This dataset illustrates the trade and production flow of a commodity that is a potential
 pathway for the entry of a pest into EU countries in yearly time periods.
 }
 \keyword{datasets}

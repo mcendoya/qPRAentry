@@ -1,4 +1,5 @@
-utils::globalVariables(c(".", "NUTS_CODES"))
+utils::globalVariables(c(".", "NUTS_CODES", "NUTS_ID", "CNTR_CODE", "CNTR_ID",
+                         "NAME_ENGL"))
 #' Data preparation
 #'
 #' @param data data.frame
@@ -10,7 +11,8 @@ utils::globalVariables(c(".", "NUTS_CODES"))
 #' @return A data frame with the values grouped by ID for each selected time period.
 #' ID corresponds to reporter if TRUE or to partner if TRUE.
 #' If reporter and partner are TRUE the data frame contains both columns.
-#'
+#' 
+#' @noRd
 #' @keywords internal
 summarise_data <- function(data, select_period = NULL, reporter = TRUE, partner = FALSE) {
   time_period <- value <- NULL
@@ -59,7 +61,8 @@ summarise_data <- function(data, select_period = NULL, reporter = TRUE, partner 
 #' @param time_period A vector specifying the time periods to be selected. 
 #'
 #' @return A vector of IDs that have zero values
-#'
+#' 
+#' @noRd
 #' @keywords internal
 check_missing_ids <- function(df1, df2, df3, IDs, time_period) {
   ID <- tps <- NULL
@@ -86,11 +89,12 @@ check_missing_ids <- function(df1, df2, df3, IDs, time_period) {
       pull(message)
     
     missing_IDs <- unique(missing_info$ID)
-    warning_message <- paste("Warning: No available data for:", 
-                             paste(warning_messages, collapse = "; "),
-                             ". Therefore,", paste(missing_IDs, collapse = ", "), 
-                             "will be excluded from the analysis.\nPlease select other time periods if you want to include", 
-                             paste(missing_IDs, collapse = ", "), "in the analysis.")
+    warning_message <- 
+      paste("Warning: No available data for:", paste(warning_messages, collapse = "; "),
+            ". Therefore,", paste(missing_IDs, collapse = ", "), 
+            paste(strwrap("will be excluded from the analysis.\nPlease select other 
+                          time periods if you want to include"), collapse=" "),
+            paste(missing_IDs, collapse = ", "), "in the analysis.")
 
   }else{
     missing_IDs <- c()
@@ -110,7 +114,8 @@ check_missing_ids <- function(df1, df2, df3, IDs, time_period) {
 #' @param IDs A vector specifying the IDs used for generating combinations.
 #'
 #' @return A data frame with missing intra-partner combinations filled with zero values.
-#'
+#' 
+#' @noRd
 #' @keywords internal
 missing_intra <- function(data, IDs) {
   IDi <- IDj <- NULL
@@ -138,6 +143,7 @@ missing_intra <- function(data, IDs) {
 #'
 #' @return A data frame with population data for each NUTS level
 #' 
+#' @noRd
 #' @keywords internal
 get_population_data <- function(nuts_level, nuts_filter=NULL) {
   sex <- age <- NULL
@@ -168,6 +174,7 @@ get_population_data <- function(nuts_level, nuts_filter=NULL) {
 #'
 #' @return A memoized version of `get_population_data`.
 #' 
+#' @noRd
 #' @keywords internal
 cached_get_eurostat_data <- memoise::memoise(get_population_data)
 

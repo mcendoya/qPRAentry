@@ -25,29 +25,36 @@ pathwayapp_server <- function(input, output, session) {
   shinyjs::disable(selector = 'a[data-value="tab2"]')
   shinyjs::disable(selector = 'a[data-value="tab3"]')
   shinyjs::disable(selector = 'a[data-value="tab4"]')
-  shinyjs::runjs("document.querySelector('a[data-value=\"tab2\"]').classList.add('disabled-tab');")
-  shinyjs::runjs("document.querySelector('a[data-value=\"tab3\"]').classList.add('disabled-tab');")
-  shinyjs::runjs("document.querySelector('a[data-value=\"tab4\"]').classList.add('disabled-tab');")
+  shinyjs::runjs(
+    "document.querySelector('a[data-value=\"tab2\"]').classList.add('disabled-tab');")
+  shinyjs::runjs(
+    "document.querySelector('a[data-value=\"tab3\"]').classList.add('disabled-tab');")
+  shinyjs::runjs(
+    "document.querySelector('a[data-value=\"tab4\"]').classList.add('disabled-tab');")
 
   observeEvent(model$model_done(),{
     shinyjs::enable(selector = 'a[data-value="tab2"]')
-    shinyjs::runjs("document.querySelector('a[data-value=\"tab2\"]').classList.remove('disabled-tab');")
+    shinyjs::runjs(
+      "document.querySelector('a[data-value=\"tab2\"]').classList.remove('disabled-tab');")
   })
   
   observeEvent(ntrade_data$data_done(),{
     shinyjs::enable(selector = 'a[data-value="tab3"]')
-    shinyjs::runjs("document.querySelector('a[data-value=\"tab3\"]').classList.remove('disabled-tab');")
+    shinyjs::runjs(
+      "document.querySelector('a[data-value=\"tab3\"]').classList.remove('disabled-tab');")
   })
 
   observeEvent(parameters$dist_done(),{
     shinyjs::enable(selector = 'a[data-value="tab4"]')
-    shinyjs::runjs("document.querySelector('a[data-value=\"tab4\"]').classList.remove('disabled-tab');")
+    shinyjs::runjs(
+      "document.querySelector('a[data-value=\"tab4\"]').classList.remove('disabled-tab');")
   })
 
   observeEvent(c(ntrade_data$ntrade_data(), ntrade_data$nuts(), ntrade_data$values(), 
                  model$model_done(), ntrade_data$data_done()),{
     shinyjs::disable(selector = 'a[data-value="tab4"]')
-    shinyjs::runjs("document.querySelector('a[data-value=\"tab4\"]').classList.add('disabled-tab');")
+    shinyjs::runjs(
+      "document.querySelector('a[data-value=\"tab4\"]').classList.add('disabled-tab');")
   })
 
   session$onSessionEnded(function() { stopApp() })

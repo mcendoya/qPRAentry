@@ -46,7 +46,7 @@ head(trade_NorthAm$intra_trade)
 # Plot the total available quantity of commodity available in each country
 library(ggplot2)
 plot_countries(data = trade_NorthAm$total_trade,
-               IDs_col = "country_IDs", 
+               iso_col = "country_IDs", 
                values_col = "total_available") +
   xlim(-180,-20) + ylim(0,90)
 ```
@@ -75,7 +75,7 @@ trade_EU <- trade_data(extra_total = extra_total,
                        filter_period = 2020)
 # Plot the total available quantity of commodity available in each country
 plot_countries(data = trade_EU$total_trade, 
-               IDs_col = "country_IDs", 
+               iso_col = "country_IDs", 
                values_col = "total_available") +
   xlim(-30,50) + ylim(25,70)
 ```

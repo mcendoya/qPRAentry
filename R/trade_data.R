@@ -2,7 +2,7 @@
 #'
 #' Prepares trade data for each country of interest based on the provided data.
 #' This function generates objects of class \code{TradeData} required to be used 
-#' in the other functions in the package.
+#' in the [ntrade()] function of the [qPRAentry] package.
 #' 
 #' @param extra_total A data frame containing the total quantity of commodity imported
 #' from third countries (pest-free and pest-present countries). It must contain the 
@@ -30,25 +30,32 @@
 #' all time periods in the data frames will be considered.
 #' 
 #'
-#' @details The function combines external imports from third countries, internal trade between 
+#' @details 
+#' The function combines external imports from third countries, internal trade between 
 #' the countries of interest and internal production data. It calculates the total amount 
 #' of product available per country in each time period as the sum of external imports 
 #' (from pest-free and pest-present countries) and internal production. 
 #' 
+#' ### Data columns:
 #' Note that the data to be incorporated must contain the columns \code{reporter}, 
 #' \code{partner} (except for \code{internal_production}), \code{value}, and \code{time_period}.
 #' The trade flow is considered from partner to reporter, i.e., reporter as importer 
-#' and partner as exporter. For the IDs of countries of interest (i.e., in the the columns 
-#' \code{reporter} of the four trade dataframes and in the column \column{partner} 
-#' of \code{intra_trade}) it is recommended to use the the ISO 3166-1 codes 
-#' (\link[https://www.iso.org/iso-3166-country-codes.html]{ISO 3166 Maintenance Agency}) 
-#' or NUTS0 codes in case of European countries (\link[https://ec.europa.eu/eurostat/web/nuts]{NUTS - 
-#' Nomenclature of territorial units for statistics}) for further use in other functions 
-#' of the \code{qPRAentry} package.
+#' and partner as exporter. 
 #' 
+#' ### IDs - country identification codes:
+#' For the IDs of countries of interest (i.e., in the the columns 
+#' \code{reporter} of the four trade dataframes and in the column \code{partner} 
+#' of \code{intra_trade}) it is recommended to use the the ISO 3166-1 (alpha-2) codes 
+#' ([ISO 3166 Maintenance Agency](https://www.iso.org/iso-3166-country-codes.html)) 
+#' or NUTS0 codes in case of European countries 
+#' ([NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts)) 
+#' for subsequent compatibility with other functions of the [qPRAentry] package.
+#' 
+#' ### Time periods:
 #' Time periods can be specified in any way, both numeric and character formatting is supported. 
 #' For example, it can be expressed as years, months, specific periods, seasons, etc.
 #' 
+#' ### Trade adjustments:
 #' Trade imbalances are adjusted, so that in case the internal export 
 #' for a given country exceeds the total quantity available in that country, the internal 
 #' export is recalculated proportionally based on the total available. 
@@ -106,7 +113,9 @@
 #'   each partner (\code{export_prop} in \code{total_trade}).\cr
 #' }
 #' }
-#'
+#' 
+#' @seealso [load_csv()], [ntrade()]
+#' 
 #' @export
 #'
 #' @examples
@@ -181,16 +190,20 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
   
   #check column names
   if (!all(c("reporter", "partner", "value", "time_period") %in% colnames(extra_total))) {
-    stop("Error: extra_total must contain the columns 'reporter', 'partner', 'value' and 'time_period'.")
+    stop(paste(strwrap("Error: extra_total must contain the columns 'reporter', 
+                       'partner', 'value' and 'time_period'."), collapse=" "))
   }
   if (!all(c("reporter", "partner", "value", "time_period") %in% colnames(extra_pest))) {
-    stop("Error: extra_pest must contain the columns 'reporter', 'partner', 'value' and 'time_period'.")
+    stop(paste(strwrap("Error: extra_pest must contain the columns 'reporter', 
+                       'partner', 'value' and 'time_period'."), collapse=" "))
   }
   if (!all(c("reporter", "partner", "value", "time_period") %in% colnames(intra_trade))) {
-    stop("Error: intra_trade must contain the columns 'reporter', 'partner', 'value' and 'time_period'.")
+    stop(paste(strwrap("Error: intra_trade must contain the columns 'reporter', 
+                       'partner', 'value' and 'time_period'."), collapse=" "))
   }
   if (!all(c("reporter", "value", "time_period") %in% colnames(internal_production))) {
-    stop("Error: internal_production must contain the columns 'reporter', 'value' and 'time_period'.")
+    stop(paste(strwrap("Error: internal_production must contain the columns 'reporter', 
+                       'value' and 'time_period'."), collapse=" "))
   }
   
   #check value numeric
@@ -218,9 +231,8 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
       neg_val <- c(neg_val, "intra_trade")}
     if(any(internal_production$value[!is.na(internal_production$value)]<0)){
       neg_val <- c(neg_val, "internal_production")}
-    stop(paste0("Error: Invalid 'value' detected. Negative values in ", 
-                paste(neg_val, collapse=", "), 
-                ", not interpretable as quantities."))
+    stop(paste("Error: Invalid 'value' detected. Negative values in:", 
+                paste(neg_val, collapse=", "), collapse=" "))
   }
 
   #selected IDs
@@ -269,8 +281,10 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
                           "extra_pest" = summarise_data(extra_pest, filter_period),
                           "intra_import" = summarise_data(intra_trade, filter_period),
                           "intra_export" = summarise_data(intra_trade, filter_period,
-                                                          reporter = FALSE, partner = TRUE),
-                          "internal_production" = summarise_data(internal_production, filter_period)
+                                                          reporter = FALSE, 
+                                                          partner = TRUE),
+                          "internal_production" = summarise_data(internal_production, 
+                                                                 filter_period)
   )
   dataframes_list <- imap(dataframes_list, ~rename(.x, !!.y := "value"))
   
@@ -303,8 +317,9 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
     distinct()
   
   if (nrow(error_ExtraPest) > 0) {
-    stop(paste0("Error: There are cases where the extra-pest import is higher ",
-                "than the extra-total import. The extra-total import must include the extra-pest import."))
+    stop(paste(strwrap("Error: There are cases where the extra-pest import is higher 
+                       than the extra-total import. The extra-total import must include 
+                       the extra-pest import."), collapse=" "))
   }
   
   warning_cases <- total_trade %>%
@@ -314,9 +329,11 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
     distinct()
   
   if (nrow(warning_cases) > 0) {
-    message(paste0("Note: For countries where intra-export is greater than total available ",
-                   "(extra-import + internal production), intra-export is considered ",
-                   "proportional to the total available.\n"))
+    message(
+      paste(strwrap("Note: For countries where intra-export is greater than total 
+                    available (extra-import + internal production), intra-export 
+                    is considered proportional to the total available."), 
+            collapse=" "))
   }
   
   if(!is.null(IDs_excluded$warning_message)){

@@ -38,8 +38,10 @@ distribution_names <- c(
 #'
 #' @param id_dist Identifier for the distribution type.
 #' 
-#' @return A tagList object containing conditional input elements for the specified distribution.
+#' @return A tagList object containing conditional input elements for the specified 
+#' distribution.
 #' 
+#' @noRd
 #' @keywords internal
 distribution_panel <- function(ns, id_dist){
   tagList(
@@ -119,6 +121,7 @@ distribution_panel <- function(ns, id_dist){
 #' 
 #' @return A numeric vector of random numbers generated from the specified distribution.
 #' 
+#' @noRd
 #' @keywords internal
 n_from_dist <- function(dist, input_pars, n_iter){
   set.seed(123)
@@ -172,6 +175,7 @@ n_from_dist <- function(dist, input_pars, n_iter){
 #' 
 #' @return A numeric vector.
 #' 
+#' @noRd
 #' @keywords internal
 q_from_dist <- function(dist, input_pars){
   set.seed(123)

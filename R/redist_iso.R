@@ -1,25 +1,28 @@
 utils::globalVariables(c(
   "TIME_PERIOD", "geo", "values",
   "values_redistribution", "proportion",
-  ":="
+  ":=", "ISO_2", "ISO_1"
 ))
 #' Data redistribution to country subdivisions
 #'
-#' Value redistribution from country-level (ISO 3166-1) to principal subdivisions 
-#' (ISO 3166-2). See \link[https://www.iso.org/iso-3166-country-codes.html]{ISO 
-#' 3166 Maintenance Agency}.
+#' Value redistribution from country-level (ISO 3166-1 alpha-2 codes) to principal 
+#' subdivisions (ISO 3166-2 codes). See 
+#' [ISO 3166 Maintenance Agency](https://www.iso.org/iso-3166-country-codes.html).
 #'
+#' @details
 #' This function enables redistribution of values from country-level  
 #' to principal subdivisions (e.g., provinces or states), proportionally 
-#' to user-supplied redistribution proportions. Note that more than one column of 
-#' values provided in the dataframe data can be redistributed at the same time. 
-#' The values in columns \code{values_col} and \code{redist_values_col} must be 
-#' numeric and positive.
+#' to user-supplied redistribution proportions. 
 #' 
+#' Note that more than one column of values provided in the dataframe data can be 
+#' redistributed at the same time. The values in columns \code{values_col} and 
+#' \code{redist_values_col} must be numeric and positive.
+#' 
+#' ### Common uses
 #' In the context of quantitative pest risk assessment (qPRA) at the entry step, 
 #' this function can be applied to redistribute the quantity of potentially infested 
-#' commodities (\eqn{N_{trade}}, see \code{\link{ntrade}}) or the number of potential 
-#' founder populations (\eqn{NPFP}, see \code{\link{pathway_model}}). For this purpose, 
+#' commodities (\eqn{N_{trade}}, see [ntrade()]) or the number of potential 
+#' founder populations (\eqn{NPFP}, see [pathway_model()]). For this purpose, 
 #' population or consumption data from subdivisions are often used for redistribution.
 #'
 #' @param data A data frame containing the data at the country-level to 
@@ -41,6 +44,8 @@ utils::globalVariables(c(
 #' level, \code{ISO_2} with the codes at subdivision level, \code{proportion} with the 
 #' proportion according to which the values have been redistributed, and the columns 
 #' corresponding to the redistributed values with the same name specified in \code{values_col}.
+#' 
+#' @seealso [ntrade()], [pathway_model()]
 #' 
 #' @export
 #'
@@ -105,10 +110,12 @@ redist_iso <- function(data, iso_col, values_col,
   }
   # Check if the specified columns exist in the dataframe
   if (!all(c(iso_col, values_col) %in% names(data))) {
-    stop("The dataframe 'data' must contain the columns specified in iso_col and values_col")
+    stop(paste(strwrap("The dataframe 'data' must contain the columns specified in 
+                       'iso_col' and 'values_col'"), collapse=" "))
   }
   if (!all(c(redist_iso_col, redist_values_col) %in% names(redist_data))) {
-    stop("The dataframe 'redist_data' must contain the columns specified in redist_iso_col and redist_values_col")
+    stop(paste(strwrap("The dataframe 'redist_data' must contain the columns specified 
+                       in 'redist_iso_col' and 'redist_values_col'"), collapse=" "))
   }
   # check data.frame
   if (!is.data.frame(data)) {
@@ -126,34 +133,34 @@ redist_iso <- function(data, iso_col, values_col,
   }
   # check value not negative
   if (any(sapply(data[, values_col], function(x) x[!is.na(x)] < 0))) {
-    stop("Error: Invalid 'value' detected. Negative values 'values_col' in 'data' not interpretable as quantities.")
+    stop(paste(strwrap("Error: Invalid 'value' detected. Negative values 'values_col' 
+                       in 'data' not interpretable as quantities."), collapse=" "))
   }
   if (any(sapply(redist_data[, redist_values_col], function(x) x[!is.na(x)] < 0))) {
-    stop("Error: Invalid 'value' detected. Negative values 'redist_values_col' in 'redist_data'.")
+    stop(paste(strwrap("Error: Invalid 'value' detected. Negative values 
+                       'redist_values_col' in 'redist_data'."), collapse=" "))
   }
   # check ISO 3166-1 in redist_data
-  missing_from_redist <- data[[iso_col]][!data[[iso_col]] %in% substr(redist_data[[redist_iso_col]], 1, 2)]
+  missing_from_redist <- data[[iso_col]][!data[[iso_col]] %in% 
+                                           substr(redist_data[[redist_iso_col]], 1, 2)]
   if (length(missing_from_redist) > 0) {
-    warning(
-      paste(
-        "ISO 3166-2 code (subdivisions) has not been found in redist_data for the following 
-        ISO 3166-1 codes (country) of data:",
-        paste(missing_from_redist, collapse = ", ")
-      )
-    )
+    warning(paste(
+      paste(strwrap("ISO 3166-2 code (subdivisions) has not been found in 'redist_data' 
+                    for the following ISO 3166-1 codes (country) of 'data':"), 
+            collapse = " "),
+      paste(missing_from_redist, collapse = ", "), sep = "\n"))
   }
   # check first characters of ISO 3166-2 in data
   missing_from_data <- unique(
-    substr(redist_data[[redist_iso_col]], 1, 2))[!unique(
-      substr(redist_data[[redist_iso_col]], 1, 2)) %in% data[[iso_col]]]
+    redist_data[[redist_iso_col]][!substr(redist_data[[redist_iso_col]], 1, 2) %in% 
+                                    data[[iso_col]]]
+  )
   if (length(missing_from_data) > 0) {
-    warning(
-      paste(
-        "ISO 3166-1 code (country) has not been found in data for the following 
-        ISO 3166-2 codes (subdivisions) of redist_data:",
-        paste(missing_from_data, collapse = ", ")
-      )
-    )
+    warning(paste(
+      paste(strwrap("ISO 3166-1 code (country) has not been found in 'data' for the 
+                    following ISO 3166-2 codes (subdivisions) of 'redist_data':"), 
+            collapse=" "),
+      paste(missing_from_data, collapse = ", "), sep="\n"))
   }
   
   
@@ -166,7 +173,7 @@ redist_iso <- function(data, iso_col, values_col,
     mutate(ISO_1 = substr(ISO_2, 1, 2)) %>%
     filter(ISO_1 %in% unique(data[[iso_col]])) %>%
     group_by(ISO_1) %>%
-    mutate(proportion = values_redistribution / sum(values_redistribution)) %>% # Proportion
+    mutate(proportion = values_redistribution / sum(values_redistribution)) %>% 
     ungroup(ISO_1)
   
   df <- redist_df %>%

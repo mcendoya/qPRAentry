@@ -13,18 +13,20 @@ mod_ntrade_redistribution_ui <- function(id){
     sidebarLayout(
       sidebarPanel(width=3,
                    style='background: #ffff;',
-                   radioButtons(ns("output_NUTS2"), "Data for proportional redistribution to NUTS2",
+                   radioButtons(ns("output_NUTS2"), 
+                                "Data for proportional redistribution to NUTS2",
                                 choices=c("Population", "Custom Data"),
                                 selected=character(0),
                                 inline=T),
                    conditionalPanel(condition="input.output_NUTS2 == 'Population'",
                                     ns = ns,
-                                    shinyWidgets::pickerInput(ns("population_year"),
-                                                              "Population data year(s)",
-                                                              choices = c("Downloading population data..."),
-                                                              multiple = TRUE,
-                                                              selected = character(0),
-                                                              width ="fit"),
+                                    shinyWidgets::pickerInput(
+                                      ns("population_year"),
+                                      "Population data year(s)",
+                                      choices = c("Downloading population data..."),
+                                      multiple = TRUE,
+                                      selected = character(0),
+                                      width ="fit"),
                                     uiOutput(ns("notification_ui"))
                    ),
                    conditionalPanel(condition="input.output_NUTS2 == 'Custom Data'",
@@ -52,8 +54,10 @@ mod_ntrade_redistribution_ui <- function(id){
                                     )
                    ),#conditionalPanel
                    br(),
-                   shinyjs::disabled(actionButton(ns("redistribution_done"), "See $N_{trade}$ redistribution")),
-                   shinyjs::disabled(downloadButton(ns("downloadAll"), "Download results"))
+                   shinyjs::disabled(actionButton(ns("redistribution_done"), 
+                                                  "See $N_{trade}$ redistribution")),
+                   shinyjs::disabled(downloadButton(ns("downloadAll"), 
+                                                    "Download results"))
       ), #sidebarPanel
       mainPanel(width=9,
                 #help text
@@ -67,8 +71,6 @@ mod_ntrade_redistribution_ui <- function(id){
                          br()
                   )),
                 uiOutput(ns("NUTS2_results")) 
-                # %>% 
-                #   shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
       )
     )#sidebarLayout
   )
@@ -90,15 +92,15 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
     output$help_data <- renderUI({
       button_state <- button_pressed()
       if (button_state) {
-        HTML('<p class="custom-text">Note: If you make any changes to the redistribution data,
-        please, press on <strong>"See <i>N<sub>trade</sub></i> redistribution"</strong> 
+        HTML('<p class="custom-text">Note: If you make any changes to the redistribution 
+        data, please, press on <strong>"See <i>N<sub>trade</sub></i> redistribution"</strong> 
         to apply the changes.<br><br>
-        <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the <strong>"Download results"</strong> 
-        button to proceed to download the <i>N<sub>trade</sub></i> data at NUTS0 and NUTS2 level and the final report.
-             <br><br>
-                  You can also return to the "Data" tab to review or 
-                  change the input data.<br>
-             </p>')
+        <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the 
+        <strong>"Download results"</strong> button to proceed to download the 
+        <i>N<sub>trade</sub></i> data at NUTS0 and NUTS2 level and the final report.
+        <br><br>
+        You can also return to the "Data" tab to review or change the input data.
+        <br></p>')
       } else {
         if(is.null(input$output_NUTS2)){
           text_DataRedistribution
@@ -226,8 +228,8 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
     observeEvent(input$redistribution_done,{
       output$NUTS2_results <- renderUI({
         tagList(
-          HTML('<p class="custom-text"><br>View <i>N<sub>trade</sub></i> redistribution 
-               results in table or map format.<br></p>'),
+          HTML('<p class="custom-text"><br>View <i>N<sub>trade</sub></i> 
+               redistribution results in table or map format.<br></p>'),
           shinyWidgets::radioGroupButtons(
             inputId = ns("NUTS2_btn"),
             label = NULL,
@@ -264,8 +266,9 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
         output$NUTS2_content <- renderUI({
           fluidRow(
             column(6,
-                   HTML('<p class="custom-text">Place your cursor over the map to display the values. 
-                 Click on a country to zoom in for a closer view.<br></p>'),
+                   HTML('<p class="custom-text">Place your cursor over the map to 
+                        display the values. Click on a country to zoom in for a 
+                        closer view.<br></p>'),
                    br(),
                    ggiraph::girafeOutput(ns("NUTS2map")) %>%
                      shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
@@ -283,8 +286,10 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
       numeric_columns <- names(Nt_redist())[which(sapply(Nt_redist(), is.numeric))]
       DT::datatable(Nt_redist(), options = list(dom = 'ft', pageLength = -1)) %>%
         DT::formatRound(columns = numeric_columns, digits=2) %>%
-        DT::formatStyle(columns = "NUTS2", target = "cell", backgroundColor = "#F7080880") %>%
-        DT::formatStyle(columns = numeric_columns, target = "cell", backgroundColor = "#F7080820")
+        DT::formatStyle(columns = "NUTS2", target = "cell", 
+                        backgroundColor = "#F7080880") %>%
+        DT::formatStyle(columns = numeric_columns, target = "cell", 
+                        backgroundColor = "#F7080820")
     })
 
     EU02_dataplot <- eventReactive(input$redistribution_done,{
@@ -346,7 +351,8 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
                             "\nMedian: ", round(country$Ntrade_NUTS2,2),
                             "\nQ0.95: ", round(country$Q0.95,2))
         }
-        limits <- c(min(country$Ntrade_NUTS2, na.rm=T), max(country$Ntrade_NUTS2, na.rm=T))
+        limits <- c(min(country$Ntrade_NUTS2, na.rm=T), 
+                    max(country$Ntrade_NUTS2, na.rm=T))
         ggiraph_plot(data = country, value = "Ntrade_NUTS2",
                      name = units(), 
                      title = bquote(paste(N[trade]," ", .(idx)," "," - ", .(c_name))),
@@ -374,7 +380,8 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
         setwd(tempDir)
         # PDF report
         tempReport <- file.path(tempDir, "Ntrade_report.pdf")
-        rmdPath <- system.file("ShinyFiles", "Ntrade_report.Rmd", package = "qPRAentry")
+        rmdPath <- system.file("ShinyFiles", "Ntrade_report.Rmd", 
+                               package = "qPRAentry")
         file.copy(rmdPath, tempReport, overwrite = TRUE)
         # Set up parameters to pass to Rmd document
         params <- list(time_period = time_period(),

@@ -25,19 +25,21 @@ mod_pathway_model_ui <- function(id){
       sidebarPanel(width = 12,
                    h3("Model parameters", style = "color:#327FB0"),
                    fluidRow(
-                     column(6, style = "background-color: white; margin-right: 50px;",
+                     column(6, 
+                            style = "background-color: white; margin-right: 50px;",
                             h4(strong("Default parameters:")),
                             column(4,
                                    br(),
-                                   checkboxGroupInput(ns("parameters"), label=NULL,
-                                                      choiceNames = lapply(
-                                                        1:length(default_parameters),
-                                                        function(x) HTML(paste0(
-                                                          '<span style="font-size:17px;">',
-                                                          default_parameters_names[x],
-                                                          '</span><br><br>'))),
-                                                      choiceValues = default_parameters,
-                                                      selected = default_parameters)
+                                   checkboxGroupInput(
+                                     ns("parameters"), label=NULL,
+                                     choiceNames = lapply(
+                                       1:length(default_parameters),
+                                       function(x) HTML(paste0(
+                                         '<span style="font-size:17px;">',
+                                         default_parameters_names[x],
+                                         '</span><br><br>'))),
+                                     choiceValues = default_parameters,
+                                     selected = default_parameters)
                             ),
                             column(8,
                                    br(),
@@ -66,9 +68,10 @@ mod_pathway_model_ui <- function(id){
                             h4(strong("Add other parameters:")),
                             br(),       
                             fluidRow(class="inline",
-                                     numericInput(ns("extra_parameters"),
-                                                  label = "Number of parameters to add:",
-                                                  value = 0, min = 0, step = 1)
+                                     numericInput(
+                                       ns("extra_parameters"),
+                                       label = "Number of parameters to add:",
+                                       value = 0, min = 0, step = 1)
                             ),
                             br(),
                             uiOutput(ns("par_dynamic"))
@@ -104,7 +107,7 @@ mod_pathway_model_server <- function(id){
         text_model_done
       }
     })
-
+    
     # Name extra parameters
     output$par_dynamic <- renderUI({
       if(input$extra_parameters>0){
@@ -166,7 +169,8 @@ mod_pathway_model_server <- function(id){
     })
     
     model_eq <- reactiveVal(
-      "NPFP = N_{trade} * (1/U_{weight}) * P_{prevalence} * (1 - P_{sorting}) * (1 - RRO_{effectiveness})"
+      "NPFP = N_{trade} * (1/U_{weight}) * P_{prevalence} * (1 - P_{sorting}) * 
+      (1 - RRO_{effectiveness})"
     )
     
     observeEvent(input$model_done,{

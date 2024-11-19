@@ -19,17 +19,19 @@ plot_nuts(
 \arguments{
 \item{data}{A data frame containing the values to be plotted on the map.}
 
-\item{nuts_col}{A string specifying the column name in \code{data} containing NUTS codes.}
+\item{nuts_col}{A string specifying the column name in \code{data} containing
+NUTS codes.}
 
-\item{values_col}{A string specifying the column name in \code{data} with the values to be plotted.}
+\item{values_col}{A string specifying the column name in \code{data} with the
+values to be plotted.}
 
-\item{nuts_level}{A numeric value (0, 1, 2, or 3) specifying the NUTS level to plot. 
-Default is 2 indicating NUTS2. See \link[https://ec.europa.eu/eurostat/web/nuts]{NUTS 
-- Nomenclature of territorialunits for statistics}.}
+\item{nuts_level}{A numeric value (0, 1, 2, or 3) specifying the NUTS level to plot.
+Default is 2 indicating NUTS2. See
+\href{https://ec.europa.eu/eurostat/web/nuts}{NUTS - Nomenclature of territorial units for statistics}.}
 
 \item{nuts_year}{Year of NUTS classification. One of '2003','2006','2010','2013',
-'2016' (default),'2021', or '2024'. See 
-\link[https://ec.europa.eu/eurostat/web/nuts/history]{NUTS - History}.}
+'2016' (default),'2021', or '2024'. See
+\href{https://ec.europa.eu/eurostat/web/nuts/history}{NUTS - History}.}
 
 \item{colors}{Optional vector of colors used in the gradient scale.}
 
@@ -37,7 +39,7 @@ Default is 2 indicating NUTS2. See \link[https://ec.europa.eu/eurostat/web/nuts]
 
 \item{title}{A title for the plot (default is \code{NULL}).}
 
-\item{legend_title}{A title for the legend. Default \code{NULL}, name in the 
+\item{legend_title}{A title for the legend. Default \code{NULL}, name in the
 \code{values_col}.}
 }
 \value{
@@ -48,9 +50,9 @@ This function plots NUTS region values on a map using data provided and allows c
 of the aesthetics such as colors, legend title, and title.
 }
 \details{
-This function extracts a \code{\link{sf}} object from the package \code{\link{giscoR}}.
-It uses the \code{\link{ggplot2}} package for the representation. Supports adding 
-other \code{ggplot2} options (see examples).
+This function extracts a \link{sf} object from the package \link{giscoR}.
+It uses the \link{ggplot2} package for the representation. Supports adding
+other \link{ggplot2} options (see examples).
 }
 \examples{
 ## Example plot at NUTS0 level (country level)

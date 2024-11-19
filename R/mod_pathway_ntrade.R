@@ -34,9 +34,11 @@ mod_pathway_ntrade_ui <- function(id){
                                              "2013", 
                                              "2016", 
                                              "2021",
-                                             "2024")) %>%
+                                             "2024"),
+                                 width = "200px") %>%
                        bsplus::shinyInput_label_embed(
-                         bsplus::shiny_iconlink("question-circle", class= "help-btn") %>%
+                         bsplus::shiny_iconlink("question-circle", 
+                                                class= "help-btn") %>%
                            bsplus::bs_embed_popover(title = text_nuts_yr$title, 
                                                     content = text_nuts_yr$content,
                                                     placement = "right",
@@ -148,15 +150,12 @@ mod_pathway_ntrade_server <- function(id){
       if((length(nuts) > 1 || (nuts != 2 && nuts != 4))){
         m <- c(m, data_ntrade_errors$nuts)
       }else{
-        if(nuts==2){
-          if(!all(df$NUTS_ID %in% NUTS_CODES$CNTR_CODE)){
-            m <- c(m, data_ntrade_errors$nuts)
-          }
-        }else if(nuts == 4){
-          if(!all(df$NUTS_ID %in% NUTS_CODES$NUTS2_CODE)){
-            m <- c(m, data_ntrade_errors$nuts)
-          }
-        } 
+        nuts_level <- nuts-2
+        NUTS_CODES <- cached_get_EUmap(year = input$nuts_yr, nuts=nuts_level) %>%
+          st_drop_geometry()
+        if(!all(df$NUTS_ID %in% NUTS_CODES$NUTS_ID)){
+          m <- c(m, data_ntrade_errors$nuts)
+        }
       }
       if(!is.numeric(df$value)){
         m <- c(m, data_ntrade_errors$values_num)

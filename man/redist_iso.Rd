@@ -14,50 +14,53 @@ redist_iso(
 )
 }
 \arguments{
-\item{data}{A data frame containing the data at the country-level to 
+\item{data}{A data frame containing the data at the country-level to
 redistribute.}
 
-\item{iso_col}{A string specifying the column name in \code{data} 
+\item{iso_col}{A string specifying the column name in \code{data}
 with the ISO 3166-1 (alpha-2) country codes.}
 
-\item{values_col}{A string or vector specifying the column name(s) in 
+\item{values_col}{A string or vector specifying the column name(s) in
 \code{data} with the values to be redistributed.}
 
-\item{redist_data}{A data frame with values for each subdivision on which the 
+\item{redist_data}{A data frame with values for each subdivision on which the
 redistribution is to be performed.}
 
-\item{redist_iso_col}{A string specifying the column name in \code{redist_data} 
+\item{redist_iso_col}{A string specifying the column name in \code{redist_data}
 that contains the destination ISO 3166-2 codes.}
 
-\item{redist_values_col}{A string specifying the column name in \code{redist_data} 
-with the values for proportional redistribution. This will define the weights 
+\item{redist_values_col}{A string specifying the column name in \code{redist_data}
+with the values for proportional redistribution. This will define the weights
 used for the redistribution.}
 }
 \value{
-A data frame with the redistributed values across the specified subnational 
-level. The dataframe contains the columns \code{ISO_1} with the codes at country 
-level, \code{ISO_2} with the codes at subdivision level, \code{proportion} with the 
-proportion according to which the values have been redistributed, and the columns 
+A data frame with the redistributed values across the specified subnational
+level. The dataframe contains the columns \code{ISO_1} with the codes at country
+level, \code{ISO_2} with the codes at subdivision level, \code{proportion} with the
+proportion according to which the values have been redistributed, and the columns
 corresponding to the redistributed values with the same name specified in \code{values_col}.
 }
 \description{
-Value redistribution from country-level (ISO 3166-1) to principal subdivisions 
-(ISO 3166-2). See \link[https://www.iso.org/iso-3166-country-codes.html]{ISO 
-3166 Maintenance Agency}.
+Value redistribution from country-level (ISO 3166-1 alpha-2 codes) to principal
+subdivisions (ISO 3166-2 codes). See
+\href{https://www.iso.org/iso-3166-country-codes.html}{ISO 3166 Maintenance Agency}.
 }
 \details{
-This function enables redistribution of values from country-level  
-to principal subdivisions (e.g., provinces or states), proportionally 
-to user-supplied redistribution proportions. Note that more than one column of 
-values provided in the dataframe data can be redistributed at the same time. 
-The values in columns \code{values_col} and \code{redist_values_col} must be 
-numeric and positive.
+This function enables redistribution of values from country-level
+to principal subdivisions (e.g., provinces or states), proportionally
+to user-supplied redistribution proportions.
 
-In the context of quantitative pest risk assessment (qPRA) at the entry step, 
-this function can be applied to redistribute the quantity of potentially infested 
-commodities (\eqn{N_{trade}}, see \code{\link{ntrade}}) or the number of potential 
-founder populations (\eqn{NPFP}, see \code{\link{pathway_model}}). For this purpose, 
+Note that more than one column of values provided in the dataframe data can be
+redistributed at the same time. The values in columns \code{values_col} and
+\code{redist_values_col} must be numeric and positive.
+\subsection{Common uses}{
+
+In the context of quantitative pest risk assessment (qPRA) at the entry step,
+this function can be applied to redistribute the quantity of potentially infested
+commodities (\eqn{N_{trade}}, see \code{\link[=ntrade]{ntrade()}}) or the number of potential
+founder populations (\eqn{NPFP}, see \code{\link[=pathway_model]{pathway_model()}}). For this purpose,
 population or consumption data from subdivisions are often used for redistribution.
+}
 }
 \examples{
 ## Example of data redistribution in Northern American countries
@@ -109,4 +112,7 @@ data_redist <- redist_iso(data = iso1_data,
 
 head(data_redist)
 
+}
+\seealso{
+\code{\link[=ntrade]{ntrade()}}, \code{\link[=pathway_model]{pathway_model()}}
 }

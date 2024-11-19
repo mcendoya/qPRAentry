@@ -3,20 +3,22 @@
 #' This function plots country values on a map using data provided and allows customization
 #' of the aesthetics such as colors, legend title, and title. 
 #' 
-#' This function extracts a \code{\link{sf}} object from the package \code{\link{giscoR}}.
-#' It uses the \code{\link{ggplot2}} package for the representation. Supports adding 
-#' other \code{ggplot2} options (see examples).
+#' This function extracts a [sf] object from the package [giscoR].
+#' It uses the [ggplot2] package for the representation. Supports adding 
+#' other [ggplot2] options (see examples).
 #'
 #' @param data A data frame containing the values to be plotted on the map.
 #' @param iso_col A string specifying the column name in \code{data} 
 #' with the ISO 3166-1 (alpha-2) country codes. See 
-#' \link[https://www.iso.org/iso-3166-country-codes.html]{ISO 3166 Maintenance Agency} 
+#' [ISO 3166 Maintenance Agency](https://www.iso.org/iso-3166-country-codes.html) 
 #' for details on country codes.
-#' @param values_col A string specifying the column name in \code{data} with the values to be plotted.
+#' @param values_col A string specifying the column name in \code{data} with the 
+#' values to be plotted.
 #' @param colors Optional vector of colors used in the gradient scale.
 #' @param na_value Color for missing values (default is "grey").
 #' @param title A title for the plot (default is \code{NULL}).
-#' @param legend_title A title for the legend. Default \code{NULL}, name in the \code{values_col}.
+#' @param legend_title A title for the legend. Default \code{NULL}, name in the 
+#' \code{values_col}.
 #'
 #' @return A \code{ggplot} object with the plotted countries.
 #'
@@ -54,7 +56,7 @@
 plot_countries <- function(data, iso_col, values_col,
                            colors = NULL, na_value = "grey",
                            title=NULL, legend_title=NULL){
-  
+  CNTR_ID <- NULL
   if(any(class(data) == "sf")){
     data <- data %>% st_drop_geometry()
   }
@@ -64,7 +66,8 @@ plot_countries <- function(data, iso_col, values_col,
   }
   # Check if the specified columns exist in the dataframe
   if (!all(c(iso_col, values_col) %in% names(data))) {
-    stop("The dataframe 'data' must contain the columns specified in iso_col and values_col")
+    stop(paste(strwrap("The dataframe 'data' must contain the columns specified 
+                       in 'iso_col' and 'values_col'"), collapse=" "))
   }
 
   map <- gisco_get_countries() 
@@ -81,8 +84,9 @@ plot_countries <- function(data, iso_col, values_col,
     data[[iso_col]][data[[iso_col]] == "GB"] <- "UK"
   }
   # check country codes
-  if (!all(data[[iso_col]] %in% map$CNTR_ID)) {
-    stop("Error: 'iso_col' in 'data' does not contain ISO 3166-1 (alpha-2) country codes.")
+  if (!any(data[[iso_col]] %in% map$CNTR_ID)) {
+    stop(paste(strwrap("Error: 'iso_col' in 'data' does not contain ISO 3166-1 
+                       (alpha-2) country codes."), collapse=" "))
   }
 
   legend_title <- ifelse(is.null(legend_title), values_col, legend_title)

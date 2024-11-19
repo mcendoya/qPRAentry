@@ -17,12 +17,13 @@ plot_countries(
 \arguments{
 \item{data}{A data frame containing the values to be plotted on the map.}
 
-\item{iso_col}{A string specifying the column name in \code{data} 
-with the ISO 3166-1 (alpha-2) country codes. See 
-\link[https://www.iso.org/iso-3166-country-codes.html]{ISO 3166 Maintenance Agency} 
+\item{iso_col}{A string specifying the column name in \code{data}
+with the ISO 3166-1 (alpha-2) country codes. See
+\href{https://www.iso.org/iso-3166-country-codes.html}{ISO 3166 Maintenance Agency}
 for details on country codes.}
 
-\item{values_col}{A string specifying the column name in \code{data} with the values to be plotted.}
+\item{values_col}{A string specifying the column name in \code{data} with the
+values to be plotted.}
 
 \item{colors}{Optional vector of colors used in the gradient scale.}
 
@@ -30,7 +31,8 @@ for details on country codes.}
 
 \item{title}{A title for the plot (default is \code{NULL}).}
 
-\item{legend_title}{A title for the legend. Default \code{NULL}, name in the \code{values_col}.}
+\item{legend_title}{A title for the legend. Default \code{NULL}, name in the
+\code{values_col}.}
 }
 \value{
 A \code{ggplot} object with the plotted countries.
@@ -40,9 +42,9 @@ This function plots country values on a map using data provided and allows custo
 of the aesthetics such as colors, legend title, and title.
 }
 \details{
-This function extracts a \code{\link{sf}} object from the package \code{\link{giscoR}}.
-It uses the \code{\link{ggplot2}} package for the representation. Supports adding 
-other \code{ggplot2} options (see examples).
+This function extracts a \link{sf} object from the package \link{giscoR}.
+It uses the \link{ggplot2} package for the representation. Supports adding
+other \link{ggplot2} options (see examples).
 }
 \examples{
 # Simulated data trade in Northern America

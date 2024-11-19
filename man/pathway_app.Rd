@@ -7,10 +7,14 @@
 pathway_app()
 }
 \description{
-Shiny app for pathway model
+Interactive application to estimate the number of founder populations (\eqn{NPFP})
+of a pest in different regions in European countries.
 }
 \examples{
 \dontrun{
 pathway_app()
 }
+}
+\seealso{
+\code{\link[=pathway_model]{pathway_model()}}
 }

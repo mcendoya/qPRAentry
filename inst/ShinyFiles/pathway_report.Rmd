@@ -144,15 +144,16 @@ knitr::kable(Ninf_EU, caption = "NPFP results for all the selected NUTS", digits
 ```
 
 Based on the median NPFP, there would be 1 entry event in the whole territory every 
-`r round(1/Ninf_EU["Median"])` years, with a 90% interval between `r round(1/Ninf_EU["Q0.05"])` 
-and `r round(1/Ninf_EU["Q0.95"])` years.
+`r round(1/Ninf_EU["Median"])` years, with a 90% interval between 
+`r round(1/Ninf_EU["Q0.05"])` and `r round(1/Ninf_EU["Q0.95"])` years.
 
 The map below shows the median $\mathit{NPFP}$ values by NUTS`r NUTS_lev`.
 
 ```{r, fig.width=8, fig.height=8}
 
-plot_nuts(Ninf, "NUTS_ID", "Median", nuts_level = NUTS_lev,
-          title = "NPFP Median", legend_title="NPFP") +
+plot_nuts(Ninf, "NUTS_ID", "Median", 
+          nuts_level = NUTS_lev, nuts_year = nuts_yr,
+          title = "NPFP Median", legend_title = "NPFP") +
    xlim(-20, 40) + ylim(35,70) +
    theme_bw()+
   theme(

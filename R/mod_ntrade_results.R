@@ -13,10 +13,13 @@ mod_ntrade_results_ui <- function(id){
     fluidRow(
       column(1),
       column(10,
-             HTML('<p class="custom-text"><br>View <i>N<sub>trade</sub></i> results in table or map format.<br><br> 
-  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> The <i>N<sub>trade</sub></i> redistribution from NUTS0 
-                  to NUTS2 level is available in the "Redistribution" tab.<br>
-                  You can also return to the "Data" tab to review or change trade data.<br></p>'),
+             HTML('<p class="custom-text"><br>View <i>N<sub>trade</sub></i> results 
+                  in table or map format.<br><br>
+                  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> 
+                  The <i>N<sub>trade</sub></i> redistribution from NUTS0 to NUTS2 
+                  level is available in the "Redistribution" tab.<br>
+                  You can also return to the "Data" tab to review or change trade 
+                  data.<br></p>'),
              shinyWidgets::radioGroupButtons(
                inputId = ns("NUTS0_btn"),
                label = NULL,
@@ -45,8 +48,11 @@ mod_ntrade_results_server <- function(id, nuts_yr, NUTS_CODES, trade_done,
       trade <- TradeData()
       if(length(time_period())>1){
         res <- ntrade(trade_data = trade,
-                      summarise_result = c("quantile(0.05)", "median", "quantile(0.95)",
-                                           "mean", "sd"))
+                      summarise_result = c("quantile(0.05)", 
+                                           "median", 
+                                           "quantile(0.95)",
+                                           "mean", 
+                                           "sd"))
         res <- res %>%
           relocate(country_IDs, q0.05, median, q0.95, mean, sd) %>%
           rename(NUTS0 = country_IDs,
@@ -67,7 +73,7 @@ mod_ntrade_results_server <- function(id, nuts_yr, NUTS_CODES, trade_done,
         relocate(CNTR_NAME, .after=NUTS0)
       return(res)
     })
-
+    
     # EU NUTS0 map (from giscoR pkg)
     EU00 <- eventReactive(trade_done(),{
       NUTS0_map <- cached_get_EUmap(nuts_yr(), nuts=0) %>% 
@@ -81,35 +87,38 @@ mod_ntrade_results_server <- function(id, nuts_yr, NUTS_CODES, trade_done,
         output$NUTS0_results <- renderUI({
           fluidRow(
             div(class="table-container",
-                  DT::dataTableOutput(ns("trade_table")) %>% 
+                DT::dataTableOutput(ns("trade_table")) %>% 
                   shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
             )
           )
         })
       }else if(input$NUTS0_btn=="Map"){
         output$NUTS0_results <- renderUI({
-            fluidRow(
-              div(class = "plot-container",
-                  div(class = "plot",
-                     p("Place your cursor over the map to display the values", class="custom-text"),
-                     br(),
-                       ggiraph::girafeOutput(ns("NUTS0_map")) %>% 
-                         shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
-                     )
-              )
+          fluidRow(
+            div(class = "plot-container",
+                div(class = "plot",
+                    p("Place your cursor over the map to display the values", 
+                      class="custom-text"),
+                    br(),
+                    ggiraph::girafeOutput(ns("NUTS0_map")) %>% 
+                      shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
+                )
             )
+          )
         })
       }
     })
-
+    
     output$trade_table <- DT::renderDataTable({
       numeric_columns <- names(Nt())[which(sapply(Nt(), is.numeric))]
       DT::datatable(Nt(), options = list(dom = 'ft', pageLength = -1)) %>%
         DT::formatRound(columns = numeric_columns, digits=4) %>%
-        DT::formatStyle(columns = "NUTS0", target = "cell", backgroundColor = "#F7080880") %>%
-        DT::formatStyle(columns = numeric_columns, target = "cell", backgroundColor = "#F7080820")
+        DT::formatStyle(columns = "NUTS0", target = "cell", 
+                        backgroundColor = "#F7080880") %>%
+        DT::formatStyle(columns = numeric_columns, target = "cell", 
+                        backgroundColor = "#F7080820")
     })
-
+    
     output$NUTS0_map <- ggiraph::renderGirafe({
       Nt <- Nt()
       EU00 <- EU00() %>%
@@ -136,7 +145,7 @@ mod_ntrade_results_server <- function(id, nuts_yr, NUTS_CODES, trade_done,
                    limits = limits,
                    tooltip = tooltip)
     })
-
+    
     return(Nt)
   })
 }
