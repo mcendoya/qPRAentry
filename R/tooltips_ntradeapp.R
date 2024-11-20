@@ -47,7 +47,8 @@ text_trade_data <- function(data, partner=TRUE){
       '<p class="custom-text">Click on
           <strong>', data_name, '</strong> and follow these steps:
           <ul class="custom-text" style="margin-right:10px;">
-          <li><strong>Data file</strong>: Upload your data file in CSV format.</li>
+          <li><strong>Data file</strong>: Upload your data file in CSV format 
+          (ensure that numeric values use a decimal point "." as the separator).</li>
           <li><strong>Data units</strong>: Verify unit conversion. The values in the 
           "Values" column will be multiplied by the conversion factor you provide 
           to match the required units. For example, if your data is in kilograms 

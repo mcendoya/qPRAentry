@@ -15,6 +15,8 @@ text_pathwaymodel <-
       <code>p_{inf}</code>).</li>
       <li>If using subscripted parameters, use <code>_</code> between braces for 
       more than one character (e.g., <code>p_{inf}</code>).</li>
+      <li>Avoid using spaces or symbols other than those indicated above in parameter 
+      names.</li>
     </ul>
     </li>
     <li><strong>In the equation as</strong>:
@@ -57,7 +59,7 @@ text_ntrade_data <-
   HTML('<p class="custom-text">
           <ul class="custom-text">
           <li><strong>Upload data file:</strong> Please upload your data file in 
-          CSV format.</li>
+          CSV format (ensure that numeric values use a decimal point "." as the separator).</li>
           <li><strong>Column selection:</strong>
             <ul style="margin-right:10px;">
               <li><strong>NUTS codes:</strong> Select the column that contains the 
