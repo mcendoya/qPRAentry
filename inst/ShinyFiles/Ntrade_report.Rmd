@@ -40,7 +40,8 @@ population_year <- params$population_year
 This report details the results of the $N_{trade}$ analysis performed using the 
 $N_{trade}$ app of the \texttt{qPRAentry} package.
 
-In the context of quantitative risk assessment of pest entry, $N_{trade}$ is defined as the potentially infected/infested quantity of commodities imported by a country from 
+In the context of quantitative risk assessment of pest entry, $N_{trade}$ is defined 
+as the potentially infected/infested quantity of commodities imported by a country from 
 other third-countries where the pest of interest is present. 
 This application is meant to calculate $N_{trade}$ in EU countries (NUTS0) and 
 redistribute this quantity to the regions (NUTS2) of the countries considered.
@@ -81,10 +82,16 @@ $i$ is estimated as $\sum_{j \neq i} ExtraPest_j R_{ji}$.
 $N_{trade}$ has been calculated in `r units` for the following time-period: `r time_period`.
 
 ```{r, fig.width=8, fig.height=8}
+if(length(time_period)>1){
+  col_plot <- title_plot <- "Median"
+}else{
+  col_plot <- paste0("Ntrade_", time_period)
+  title_plot <- time_period
+}
 
-p <- plot_nuts(Nt, "NUTS0", "Median",
+p <- plot_nuts(Nt, "NUTS0", col_plot,
                nuts_level = 0, nuts_year = nuts_yr,
-               title = bquote(N[trade] ~ " Median"), 
+               title = bquote(N[trade] ~ " " ~ .(title_plot)), 
                legend_title = units) +
   xlim(-20, 40) + ylim(35,70) +
   theme_bw()+
@@ -145,9 +152,9 @@ if(data_redistribution=="Population"){
 
 ```{r, fig.width=8, fig.height=8}
 
-plot_nuts(Nt_redist, "NUTS2", "Median", 
+plot_nuts(Nt_redist, "NUTS2", col_plot, 
           nuts_level = 2, nuts_year = nuts_yr,
-          title = bquote(N[trade] ~ " Median"), 
+          title = bquote(N[trade] ~ " " ~ .(title_plot)), 
           legend_title = units) +
   xlim(-20, 40) + ylim(35,70) +
   theme_bw()+
