@@ -131,9 +131,10 @@ redist_nuts <- function(data, nuts_col, values_col,
   
   # Check if the specified columns exist in the dataframe
   if (!all(c(nuts_col, values_col) %in% names(data))) {
-    stop("The dataframe 'data' must contain the columns specified in nuts_col and values_col")
+    stop(paste(strwrap("Error: The dataframe 'data' must contain the columns 
+                       specified in 'nuts_col' and 'values_col'."), collapse=" "))
   }
-
+  
   # check nuts year
   if (!nuts_year %in% c('2003','2006','2010','2013','2016','2021','2024')) {
     stop(paste(strwrap("Error: nuts_year not available. Try '2003', '2006', '2010', 
@@ -146,7 +147,7 @@ redist_nuts <- function(data, nuts_col, values_col,
   }
   NUTS_CODES <- cached_get_EUmap(year = nuts_year, nuts = to_nuts) %>%
     st_drop_geometry()
- 
+  
   # check value numeric
   if (!all(sapply(data[, values_col], is.numeric))) {
     stop("Error: 'values_col' in 'data' must be numeric.")
@@ -178,18 +179,12 @@ redist_nuts <- function(data, nuts_col, values_col,
   }
   
   # Check redist_data
-  if(is.vector(redist_data)){
-    if(redist_data!="population"){
-      stop("Error: 'redist_data' must be 'population' (default option) or a dataframe")
-    }else{
-      redist_data <- NULL
-    }
+  if(!is.data.frame(redist_data) && redist_data != "population"){
+    stop(paste(strwrap("Error: 'redist_data' must be 'population' (default option) 
+                       or a data.frame."), collapse = " "))
   }
-  if (!is.null(redist_data)) {
-    # check data.frame
-    if (!is.data.frame(redist_data)) {
-      stop("Error: 'redist_data' must be data.frame.")
-    }
+  
+  if(is.data.frame(redist_data)){
     if (!all(c(redist_nuts_col, redist_values_col) %in% names(redist_data))) {
       stop(paste(strwrap("The dataframe 'redist_data' must contain the columns specified 
                          in 'redist_nuts_col' and 'redist_values_col'"), 
@@ -220,7 +215,7 @@ redist_nuts <- function(data, nuts_col, values_col,
     }
   }
   
-  if (is.null(redist_data)) {
+  if (!is.data.frame(redist_data) && redist_data=="population") {
     redist_df <- cached_get_eurostat_data(nuts_level=to_nuts, 
                                           nuts_filter = NUTS_CODES$NUTS_ID)
     # check population_year

@@ -107,25 +107,37 @@
 #' 
 pathway_model <- function(ntrade_data, IDs_col, values_col,
                           expression, parameters, niter=100){
-  
+  # check data.frame
+  if(!is.data.frame(ntrade_data)){
+    stop("Error: 'ntrade_data' must be a data.frame.")
+  }
   # Check if the specified columns exist in the dataframe
   if (!all(c(IDs_col, values_col) %in% names(ntrade_data))) {
-    stop("The dataframe must contain the columns specified in IDs_col and values_col")
+    stop(paste(strwrap("Error: 'ntrade_data' must contain the columns specified 
+                       in 'IDs_col' and 'values_col'."), collapse=" "))
   }
   # Check if parameters is a list
   if (!is.list(parameters)) {
-    stop("parameters must be a list")
+    stop("Error: 'parameters' must be a list.")
+  }
+  
+  # check if each parameter is a list
+  if(!all(sapply(parameters, is.list))){
+    stop(paste("Error: Each element within 'parameters' must be a list.",
+               "Example: parameters = list(param1 = list(), param2 = list()).", 
+               sep = "\n"))
   }
   
   # Check if parameter names are in the expression
   if(!all(sapply(names(parameters), function(x) grepl(x, expression)))){
-    stop("The parameters in 'expression' do not match the parameters specified in 'parameters'")
+    stop(paste(strwrap("Error: The parameters in 'expression' do not match those 
+                       specified in 'parameters'."), collapse=" "))
   }
   
   param_samples <- lapply(parameters, function(distr) {
-    dist_name <- paste0("r", distr$dist)
+    dist_name <- paste0("r", distr[1])
     if (!exists(dist_name)) {
-      stop(paste("The distribution function", dist_name, "is not valid"))
+      stop(paste("Error: The distribution function", distr[1], "is not valid."))
     }
     do.call(dist_name, c(list(niter), distr[-1]))
   })

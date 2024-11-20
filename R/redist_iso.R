@@ -75,24 +75,24 @@ redist_iso <- function(data, iso_col, values_col,
   if(any(class(data) == "sf")){
     data <- data %>% st_drop_geometry()
   }
-  if(any(class(redist_data) == "sf")){
-    redist_data <- redist_data %>% st_drop_geometry()
-  }
-  # Check if the specified columns exist in the dataframe
-  if (!all(c(iso_col, values_col) %in% names(data))) {
-    stop(paste(strwrap("The dataframe 'data' must contain the columns specified in 
-                       'iso_col' and 'values_col'"), collapse=" "))
-  }
-  if (!all(c(redist_iso_col, redist_values_col) %in% names(redist_data))) {
-    stop(paste(strwrap("The dataframe 'redist_data' must contain the columns specified 
-                       in 'redist_iso_col' and 'redist_values_col'"), collapse=" "))
-  }
   # check data.frame
   if (!is.data.frame(data)) {
     stop("Error: 'data' must be data.frame.")
   }
+  if(any(class(redist_data) == "sf")){
+    redist_data <- redist_data %>% st_drop_geometry()
+  }
   if (!is.data.frame(redist_data)) {
     stop("Error: 'redist_data' must be data.frame.")
+  }
+  # Check if the specified columns exist in the dataframe
+  if (!all(c(iso_col, values_col) %in% names(data))) {
+    stop(paste(strwrap("The dataframe 'data' must contain the columns specified in 
+                       'iso_col' and 'values_col'."), collapse=" "))
+  }
+  if (!all(c(redist_iso_col, redist_values_col) %in% names(redist_data))) {
+    stop(paste(strwrap("The dataframe 'redist_data' must contain the columns specified 
+                       in 'redist_iso_col' and 'redist_values_col'."), collapse=" "))
   }
   # check value numeric
   if (!all(sapply(data[, values_col], is.numeric))) {

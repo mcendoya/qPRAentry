@@ -67,3 +67,29 @@ test_that("ntrade errors", {
     fixed=TRUE
   )
 })
+
+test_that("ntrade errors", {
+  skip_on_cran()
+  test_data <- datatrade_EU
+  suppressMessages(
+    trade <- trade_data(extra_total = test_data$extra_import %>% 
+                          filter(partner=="Extra_Total"), 
+                        extra_pest = test_data$extra_import %>% 
+                          filter(partner!="Extra_Total"),
+                        intra_trade = test_data$intra_trade, 
+                        internal_production = test_data$internal_production)
+  )
+    # filter period
+    res <- ntrade(trade, 
+           filter_period=2020)
+    expect_true("Ntrade_2020" %in% names(res))
+    
+    # summarise
+    res <- ntrade(trade, 
+                  summarise_result = c("quantile(0.5)", "median"))
+    expect_true(all(c("q0.5", "median") %in% names(res)))
+    
+    res <- ntrade(trade, 
+                  summarise_result = c("median"))
+    expect_false(all(c("q0.5", "median") %in% names(res)))
+})
