@@ -94,11 +94,12 @@ data("datatrade_EU")
 nuts0 <- unique(datatrade_EU$internal_production$reporter)
 # simulate values for each country
 nuts0_data <- data.frame(nuts0 = nuts0,
-                         values = abs(rnorm(length(nuts0), 30000, 10000)))
+                         value = abs(rnorm(length(nuts0), 30000, 10000)))
 
+# Redistribution
 data_redist <- redist_nuts(data = nuts0_data,
                            nuts_col = "nuts0",
-                           values_col = "values",
+                           values_col = "value",
                            to_nuts = 2,
                            redist_data = "population",
                            population_year = c(2017, 2018, 2019))
@@ -108,25 +109,20 @@ head(data_redist)
 plot_nuts(data = data_redist,
           nuts_level = 2,
           nuts_col = "NUTS2", 
-          values_col = "values")
+          values_col = "value")
 
-## Example of data redistribution of two value columns to NUTS1 using custom data
-nuts0_data$values2 <- abs(rnorm(length(nuts0), 2000, 500))
-# NUTS1 codes extracted from 'giscoR' package
-library(dplyr)
-library(giscoR)
-nuts1_data <- gisco_get_nuts(nuts_level=1) \%>\% 
-  select(NUTS_ID) \%>\% 
-  # simulate values for each NUTS1
-  mutate(values = abs(rnorm(nrow(.), 0, 1000)))
+## Example of data redistribution to NUTS1 using custom data
+# consumption data at NUTS1 level
+nuts1_data <- datatrade_EU$consumption_nuts1
 
+# Redistribution
 data_redist <- redist_nuts(data = nuts0_data,
                            nuts_col = "nuts0",
-                           values_col = c("values", "values2"),
+                           values_col = "value",
                            to_nuts = 1,
                            redist_data = nuts1_data,
                            redist_nuts_col = "NUTS_ID",
-                           redist_values_col = "values")
+                           redist_values_col = "value")
 
 head(data_redist)
 
@@ -134,7 +130,7 @@ head(data_redist)
 plot_nuts(data = data_redist,
           nuts_level = 1,
           nuts_col = "NUTS1", 
-          values_col = "values2")
+          values_col = "value")
 
 }
 \seealso{

@@ -65,50 +65,20 @@ population or consumption data from subdivisions are often used for redistributi
 \examples{
 ## Example of data redistribution in Northern American countries
 data(datatrade_NorthAm)
-# extract ISO codes at country level
-iso_3166_1 <- unique(datatrade_NorthAm$internal_production$reporter)
-# simulate values for each country
-iso1_data <- data.frame(iso_3166_1 = iso_3166_1,
-                        values = abs(rnorm(length(iso_3166_1), 30000, 10000)))
-# simulate values for each subdivision
-# ISO 3166_2 codes extracted from 'rnaturalearth' package
-library(dplyr)
-library(rnaturalearth)
-iso2_data <- ne_states() \%>\% 
-  # subdivisions of the countries selected above
-  filter(substr(iso_3166_2, 1, 2) \%in\% iso_3166_1) \%>\% 
-  distinct(iso_3166_2) \%>\%
-  select(iso_3166_2) \%>\% 
-  # simulate values for each subdivision
-  mutate(values = abs(rnorm(nrow(.), 0, 1000)))
+# Selection of internal production data from January to March to be proportionally 
+# redistributed based on sub-national consumption data
+data_ip <- datatrade_NorthAm$internal_production
+data_ip <- data_ip[data_ip$time_period=="January-March",]
+# consumption data at sub-national level
+data_sub <- datatrade_NorthAm$consumption_iso2
 
-data_redist <- redist_iso(data = iso1_data,
-                          iso_col = "iso_3166_1",
-                          values_col = "values",
-                          redist_data = iso2_data,
+# Redistribution
+data_redist <- redist_iso(data = data_ip,
+                          iso_col = "reporter",
+                          values_col = "value",
+                          redist_data = data_sub,
                           redist_iso_col = "iso_3166_2",
-                          redist_values_col = "values")
-
-head(data_redist)
-
-# Plot using the 'sf' object from 'rnaturalearth' package
-iso2_plot <- ne_states() \%>\% 
-  filter(substr(iso_3166_2, 1, 2) \%in\% iso_3166_1) \%>\% 
-  left_join(data_redist, by = join_by(iso_3166_2 == ISO_2))
-
-library(ggplot2)
-ggplot(iso2_plot, aes(fill = values)) + 
-  geom_sf()
-  
-## Example of redistribution of two columns
-# simulate values for each country
-iso1_data$values2 <- abs(rnorm(nrow(iso1_data), 1000, 500))
-data_redist <- redist_iso(data = iso1_data,
-                          iso_col = "iso_3166_1",
-                          values_col = c("values", "values2"),
-                          redist_data = iso2_data,
-                          redist_iso_col = "iso_3166_2",
-                          redist_values_col = "values")
+                          redist_values_col = "value")
 
 head(data_redist)
 

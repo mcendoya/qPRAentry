@@ -40,6 +40,9 @@ datatrade_EU
 \description{
 \code{datatrade_EU} simulated trade data for a commodity within the European Union (EU).
 This dataset illustrates the trade and production flow of a commodity that is a potential
-pathway for the entry of a pest into EU countries in yearly time periods.
+pathway for the entry of a pest into EU countries in yearly time periods. It also
+includes simulated consumption data of the commodity at NUTS1 level.
+This dataset serves as a reference on how the data should be structured and as
+a basis for the examples included in the \link{qPRAentry} package.
 }
 \keyword{datasets}

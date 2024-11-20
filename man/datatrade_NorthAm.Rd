@@ -43,6 +43,9 @@ datatrade_NorthAm
 \code{datatrade_NorthAm} simulated trade data for a commodity within Northern America.
 This dataset illustrates the trade and production flow of a commodity that is a potential
 pathway for the entry of a pest into Northern American countries in a year expressed
-in three-month periods.
+in three-month periods. It also includes simulated consumption data of the commodity
+at at the level of principal sub-national divisions (ISO 3166-2 codes).
+This dataset serves as a reference on how the data should be structured and as
+a basis for the examples included in the \link{qPRAentry} package.
 }
 \keyword{datasets}
