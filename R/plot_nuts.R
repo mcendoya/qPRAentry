@@ -1,4 +1,4 @@
-#' Plot NUTS2 region values on a map
+#' Plot NUTS region values on a map
 #'
 #' This function plots NUTS region values on a map using data provided and allows customization
 #' of the aesthetics such as colors, legend title, and title.

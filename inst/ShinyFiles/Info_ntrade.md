@@ -10,23 +10,25 @@ output:
 <br>
 
 $N_{trade}$ is defined as "the potentially infected/infested quantity of commodities 
-imported by a country from third-countries where the pest is present".
+imported by a country from third countries where the pest is present".
 
-This application is meant to calculate $N_{trade}$ for European countries 
-([NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts)), 
-including European Union Member States, EFTA countries, and candidate countries and potential candidates. 
-Note that it is not necessary to consider all countries included in this list.
+This application is meant to calculate $N_{trade}$ for countries included in the NUTS 
+([Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts)) 
+coding system, which includes European Union Member States, EFTA countries, candidate 
+countries and potential candidates. Note that it is not necessary to consider all 
+countries included in this list.
 
-For non-European countries, the calculation of $N_{trade}$ can be performed using 
+For other countries worldwide, the calculation of $N_{trade}$ can be performed using 
 the `ntrade` function from the `qPRAentry` package.
 
 For the use of this application, trade data of the commodities of interest, i.e., 
-potential carriers of the target pests, are required. The required trade data are: 
+potential carriers of the pests under assessment, are required. The required trade data are: 
 
-- Total quantity of non-EU commodity imported by EU countries.
-- Quantity of commodity from non-EU countries where the pest is present imported by EU countries.
-- Quantity of commodity imported between EU countries.
-- Quantity of commodity produced in the EU countries.
+- Total quantity of commodity from third countries imported by the countries of interest.
+- Quantity of commodity from third countries where the pest is present imported by the 
+countries of interest.
+- Quantity of commodity imported between the countries of interest.
+- Quantity of commodity produced in the countries of interest.
 
 All the trade data required can be accessed 
 through the [Eurostat database](https://ec.europa.eu/eurostat/data/database).
@@ -37,10 +39,10 @@ through the [Eurostat database](https://ec.europa.eu/eurostat/data/database).
 
 <br>
 
-For a given EU country $i$, $N_{trade_i}$ is calculated taking into account the quantity 
-of commodity imported by country $i$ from non-EU countries where the pest is present, and 
+For a given country $i$, $N_{trade_i}$ is calculated taking into account the quantity 
+of commodity imported by country $i$ from third countries where the pest is present, and 
 the internal trade of this commodity, i.e., export and import between country $i$ and other 
-EU countries $j$, with $j \neq i$. Thus, $N_{trade_i}$ is approached as:
+countries $j$, with $j \neq i$. Thus, $N_{trade_i}$ is approached as:
 
 $$
 N_{trade_i} = ExtraPest_i - ExtraPest_i \sum_{j \neq i} R_{ij} + \sum_{j \neq i} ExtraPest_j R_{ji},
@@ -48,12 +50,12 @@ $$
 
 <br>
 
-where $ExtraPest_i$ and $ExtraPest_j$ are the quantity of commodity imported from non-EU 
+where $ExtraPest_i$ and $ExtraPest_j$ are the quantity of commodity imported from third 
 countries where the pest is present by country $i$ and country $j$, respectively. $R_{ij}$ 
 and $R_{ji}$ represent the proportion of commodity exported from $i$ to $j$ ($IntraExp_{ij}$), 
 and from $j$ to $i$ ($IntraExp_{ji}$), respectively, out of the total available commodity in 
 the exporter country. This total quantity is considered as the sum of the internal production 
-of the country ($IP$) and the total quantity imported from non-EU countries ($ExtraTotal$), 
+of the country ($IP$) and the total quantity imported from third countries ($ExtraTotal$), 
 regardless of whether the pest is present. Thus, $R_{ij}$ and $R_{ji}$ are defined as: 
 
   $$R_{ij} = \frac{IntraExp_{ij}}{IP_i + ExtraTotal_i},$$ 
@@ -75,16 +77,16 @@ redistributing these quantities to NUTS2 regions.
 
 Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
 
-1. **Population-based redistribution using Eurostat data**
+1. **Human Population-based redistribution using Eurostat data**
 
    - **Overview:** This option allows users to redistribute $N_{trade}$ data to NUTS2 
-   regions proportionally based on population data. The 
-   [population data](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3) 
+   regions proportionally based on human population data. The 
+   [human population data](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3) 
    is sourced from Eurostat and is already integrated into the application.
    
    - **How it works:** The $N_{trade_i}$ value for a country $i$ is redistributed 
    to its respective NUTS2 regions $k$. This redistribution is done proportionally 
-   based on the population of each region $k$. Thus, the quantity allocated to a specific 
+   based on the human population of each region $k$. Thus, the quantity allocated to a specific 
    region $k$ is calculated as $N_{trade_k} = N_{trade_i} \cdot (Population_k / Population_i)$.
 
 
