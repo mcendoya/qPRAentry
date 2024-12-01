@@ -8,8 +8,10 @@ ntrade_app()
 }
 \description{
 Interactive application for the calculation and redistribution of the potentially
-infected/infested quantity of commodities imported by a country from third-countries
-where the pest is present (\eqn{N_{trade}}) for European countries.
+infected/infested quantity of commodities imported by a country from third countries
+where the pest is present (\eqn{N_{trade}}) for countries included in the NUTS
+coding system. See
+\href{https://ec.europa.eu/eurostat/web/nuts}{NUTS - Nomenclature of territorial units for statistics}.
 }
 \examples{
 \dontrun{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_nuts.R
 \name{plot_nuts}
 \alias{plot_nuts}
-\title{Plot NUTS2 region values on a map}
+\title{Plot NUTS region values on a map}
 \usage{
 plot_nuts(
   data,
