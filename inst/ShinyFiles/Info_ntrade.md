@@ -24,11 +24,12 @@ the `ntrade` function from the `qPRAentry` package.
 For the use of this application, trade data of the commodities of interest, i.e., 
 potential carriers of the pests under assessment, are required. The required trade data are: 
 
-- Total quantity of commodity from third countries imported by the countries of interest.
-- Quantity of commodity from third countries where the pest is present imported by the 
+- $ExtraTotal$: Total quantity of commodity from third countries imported by the 
 countries of interest.
-- Quantity of commodity imported between the countries of interest.
-- Quantity of commodity produced in the countries of interest.
+- $ExtraPest$: Quantity of commodity from third countries where the pest under 
+assessment is present imported by the countries of interest.
+- $Intra$: Quantity of commodity traded between the countries of interest.
+- $IP$: Quantity of commodity produced in the countries of interest.
 
 All the trade data required can be accessed 
 through the [Eurostat database](https://ec.europa.eu/eurostat/data/database).
@@ -77,7 +78,7 @@ redistributing these quantities to NUTS2 regions.
 
 Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
 
-1. **Human Population-based redistribution using Eurostat data**
+1. **Human population-based redistribution using Eurostat data**
 
    - **Overview:** This option allows users to redistribute $N_{trade}$ data to NUTS2 
    regions proportionally based on human population data. The 

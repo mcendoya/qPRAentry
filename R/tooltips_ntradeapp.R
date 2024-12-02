@@ -2,34 +2,40 @@
 # Data tab
 text_trade_data <- function(data, partner=TRUE){
   if(data == "ExtraTotal"){
-    data_name <- "Extra-EU import total"
+    data_name <- "ExtraTotal"
+    data_def <- "Total quantity of commodity from third countries imported by the 
+    countries of interest."
     columns <- c('<li><strong>Reporter:</strong> Select the column containing the NUTS codes
-                 (2-letter code) of the EU countries that are importing the commodity.</li>
+                 (2-letter code) of the countries of interest that are importing the commodity.</li>
                    <li><strong>Partner:</strong> Select the column containing the IDs of the
-                 third countries (non-EU) exporting the commodity.</br>
+                 third countries exporting the commodity.</br>
                    Note: It is not necessary to list each exporting country individually;
                  they can be grouped under a single ID (e.g., "total").</li>
                    <li><strong>Values:</strong> Select the column that contains the quantity 
                  of the imported commodity.</li>')
   }else if(data == "ExtraPest"){
-    data_name <- "Extra-EU import from countries where the pest is present"
+    data_name <- "ExtraPest"
+    data_def <- "Quantity of commodity from third countries where the pest under 
+    assessment is present imported by the countries of interest."
     columns <- c('<li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code)
-          for the EU countries importing the commodity.</li>
-          <li><strong>Partner:</strong> Column with the IDs of the third countries (non-EU)
+          for the countries of interest importing the commodity.</li>
+          <li><strong>Partner:</strong> Column with the IDs of the third countries 
           where the pest is present. You do not need to identify each country individually;
           you can aggregate them into a single ID (e.g., "extra_pest").</li>
           <li><strong>Values:</strong> Column with the quantity of the imported commodity.</li>')
   }else if(data == "IntraEU"){
-    data_name <- "Intra-EU import"
+    data_name <- "Intra"
+    data_def <- "Quantity of commodity traded between the countries of interest."
     columns <- c('<li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) 
-          for the EU countries importing the commodity.</li>
+          for the countries of interest importing the commodity.</li>
           <li><strong>Partner:</strong> Column with the NUTS codes (2-letter code) 
-          for the EU countries exporting the commodity.</li>
+          for the countries of interest exporting the commodity.</li>
           <li><strong>Values:</strong> Column with the quantity of the imported commodity.</li>')
   }else if(data == "IP"){
-    data_name <- "Internal production"
+    data_name <- "IP"
+    data_def <- "Quantity of commodity produced in the countries of interest."
     columns <- c('<li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) 
-                 for the EU countries that are producing the commodity.</li>
+                 for the countries of interest that are producing the commodity.</li>
                  <li><strong>Values:</strong> Column with the quantity of the commodity 
                  produced.</li>')
   }
@@ -44,8 +50,10 @@ text_trade_data <- function(data, partner=TRUE){
   
   HTML(
     paste0(
+      '<p style="color:#1E68BA; font-size:18px;"><strong><i>', data_name, 
+      ': </i></strong>', data_def, '</p>',
       '<p class="custom-text">Click on
-          <strong>', data_name, '</strong> and follow these steps:
+          <strong><i>', data_name, '</i></strong> and follow these steps:
           <ul class="custom-text" style="margin-right:10px;">
           <li><strong>Data file</strong>: Upload your data file in CSV format 
           (ensure that numeric values use a decimal point "." as the separator).</li>
@@ -124,9 +132,9 @@ text_DataRedistribution <- HTML(
   '<p class="custom-text">To proportionally redistribute <i>N<sub>trade</sub></i> 
   to NUTS2 regions, select either:
   <ul class="custom-text" style="margin-right:10px;">
-  <li><strong>Population (Eurostat):</strong> This option uses the Eurostat population 
-  data to proportionally redistribute <i>N<sub>trade</sub></i> based on the population 
-  size in each NUTS2 region.</li>
+  <li><strong>Human population (Eurostat):</strong> This option uses the Eurostat 
+  human population data to proportionally redistribute <i>N<sub>trade</sub></i> 
+  based on the human population size in each NUTS2 region.</li>
   <li><strong>Custom Data:</strong> This option allows the user to upload a custom 
   dataset that can serve as the basis for the redistribution 
   (e.g., consumption data at the NUTS2 level).</li>

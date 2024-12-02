@@ -49,20 +49,23 @@ mod_ntrade_data_ui <- function(id){
                    div(style = "border-bottom:2px solid grey",
                        br(),
                        strong("Trade data:"),
-                       # ExtraEU
-                       data_input(ns, "ExtraTotal", "Extra-EU import total", 
+                       # Extra
+                       data_input(ns, "ExtraTotal", 
+                                  HTML("<i style='font-size:18px;'>ExtraTotal</i>"), 
                                   extra=TRUE),
                        br(),
                        data_input(ns, "ExtraPest",
-                                  HTML("Extra-EU import from countries<br/> where 
-                                       the pest is present"),
+                                  HTML("<i style='font-size:18px;'>ExtraPest</i>"),
                                   extra=TRUE),
                        br(),
                        # IntraEU
-                       data_input(ns, "IntraEU", "Intra-EU import"),
+                       data_input(ns, "IntraEU", 
+                                  HTML("<i style='font-size:18px;'>Intra</i>")),
                        br(),
                        #Internal production
-                       data_input(ns, "IP", "Internal production", partner=FALSE),
+                       data_input(ns, "IP", 
+                                  HTML("<i style='font-size:18px;'>IP</i>")
+                                  , partner=FALSE),
                        br()
                    ),
                    br(),
