@@ -16,10 +16,7 @@ mod_pathway_model_ui <- function(id){
         column(11,
                br(),
                uiOutput(ns("help_data")),
-               br(),
-               div(class="warn",
-                   verbatimTextOutput(ns("message"))
-               )
+               br()
         )),
       br(),
       sidebarPanel(width = 12,
@@ -81,7 +78,10 @@ mod_pathway_model_ui <- function(id){
                    fluidRow(
                      column(11, style = "background-color: white; margin: 20px;",
                             h4(strong("Pathway model:")),
-                            uiOutput(ns("pathway_model"))
+                            uiOutput(ns("pathway_model")),
+                            div(class="warn",
+                                verbatimTextOutput(ns("message"))
+                            )
                      )
                    ),
                    br(),
@@ -146,6 +146,8 @@ mod_pathway_model_server <- function(id){
     
     # Model equation
     model_def <- eventReactive(input$model_done,{
+      output$message <- renderText({NULL})
+      wrong_pars <- c()
       model <- "NPFP = N_{trade}"
       selected_parameters <- input$parameters
       if (is.null(selected_parameters)){
@@ -161,11 +163,27 @@ mod_pathway_model_server <- function(id){
       if(input$extra_parameters>0){
         for(i in 1:input$extra_parameters){
           par_names <- input[[paste0("p_eq", i)]]
+          if(!grepl(input[[paste0("p", i)]], par_names, fixed = TRUE)){
+            wrong_pars <- c(wrong_pars, i)
+          }
           symbol_p <- input[[paste0("symbol_p_", i)]]
           model <- paste0(model, " ", symbol_p, " ", par_names)
         }
       }
+      tryCatch({
+      if(input$extra_parameters>0 & length(wrong_pars>0)){
+        stop(paste(
+        paste(strwrap("Error: The parameter name in the equation does not 
+                           exactly match the one entered under 'Parameter Name' 
+                           in the parameters:"), collapse=" "), 
+        paste(wrong_pars, collapse = ", ")
+      ))
+      }
       return(model)
+      }, error = function(e) {
+        output$message <- renderText({e$message})
+        return(NULL)
+      })
     })
     
     model_eq <- reactiveVal(

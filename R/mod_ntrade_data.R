@@ -51,20 +51,24 @@ mod_ntrade_data_ui <- function(id){
                        strong("Trade data:"),
                        # Extra
                        data_input(ns, "ExtraTotal", 
-                                  HTML("<i style='font-size:18px;'>ExtraTotal</i>"), 
+                                  HTML("<i style='font-size:18px;'>
+                                       ExtraTotal Import</i>"), 
                                   extra=TRUE),
                        br(),
                        data_input(ns, "ExtraPest",
-                                  HTML("<i style='font-size:18px;'>ExtraPest</i>"),
+                                  HTML("<i style='font-size:18px;'>
+                                       ExtraPest Import</i>"),
                                   extra=TRUE),
                        br(),
-                       # IntraEU
-                       data_input(ns, "IntraEU", 
-                                  HTML("<i style='font-size:18px;'>Intra</i>")),
+                       # Intra
+                       data_input(ns, "Intra", 
+                                  HTML("<i style='font-size:18px;'>
+                                       Intra Trade</i>")),
                        br(),
                        #Internal production
                        data_input(ns, "IP", 
-                                  HTML("<i style='font-size:18px;'>IP</i>")
+                                  HTML("<i style='font-size:18px;'>
+                                       Internal Production</i>")
                                   , partner=FALSE),
                        br()
                    ),
@@ -153,10 +157,10 @@ mod_ntrade_data_server <- function(id){
       })
       return(df)
     })
-    session$userData$IntraEU_reactive <- eventReactive(input$IntraEU,{
+    session$userData$Intra_reactive <- eventReactive(input$Intra,{
       output$message <- renderText({NULL})
       df <- tryCatch({
-        load_csv(input$IntraEU$datapath)
+        load_csv(input$Intra$datapath)
       }, error = function(e) {
         output$message <- renderText({e$message})
         return(NULL)
@@ -183,9 +187,9 @@ mod_ntrade_data_server <- function(id){
       colnames_select(session$userData$ExtraPest_reactive(), 
                       "ExtraPest", partner=TRUE, session=session)
     })
-    observeEvent(session$userData$IntraEU_reactive(),{
-      colnames_select(session$userData$IntraEU_reactive(), 
-                      "IntraEU", partner=TRUE, session=session)
+    observeEvent(session$userData$Intra_reactive(),{
+      colnames_select(session$userData$Intra_reactive(), 
+                      "Intra", partner=TRUE, session=session)
     })
     observeEvent(session$userData$IP_reactive(),{
       colnames_select(session$userData$IP_reactive(), 
@@ -215,7 +219,7 @@ mod_ntrade_data_server <- function(id){
     output$unitsOutputExtraPest <- renderText({
       paste0("= ", input$units)
     })
-    output$unitsOutputIntraEU <- renderText({
+    output$unitsOutputIntra <- renderText({
       paste0("= ", input$units)
     })
     output$unitsOutputIP <- renderText({
@@ -225,15 +229,27 @@ mod_ntrade_data_server <- function(id){
     #close dropMenu
     observeEvent(input$done_ExtraTotal,{
       shinyWidgets::hideDropMenu("ExtraTotal_menu_dropmenu")
+      if(is.null(ExtraTotal_df())){
+        runjs("window.scrollTo({ top: 0, behavior: 'smooth' });")
+      }
     })
     observeEvent(input$done_ExtraPest,{
       shinyWidgets::hideDropMenu("ExtraPest_menu_dropmenu")
+      if(is.null(ExtraPest_df())){
+        runjs("window.scrollTo({ top: 0, behavior: 'smooth' });")
+      }
     })
-    observeEvent(input$done_IntraEU,{
-      shinyWidgets::hideDropMenu("IntraEU_menu_dropmenu")
+    observeEvent(input$done_Intra,{
+      shinyWidgets::hideDropMenu("Intra_menu_dropmenu")
+      if(is.null(Intra_df())){
+        runjs("window.scrollTo({ top: 0, behavior: 'smooth' });")
+      }
     })
     observeEvent(input$done_IP,{
       shinyWidgets::hideDropMenu("IP_menu_dropmenu")
+      if(is.null(IP_df())){
+        runjs("window.scrollTo({ top: 0, behavior: 'smooth' });")
+      }
     })
     
     # fn to rename colnames
@@ -378,13 +394,13 @@ mod_ntrade_data_server <- function(id){
       })
     })
     
-    IntraEU_df <- eventReactive(input$done_IntraEU,{
+    Intra_df <- eventReactive(input$done_Intra,{
       NUTS_CODES <- NUTS_CODES()
       tryCatch({
-        df <- session$userData$IntraEU_reactive()
-        m <- columns_null("IntraEU")
+        df <- session$userData$Intra_reactive()
+        m <- columns_null("Intra")
         if (!is.null(m)) { stop(m) }
-        df <- colnames_rename(df, "IntraEU") %>% 
+        df <- colnames_rename(df, "Intra") %>% 
           {if(any(.$reporter %in% NUTS_CODES$CNTR_CODE)) {
             mutate(., reporter = case_when(
               reporter == "GR" ~ "EL",
@@ -408,7 +424,7 @@ mod_ntrade_data_server <- function(id){
         m <- data_message(df, NUTS_CODES, partner=TRUE)
         if (!is.null(m)) { stop(m) }
         df <- df %>%
-          mutate(value = value * input$unitsIntraEU)
+          mutate(value = value * input$unitsIntra)
         class(df$time_period) <- class(input$time_period)
         return(df)
       }, error = function(e) {
@@ -449,7 +465,7 @@ mod_ntrade_data_server <- function(id){
     is_initial <- reactiveVal(TRUE)
     observe({
       # Update is_initial
-      if (!is.null(ExtraTotal_df())||!is.null(ExtraPest_df())||!is.null(IntraEU_df())||!is.null(IP_df())){
+      if (!is.null(ExtraTotal_df())||!is.null(ExtraPest_df())||!is.null(Intra_df())||!is.null(IP_df())){
         is_initial(FALSE)
       }
     })
@@ -460,8 +476,8 @@ mod_ntrade_data_server <- function(id){
         text_trade_data("ExtraTotal")
       }else if(is.null(input$ExtraPest$datapath)||input$done_ExtraPest==0||is.null(ExtraPest_df())){
         text_trade_data("ExtraPest")
-      }else if(is.null(input$IntraEU$datapath)||input$done_IntraEU==0||is.null(IntraEU_df())){
-        text_trade_data("IntraEU", partner=FALSE)
+      }else if(is.null(input$Intra$datapath)||input$done_Intra==0||is.null(Intra_df())){
+        text_trade_data("Intra", partner=FALSE)
       }else if(is.null(input$IP$datapath)||input$done_IP==0||is.null(IP_df())){
         text_trade_data("IP", partner=FALSE)
       }else{
@@ -494,15 +510,15 @@ mod_ntrade_data_server <- function(id){
       df <- ExtraTotal_df()
       if (is.null(df)) {
         updateActionButton(session, "ExtraTotal_menu",
-                           label= '<h5><strong style="color:#327FB0;">
-                           Extra-EU import total</strong></h5>') #remove check icon
+                           label= '<p><strong style="color:#327FB0; font-size:18px;">
+                           <i>ExtraTotal Import</i></strong></p>') #remove check icon
         return(NULL)  # Do nothing if there is an error
       } else {
         updateActionButton(session, "ExtraTotal_menu",
-                           label= '<h5><strong style="color:#327FB0;">
-                           Extra-EU import total</strong>&nbsp;&nbsp;
+                           label= '<p><strong style="color:#327FB0; font-size:18px;">
+                           <i>ExtraTotal Import</i></strong>&nbsp;&nbsp;
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
-                           </i></h5>') #check icon
+                           </i></p>') #check icon
         output$message <- renderText({NULL})  # Clear message
         update_time_periods("ExtraTotal", session)
       }
@@ -511,51 +527,49 @@ mod_ntrade_data_server <- function(id){
       df <- ExtraPest_df()
       if (is.null(df)) {
         updateActionButton(session, "ExtraPest_menu",
-                           label= '<h5><strong style="color:#327FB0;">
-                           Extra-EU import from countries<br/> 
-                           where the pest is present</strong></h5>')#remove check icon
+                           label= '<p><strong style="color:#327FB0; font-size:18px;">
+                           <i>ExtraPest Import</i></strong></p>')#remove check icon
         return(NULL)  # Do nothing if there is an error
       } else {
         updateActionButton(session, "ExtraPest_menu",
-                           label= '<h5><strong style="color:#327FB0;">
-                           Extra-EU import from countries<br/> where the pest 
-                           is present</strong>&nbsp;&nbsp;
+                           label= '<p><strong style="color:#327FB0; font-size:18px;">
+                           <i>ExtraPest Import</i></strong>&nbsp;&nbsp;
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
-                           </i></h5>')#check icon
+                           </i></p>')#check icon
         output$message <- renderText({NULL})  # Clear message
         update_time_periods("ExtraPest", session)
       }
     })
-    observeEvent(input$done_IntraEU, {
-      df <- IntraEU_df()
+    observeEvent(input$done_Intra, {
+      df <- Intra_df()
       if (is.null(df)) {
-        updateActionButton(session, "IntraEU_menu",
-                           label= '<h5><strong style="color:#327FB0;">
-                           Intra-EU import</strong></h5>')#remove check icon
+        updateActionButton(session, "Intra_menu",
+                           label= '<p><strong style="color:#327FB0; font-size:18px;">
+                           <i>Intra Trade</i></strong></p>')#remove check icon
         return(NULL)  # Do nothing if there is an error
       } else {
-        updateActionButton(session, "IntraEU_menu",
-                           label= '<h5><strong style="color:#327FB0;">
-                           Intra-EU import</strong>&nbsp;&nbsp;
+        updateActionButton(session, "Intra_menu",
+                           label= '<p><strong style="color:#327FB0; font-size:18px;">
+                           <i>Intra Trade</i></strong>&nbsp;&nbsp;
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
-                           </i></h5>')#check icon
+                           </i></p>')#check icon
         output$message <- renderText({NULL})  # Clear message
-        update_time_periods("IntraEU", session)
+        update_time_periods("Intra", session)
       }
     })
     observeEvent(input$done_IP, {
       df <- IP_df()
       if (is.null(df)) {
         updateActionButton(session, "IP_menu",
-                           label= '<h5><strong style="color:#327FB0;">
-                           Internal production</strong></h5>')#remove check icon
+                           label= '<p><strong style="color:#327FB0; font-size:18px;">
+                           <i>Internal Production</i></strong></p>')#remove check icon
         return(NULL)  # Do nothing if there is an error
       } else {
         updateActionButton(session, "IP_menu",
-                           label= '<h5><strong style="color:#327FB0;">
-                           Internal production</strong>&nbsp;&nbsp;
+                           label= '<p><strong style="color:#327FB0; font-size:18px;">
+                           <i>Internal Production</i></strong>&nbsp;&nbsp;
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
-                           </i></h5>')#check icon
+                           </i></p>')#check icon
         output$message <- renderText({NULL})  # Clear message
         update_time_periods("IP", session)
       }
@@ -565,7 +579,7 @@ mod_ntrade_data_server <- function(id){
     observe({
       if(input$done_ExtraTotal &
          input$done_ExtraPest &
-         input$done_IntraEU &
+         input$done_Intra &
          input$done_IP){
         all_btns("all")
       }
@@ -579,7 +593,7 @@ mod_ntrade_data_server <- function(id){
         output$plot_buttons <- renderUI({
           sidebarPanel(width = 11,
                        HTML('<p class="custom-text">Use the buttons <strong>
-                            "Plot Extra-EU Import"</strong>, <strong>"Plot Intra-EU 
+                            "Plot Extra Import"</strong>, <strong>"Plot Intra 
                             Trade"</strong>, or <strong>"Plot Internal Production"</strong> 
                             to change the trade data visualization.<br> 
                             Place your cursor over the bars to to view mean and 
@@ -589,12 +603,12 @@ mod_ntrade_data_server <- function(id){
                        fluidRow(
                          column(4, align = "center",
                                 actionButton(ns("ExtraTotal_plot"),
-                                             HTML("Plot</br>Extra-EU Import"),
+                                             HTML("Plot</br>Extra Import"),
                                              class="enable")
                          ),
                          column(4, align = "center",
-                                actionButton(ns("IntraEU_plot"),
-                                             HTML("Plot</br> Intra-EU Trade"),
+                                actionButton(ns("Intra_plot"),
+                                             HTML("Plot</br> Intra Trade"),
                                              class="enable")
                          ),
                          column(4, align = "center",
@@ -611,14 +625,14 @@ mod_ntrade_data_server <- function(id){
     
     # trade data
     TradeData <- eventReactive(c(input$done_ExtraTotal, input$done_ExtraPest, 
-                                 input$done_IntraEU, input$done_IP, input$time_period),{
+                                 input$done_Intra, input$done_IP, input$time_period),{
                                    if(all_btns()=="all"){
                                      tryCatch({
                                        withCallingHandlers({
                                          shinyjs::html("message", "")
                                          df <- trade_data(extra_total = ExtraTotal_df(),
                                                           extra_pest = ExtraPest_df(),
-                                                          intra_trade = IntraEU_df(),
+                                                          intra_trade = Intra_df(),
                                                           internal_production = IP_df(),
                                                           filter_period = input$time_period)
                                        },
@@ -645,7 +659,7 @@ mod_ntrade_data_server <- function(id){
     
     # change data_plot reactive
     observe_plot_event("ExtraTotal")
-    observe_plot_event("IntraEU")
+    observe_plot_event("Intra")
     observe_plot_event("IP")
     
     output$dataPlot <- ggiraph::renderGirafe({
@@ -657,13 +671,13 @@ mod_ntrade_data_server <- function(id){
         pl <- plot_dataUpload(df = df,
                               dfName = "ExtraTotal",
                               timePeriod, yLab,
-                              plotTitle = "Extra-EU import",
-                              legendTitle = "Non-EU countries:")
-      }else if(data_plot()=="IntraEU"){
+                              plotTitle = "Extra Import",
+                              legendTitle = "Third countries:")
+      }else if(data_plot()=="Intra"){
         pl <- plot_dataUpload(df = df,
-                              dfName = "IntraEU",
+                              dfName = "Intra",
                               timePeriod, yLab,
-                              plotTitle = "Intra-EU trade",
+                              plotTitle = "Intra Trade",
                               legendTitle = "Trade:")
       }else if(data_plot()=="IP"){
         pl <- plot_dataUpload(df = df,
@@ -695,14 +709,14 @@ mod_ntrade_data_server <- function(id){
                                dfName = "ExtraTotal",
                                idx,
                                yLab,
-                               plotTitle = "Extra-EU import",
-                               legendTitle = "Non-EU countries:")
-        }else if(data_plot()=="IntraEU"){
+                               plotTitle = "Extra Tmport",
+                               legendTitle = "Third countries:")
+        }else if(data_plot()=="Intra"){
           pl <- plot_byCountry(df = df,
-                               dfName = "IntraEU",
+                               dfName = "Intra",
                                idx,
                                yLab,
-                               plotTitle = "Intra-EU trade",
+                               plotTitle = "Intra Trade",
                                legendTitle = "Trade:")
         }else if(data_plot()=="IP"){
           pl <- plot_byCountry(df = df,

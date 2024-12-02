@@ -64,7 +64,7 @@ text_ntrade_data <-
             <ul style="margin-right:10px;">
               <li><strong>NUTS codes:</strong> Select the column that contains the 
               NUTS codes, which may be at the country level (NUTS0) or regional level 
-              (NUTS2) for the EU countries or regions of interest.</li>
+              (NUTS2) for the countries or regions of interest.</li>
               <li><strong>Values:</strong> Choose the column that includes the 
               <i>N<sub>trade</sub></i> values.</li>
             </ul>

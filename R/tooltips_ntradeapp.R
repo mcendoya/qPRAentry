@@ -2,7 +2,7 @@
 # Data tab
 text_trade_data <- function(data, partner=TRUE){
   if(data == "ExtraTotal"){
-    data_name <- "ExtraTotal"
+    data_name <- "ExtraTotal Import"
     data_def <- "Total quantity of commodity from third countries imported by the 
     countries of interest."
     columns <- c('<li><strong>Reporter:</strong> Select the column containing the NUTS codes
@@ -14,7 +14,7 @@ text_trade_data <- function(data, partner=TRUE){
                    <li><strong>Values:</strong> Select the column that contains the quantity 
                  of the imported commodity.</li>')
   }else if(data == "ExtraPest"){
-    data_name <- "ExtraPest"
+    data_name <- "ExtraPest Import"
     data_def <- "Quantity of commodity from third countries where the pest under 
     assessment is present imported by the countries of interest."
     columns <- c('<li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code)
@@ -23,8 +23,8 @@ text_trade_data <- function(data, partner=TRUE){
           where the pest is present. You do not need to identify each country individually;
           you can aggregate them into a single ID (e.g., "extra_pest").</li>
           <li><strong>Values:</strong> Column with the quantity of the imported commodity.</li>')
-  }else if(data == "IntraEU"){
-    data_name <- "Intra"
+  }else if(data == "Intra"){
+    data_name <- "Intra Trade"
     data_def <- "Quantity of commodity traded between the countries of interest."
     columns <- c('<li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) 
           for the countries of interest importing the commodity.</li>
@@ -32,7 +32,7 @@ text_trade_data <- function(data, partner=TRUE){
           for the countries of interest exporting the commodity.</li>
           <li><strong>Values:</strong> Column with the quantity of the imported commodity.</li>')
   }else if(data == "IP"){
-    data_name <- "IP"
+    data_name <- "Internal Production"
     data_def <- "Quantity of commodity produced in the countries of interest."
     columns <- c('<li><strong>Reporter:</strong> Column with the NUTS codes (2-letter code) 
                  for the countries of interest that are producing the commodity.</li>
