@@ -19,7 +19,7 @@
 #' \code{reporter} (importing country), \code{partner} (exporting country), 
 #' \code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).
 #' @param internal_production A data frame containing the quantity of the commodity 
-#' produced domestically within each country of interest. It must contain the following columns: 
+#' produced internally within each country of interest. It must contain the following columns: 
 #' \code{reporter} (producing country), \code{value} (quantity of commodity) and 
 #' \code{time_period} (time period of production).
 #' @param filter_IDs A vector containing the country IDs to filter (identification codes 

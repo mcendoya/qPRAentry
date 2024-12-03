@@ -1,13 +1,13 @@
 ---
-title: "qPRAentry package workflow"
+title: "qPRAentry workflow"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{qPRAentry_workflow}
+  %\VignetteIndexEntry{qPRAentry workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -20,36 +20,216 @@ library(qPRAentry)
 
 # Introduction
 
-# Trade data preparation
+`qPRAentry` is a package for...
+
+Two application examples of the functions available in the `qPRAentry` package are 
+shown below. The example [A](#example-ISO) uses the functions applicable to any country in the world using ISO codes. The example [B](#example-NUTS) uses the functions designed for use with the NUTS code system.
+
+In both cases, trade data are required for the commodity that is considered to be a potential pathway for the pest under assessment. The data required include:
+
+  - Import of the commodity from third countries to the countries of interest in 
+  the study, both the total quantity and the quantity imported from third countries 
+  where the pest is known to be present. 
+  - Trade of the commodity between the countries of interest.
+  - Internal production of the commodity in the countries of interest.
+
+# A. Example using ISO codes {#example-ISO}
+
+## 1. Trade data preparation
+
+### Trade data required
+
+CSV data files can be loaded via `load_csv()`
 
 ```{r}
-## Example with simulated trade data for Northern America
-library(dplyr)
-# Load data
 data("datatrade_NorthAm")
-# Total extra-import data: data contains imports from 5 third countries (column partner). 
+```
+
+Total quantity of commodity imported from third countries. Using the example data, 
+we select imports from all third countries (column partner):
+
+```{r}
 extra_total <- datatrade_NorthAm$extra_import
-# Extra-import data from countries where the pest is present (e.g., CNTR_1 and CNTR_2)
+head(extra_total)
+```
+
+Quantity of commodity imported from third countries where the pest is present. In 
+this case we assume that the pest is present in countries ``NTR_1" and ``CNTR_2":
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
 CNTR_pest <- c("CNTR_1", "CNTR_2")
 extra_pest <- datatrade_NorthAm$extra_import %>% filter(partner%in%CNTR_pest)
-# Intra-trade data
+head(extra_pest)
+```
+
+Quantity of commodity traded between countries of interest:
+
+```{r}
 intra_trade  <- datatrade_NorthAm$intra_trade
-# Internal production data
+head(intra_trade)
+```
+
+Quantity of commodity produced internally in each country of interest:
+
+```{r}
 internal_production  <- datatrade_NorthAm$internal_production
-# Generate trade data (TradeData object)
+head(internal_production)
+```
+
+### Generation of the `TradeData` object from data frames
+
+```{r}
 trade_NorthAm <- trade_data(extra_total = extra_total,
                             extra_pest = extra_pest,
                             intra_trade = intra_trade,
                             internal_production = internal_production)
+```
+
+Total trade:
+
+```{r}
 head(trade_NorthAm$total_trade)
+```
+
+Trade between countries:
+
+```{r}
 head(trade_NorthAm$intra_trade)
-# Plot the total available quantity of commodity available in each country
+```
+
+### Plot
+
+Plot the total available quantity of commodity available in each country
+
+```{r}
 library(ggplot2)
 plot_countries(data = trade_NorthAm$total_trade,
                iso_col = "country_IDs", 
                values_col = "total_available") +
   xlim(-180,-20) + ylim(0,90)
 ```
+
+## 2. Ntrade
+
+### Calculation of the Ntrade for each time period
+
+```{r}
+ntrade_NorthAm <- ntrade(trade_data = trade_NorthAm)
+head(ntrade_NorthAm)
+```
+
+### Ntrade summary for the time periods
+
+```{r}
+ntrade_NorthAm_summary <- ntrade(trade_data = trade_NorthAm,
+                                 summarise_result = c("mean", "sd", 
+                                                      "quantile(0.025)", 
+                                                      "median",
+                                                      "quantile(0.975)"))
+head(ntrade_NorthAm_summary)
+```
+
+### Plot 
+
+```{r}
+# Plot the median of Ntrade
+library(ggplot2)
+plot_countries(data = ntrade_NorthAm_summary,
+               iso_col = "country_IDs", 
+               values_col = "median") +
+  xlim(-180,-20) + ylim(0,90)
+```
+
+
+## 3. Ntrade redistribution
+
+```{r}
+# ## Example of data redistribution in Northern American countries
+# data(datatrade_NorthAm)
+# # extract ISO codes at country level
+# iso_3166_1 <- unique(datatrade_NorthAm$internal_production$reporter)
+# # simulate values for each country
+# iso1_data <- data.frame(iso_3166_1 = iso_3166_1,
+#                         values = abs(rnorm(length(iso_3166_1), 30000, 10000)))
+# # simulate values for each subdivision
+# # ISO 3166_2 codes extracted from 'rnaturalearth' package
+# library(dplyr)
+# library(rnaturalearth)
+# iso2_data <- ne_states() %>% 
+#   # subdivisions of the countries selected above
+#   filter(substr(iso_3166_2, 1, 2) %in% iso_3166_1) %>% 
+#   distinct(iso_3166_2) %>%
+#   select(iso_3166_2) %>% 
+#   # simulate values for each subdivision
+#   mutate(values = abs(rnorm(nrow(.), 0, 1000)))
+# 
+# data_redist <- redist_iso(data = iso1_data,
+#                           iso_col = "iso_3166_1",
+#                           values_col = "values",
+#                           redist_data = iso2_data,
+#                           redist_iso_col = "iso_3166_2",
+#                           redist_values_col = "values")
+# 
+# head(data_redist)
+# 
+# # Plot using the 'sf' object from 'rnaturalearth' package
+# iso2_plot <- ne_states() %>% 
+#   filter(substr(iso_3166_2, 1, 2) %in% iso_3166_1) %>% 
+#   left_join(data_redist, by = join_by(iso_3166_2 == ISO_2))
+# 
+# library(ggplot2)
+# ggplot(iso2_plot, aes(fill = values)) + 
+#   geom_sf()
+#   
+# ## Example of redistribution of two columns
+# # simulate values for each country
+# iso1_data$values2 <- abs(rnorm(nrow(iso1_data), 1000, 500))
+# data_redist <- redist_iso(data = iso1_data,
+#                           iso_col = "iso_3166_1",
+#                           values_col = c("values", "values2"),
+#                           redist_data = iso2_data,
+#                           redist_iso_col = "iso_3166_2",
+#                           redist_values_col = "values")
+# 
+# head(data_redist)
+```
+
+
+## 4. Pathway model
+
+```{r}
+# ## Example using Northern American countries and ntrade simulated data
+# data("datatrade_NorthAm")
+# # Extract country IDs and simulate ntrade data
+# IDs <- datatrade_NorthAm$internal_production$reporter
+# df <- data.frame(IDs = IDs,
+#                  ntrade_values = abs(rnorm(length(IDs), 10000, 2000)))
+# # Expression for the pathway model using 3 parameters
+# eq <- "(1/P1)*P2*P3"
+# # Distribution for each parameter
+# parameters <- list(
+#   P1 = list(dist = "beta", shape1 = 0.5, shape2 = 1),
+#   P2 = list(dist = "gamma", shape = 1.5, scale = 100),
+#   P3 = list(dist = "lnorm", mean = 5, sd = 2)
+# )
+# # Run pathway_model()
+# res_pathway <- pathway_model(ntrade_data = df,
+#                              IDs_col = "IDs",
+#                              values_col = "ntrade_values",
+#                              expression = eq,
+#                              parameters = parameters,
+#                              niter = 100)
+# head(res_pathway)
+# # summary of the total for all countries
+# res_pathway[res_pathway$IDs == "Total",]
+# # plot
+# plot_countries(res_pathway, "IDs", "Median")
+```
+
+# B. Example using NUTS codes {#example-NUTS}
+
+## 1. Trade data preparation
 
 ```{r}
 ## Example with simulated trade data for Europe 
@@ -81,43 +261,10 @@ plot_countries(data = trade_EU$total_trade,
 ```
 
 
-# Ntrade
+## 2. Ntrade
+
 
 ```{r}
-## Example with simulated trade data for Northern America
-library(dplyr)
-data("datatrade_NorthAm")
-# Total extra-import data: data contains imports from 5 third countries (column partner). 
-extra_total <- datatrade_NorthAm$extra_import
-# Extra-import data from countries where the pest is present (e.g., CNTR_1 and CNTR_2)
-CNTR_pest <- c("CNTR_1", "CNTR_2")
-extra_pest <- datatrade_NorthAm$extra_import %>% filter(partner%in%CNTR_pest)
-# Intra-trade data
-intra_trade  <- datatrade_NorthAm$intra_trade
-# Internal production data
-internal_production  <- datatrade_NorthAm$internal_production
-# Generate trade data (TradeData object)
-trade_NorthAm <- trade_data(extra_total = extra_total,
-                            extra_pest = extra_pest,
-                            intra_trade = intra_trade,
-                            internal_production = internal_production)
-# Calculation of the Ntrade for each time period
-ntrade_NorthAm <- ntrade(trade_data = trade_NorthAm)
-head(ntrade_NorthAm)
-# Ntrade summary for the time periods
-ntrade_NorthAm_summary <- ntrade(trade_data = trade_NorthAm,
-                                 summarise_result = c("mean", "sd", 
-                                                      "quantile(0.025)", 
-                                                      "median",
-                                                      "quantile(0.975)"))
-head(ntrade_NorthAm_summary)
-# Plot the median of Ntrade
-library(ggplot2)
-plot_countries(data = ntrade_NorthAm_summary,
-               iso_col = "country_IDs", 
-               values_col = "median") +
-  xlim(-180,-20) + ylim(0,90)
-
 ## Example with simulated trade data for Europe 
 # Load data
 data("datatrade_EU")
@@ -158,137 +305,89 @@ plot_countries(data = ntrade_EU_s,
 ```
 
 
-## Ntrade redistribution
+## 3. Ntrade redistribution
 
 ```{r}
-## Example of data redistribution in Northern American countries
-data(datatrade_NorthAm)
-# extract ISO codes at country level
-iso_3166_1 <- unique(datatrade_NorthAm$internal_production$reporter)
-# simulate values for each country
-iso1_data <- data.frame(iso_3166_1 = iso_3166_1,
-                        values = abs(rnorm(length(iso_3166_1), 30000, 10000)))
-# simulate values for each subdivision
-# ISO 3166_2 codes extracted from 'rnaturalearth' package
-library(dplyr)
-library(rnaturalearth)
-iso2_data <- ne_states() %>% 
-  # subdivisions of the countries selected above
-  filter(substr(iso_3166_2, 1, 2) %in% iso_3166_1) %>% 
-  distinct(iso_3166_2) %>%
-  select(iso_3166_2) %>% 
-  # simulate values for each subdivision
-  mutate(values = abs(rnorm(nrow(.), 0, 1000)))
-
-data_redist <- redist_iso(data = iso1_data,
-                          iso_col = "iso_3166_1",
-                          values_col = "values",
-                          redist_data = iso2_data,
-                          redist_iso_col = "iso_3166_2",
-                          redist_values_col = "values")
-
-head(data_redist)
-
-# Plot using the 'sf' object from 'rnaturalearth' package
-iso2_plot <- ne_states() %>% 
-  filter(substr(iso_3166_2, 1, 2) %in% iso_3166_1) %>% 
-  left_join(data_redist, by = join_by(iso_3166_2 == ISO_2))
-
-library(ggplot2)
-ggplot(iso2_plot, aes(fill = values)) + 
-  geom_sf()
-  
-## Example of redistribution of two columns
-# simulate values for each country
-iso1_data$values2 <- abs(rnorm(nrow(iso1_data), 1000, 500))
-data_redist <- redist_iso(data = iso1_data,
-                          iso_col = "iso_3166_1",
-                          values_col = c("values", "values2"),
-                          redist_data = iso2_data,
-                          redist_iso_col = "iso_3166_2",
-                          redist_values_col = "values")
-
-head(data_redist)
-
-#' ## Example of data redistribution to NUTS2 using population data
-data("datatrade_EU")
-# extract NUTS0 codes (country level)
-nuts0 <- unique(datatrade_EU$internal_production$reporter)
-# simulate values for each country
-nuts0_data <- data.frame(nuts0 = nuts0,
-                         values = abs(rnorm(length(nuts0), 30000, 10000)))
-
-data_redist <- redist_nuts(data = nuts0_data,
-                           nuts_col = "nuts0",
-                           values_col = "values",
-                           to_nuts = 2,
-                           redist_data = "population",
-                           population_year = c(2017, 2018, 2019))
-head(data_redist)
-
-# Plot
-plot_nuts(data = data_redist,
-          nuts_level = 2,
-          nuts_col = "NUTS2", 
-          values_col = "values")
-
-## Example of data redistribution of two value columns to NUTS1 using custom data
-nuts0_data$values2 <- abs(rnorm(length(nuts0), 2000, 500))
-# NUTS1 codes extracted from 'giscoR' package
-library(dplyr)
-library(giscoR)
-nuts1_data <- gisco_get_nuts(nuts_level=1) %>% 
-  select(NUTS_ID) %>% 
-  # simulate values for each NUTS1
-  mutate(values = abs(rnorm(nrow(.), 0, 1000)))
-
-data_redist <- redist_nuts(data = nuts0_data,
-                           nuts_col = "nuts0",
-                           values_col = c("values", "values2"),
-                           to_nuts = 1,
-                           redist_data = nuts1_data,
-                           redist_nuts_col = "NUTS_ID",
-                           redist_values_col = "values")
-
-head(data_redist)
-
-# Plot
-plot_nuts(data = data_redist,
-          nuts_level = 1,
-          nuts_col = "NUTS1", 
-          values_col = "values2")
+# 
+# #' ## Example of data redistribution to NUTS2 using population data
+# data("datatrade_EU")
+# # extract NUTS0 codes (country level)
+# nuts0 <- unique(datatrade_EU$internal_production$reporter)
+# # simulate values for each country
+# nuts0_data <- data.frame(nuts0 = nuts0,
+#                          values = abs(rnorm(length(nuts0), 30000, 10000)))
+# 
+# data_redist <- redist_nuts(data = nuts0_data,
+#                            nuts_col = "nuts0",
+#                            values_col = "values",
+#                            to_nuts = 2,
+#                            redist_data = "population",
+#                            population_year = c(2017, 2018, 2019))
+# head(data_redist)
+# 
+# # Plot
+# plot_nuts(data = data_redist,
+#           nuts_level = 2,
+#           nuts_col = "NUTS2", 
+#           values_col = "values")
+# 
+# ## Example of data redistribution of two value columns to NUTS1 using custom data
+# nuts0_data$values2 <- abs(rnorm(length(nuts0), 2000, 500))
+# # NUTS1 codes extracted from 'giscoR' package
+# library(dplyr)
+# library(giscoR)
+# nuts1_data <- gisco_get_nuts(nuts_level=1) %>% 
+#   select(NUTS_ID) %>% 
+#   # simulate values for each NUTS1
+#   mutate(values = abs(rnorm(nrow(.), 0, 1000)))
+# 
+# data_redist <- redist_nuts(data = nuts0_data,
+#                            nuts_col = "nuts0",
+#                            values_col = c("values", "values2"),
+#                            to_nuts = 1,
+#                            redist_data = nuts1_data,
+#                            redist_nuts_col = "NUTS_ID",
+#                            redist_values_col = "values")
+# 
+# head(data_redist)
+# 
+# # Plot
+# plot_nuts(data = data_redist,
+#           nuts_level = 1,
+#           nuts_col = "NUTS1", 
+#           values_col = "values2")
 ```
 
 
-# Pathway model
+## 4. Pathway model
 
 ```{r}
-## Example using Northern American countries and ntrade simulated data
-data("datatrade_NorthAm")
-# Extract country IDs and simulate ntrade data
-IDs <- datatrade_NorthAm$internal_production$reporter
-df <- data.frame(IDs = IDs,
-                 ntrade_values = abs(rnorm(length(IDs), 10000, 2000)))
-# Expression for the pathway model using 3 parameters
-eq <- "(1/P1)*P2*P3"
-# Distribution for each parameter
-parameters <- list(
-  P1 = list(dist = "beta", shape1 = 0.5, shape2 = 1),
-  P2 = list(dist = "gamma", shape = 1.5, scale = 100),
-  P3 = list(dist = "lnorm", mean = 5, sd = 2)
-)
-# Run pathway_model()
-res_pathway <- pathway_model(ntrade_data = df,
-                             IDs_col = "IDs",
-                             values_col = "ntrade_values",
-                             expression = eq,
-                             parameters = parameters,
-                             niter = 100)
-head(res_pathway)
-# summary of the total for all countries
-res_pathway[res_pathway$IDs == "Total",]
-# plot
-plot_countries(res_pathway, "IDs", "Median")
+# ## Example using Northern American countries and ntrade simulated data
+# data("datatrade_NorthAm")
+# # Extract country IDs and simulate ntrade data
+# IDs <- datatrade_NorthAm$internal_production$reporter
+# df <- data.frame(IDs = IDs,
+#                  ntrade_values = abs(rnorm(length(IDs), 10000, 2000)))
+# # Expression for the pathway model using 3 parameters
+# eq <- "(1/P1)*P2*P3"
+# # Distribution for each parameter
+# parameters <- list(
+#   P1 = list(dist = "beta", shape1 = 0.5, shape2 = 1),
+#   P2 = list(dist = "gamma", shape = 1.5, scale = 100),
+#   P3 = list(dist = "lnorm", mean = 5, sd = 2)
+# )
+# # Run pathway_model()
+# res_pathway <- pathway_model(ntrade_data = df,
+#                              IDs_col = "IDs",
+#                              values_col = "ntrade_values",
+#                              expression = eq,
+#                              parameters = parameters,
+#                              niter = 100)
+# head(res_pathway)
+# # summary of the total for all countries
+# res_pathway[res_pathway$IDs == "Total",]
+# # plot
+# plot_countries(res_pathway, "IDs", "Median")
 ```
 
 
