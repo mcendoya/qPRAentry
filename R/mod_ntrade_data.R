@@ -485,7 +485,7 @@ mod_ntrade_data_server <- function(id){
       }
     })
     
-    # Update time periods from all dataframes
+    # Update time periods from all data frames
     all_time_periods <- reactiveValues(data = NULL)
     update_time_periods <- function(x, session){
       reactive_function <- get(paste0(x, "_reactive"), envir = session$userData)

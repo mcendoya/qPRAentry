@@ -142,9 +142,9 @@ text_DataRedistribution <- HTML(
 )
 
 text_PopulationYear <- HTML('<p class="custom-text">Select one or more years of 
-                            population data for redistribution. If multiple years 
-                            are selected, the redistribution will be based on the 
-                            average population across those years. 
+                            human population data for redistribution. If multiple 
+                            years are selected, the redistribution will be based on the 
+                            average human population across those years. 
                             <ul class="custom-text" style="margin-right:10px;">
                             <li>Once the years are selected, click on <strong>"See 
                             <i>N<sub>trade</sub></i> redistribution"</strong> to 

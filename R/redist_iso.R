@@ -5,8 +5,8 @@ utils::globalVariables(c(
 ))
 #' Data redistribution to country subdivisions
 #'
-#' Value redistribution from country-level (ISO 3166-1 alpha-2 codes) to principal 
-#' subdivisions (ISO 3166-2 codes). See 
+#' Value redistribution from country-level (i.e., ISO 3166-1 alpha-2 codes) to principal 
+#' subdivisions (i.e., ISO 3166-2 codes). See 
 #' [ISO 3166 Maintenance Agency](https://www.iso.org/iso-3166-country-codes.html).
 #'
 #' @details
@@ -14,7 +14,7 @@ utils::globalVariables(c(
 #' to principal subdivisions (e.g., provinces or states), proportionally 
 #' to user-supplied redistribution proportions. 
 #' 
-#' Note that more than one column of values provided in the dataframe data can be 
+#' Note that more than one column of values provided in the data frame data can be 
 #' redistributed at the same time. The values in columns \code{values_col} and 
 #' \code{redist_values_col} must be numeric and positive.
 #' 
@@ -23,7 +23,7 @@ utils::globalVariables(c(
 #' this function can be applied to redistribute the quantity of potentially infested 
 #' commodities (\eqn{N_{trade}}, see [ntrade()]) or the number of potential 
 #' founder populations (\eqn{NPFP}, see [pathway_model()]). For this purpose, 
-#' population or consumption data from subdivisions are often used for redistribution.
+#' human population or consumption data from subdivisions are often used for redistribution.
 #'
 #' @param data A data frame containing the data at the country-level to 
 #' redistribute.
@@ -31,8 +31,8 @@ utils::globalVariables(c(
 #' with the ISO 3166-1 (alpha-2) country codes.
 #' @param values_col A string or vector specifying the column name(s) in 
 #' \code{data} with the values to be redistributed.
-#' @param redist_data A data frame with values for each subdivision on which the 
-#' redistribution is to be performed.
+#' @param redist_data A data frame with values for each subdivision that will be 
+#' used as the basis for redistribution.
 #' @param redist_iso_col A string specifying the column name in \code{redist_data} 
 #' that contains the destination ISO 3166-2 codes.
 #' @param redist_values_col A string specifying the column name in \code{redist_data} 
@@ -40,7 +40,7 @@ utils::globalVariables(c(
 #' used for the redistribution.
 #'
 #' @return A data frame with the redistributed values across the specified subnational 
-#' level. The dataframe contains the columns \code{ISO_1} with the codes at country 
+#' level. The data frame contains the columns \code{ISO_1} with the codes at country 
 #' level, \code{ISO_2} with the codes at subdivision level, \code{proportion} with the 
 #' proportion according to which the values have been redistributed, and the columns 
 #' corresponding to the redistributed values with the same name specified in \code{values_col}.
@@ -85,13 +85,13 @@ redist_iso <- function(data, iso_col, values_col,
   if (!is.data.frame(redist_data)) {
     stop("Error: 'redist_data' must be data.frame.")
   }
-  # Check if the specified columns exist in the dataframe
+  # Check if the specified columns exist in the data frame
   if (!all(c(iso_col, values_col) %in% names(data))) {
-    stop(paste(strwrap("The dataframe 'data' must contain the columns specified in 
+    stop(paste(strwrap("The data frame 'data' must contain the columns specified in 
                        'iso_col' and 'values_col'."), collapse=" "))
   }
   if (!all(c(redist_iso_col, redist_values_col) %in% names(redist_data))) {
-    stop(paste(strwrap("The dataframe 'redist_data' must contain the columns specified 
+    stop(paste(strwrap("The data frame 'redist_data' must contain the columns specified 
                        in 'redist_iso_col' and 'redist_values_col'."), collapse=" "))
   }
   # check value numeric

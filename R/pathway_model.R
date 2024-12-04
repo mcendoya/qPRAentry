@@ -1,17 +1,16 @@
 #' Pathway model
 #' 
 #' @description
-#' Estimate the amount of infested commodities that can enter into the
-#' countries of interest imported from third countries where the pest is present,
-#' and produce the number of potential founder populations (\eqn{NPFP}) that can establish 
-#' and spread.
+#' Estimates the number of potential founder populations (\eqn{NPFP}) of a pest 
+#' in different regions, using \eqn{N_{trade}} data combined with additional user-defined 
+#' parameters.
 #' 
 #' @details
 #' ### IDs - country or region identification codes:
 #' The use of ISO 3166 (alpha-2) codes 
 #' ([ISO 3166 Maintenance Agency](https://www.iso.org/iso-3166-country-codes.html)), 
 #' or NUTS codes in the case of European countries 
-#' [NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts), 
+#' [Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts), 
 #' as country or region identifiers (\code{IDs_col}) is recommended 
 #' for subsequent compatibility with other functions of the  [qPRAentry] package.
 #' 
@@ -44,8 +43,8 @@
 #' Ensure that all parameters required by the chosen distribution are included.
 #' 
 #' @param ntrade_data A data frame with the quantity of potentially infested commodities
-#' imported from third countries where the pest is present. It can be calculated
-#' using [ntrade()] function.
+#' imported from third countries where the pest is present (\eqn{N_{trade}}). 
+#' It can be calculated using the [ntrade()] function.
 #' @param IDs_col A string specifying the column name in \code{ntrade_data} with the 
 #' country or region IDs of interest. See details on 
 #' **IDs - country or region identification codes**.
@@ -54,7 +53,7 @@
 #' to be used in the pathway model.
 #' @param expression A string of characters representing the equation for the pathway model.
 #' This expression must not include \eqn{N_{trade}}, since it is added multiplicatively to the
-#' entered equation by default. This equation is then added multiplicatively to:
+#' entered equation by default. The resulting equation will be of the form: 
 #' \deqn{NPFP = N_{trade_i} \cdot \; ``expression"}
 #' @param parameters A named list specifying the distributions for each parameter 
 #' used in \code{expression}. Each element of the list must be another list containing:
@@ -63,15 +62,15 @@
 #'   \item Additional arguments required by the specified distribution (e.g., \code{mean}, 
 #'   \code{sd} for "norm").
 #' }
-#' See the **Parameter distributions** section for a list of available distributions 
+#' See details on **Parameter distributions** for a list of available distributions 
 #' and examples on how to specify them.
 #' @param niter The number of iterations to generate random samples from the distributions.
-#' Default 100 iterations.
+#' The default is 100 iterations.
 #'
-#' @return A dataframe with the statistics (mean, SD, minimum, first quartile, 
-#' median, third quartile, and maximum) resulting from the iterations of number of 
-#' founder populations \eqn{NPFP} for each country/region and for the total (i.e., 
-#' the results for the set of all countries/regions).
+#' @return A data frame with the statistics (mean, SD, minimum, first quartile, 
+#' median, third quartile, and maximum) resulting from the iterations of the \eqn{NPFP} 
+#' for each country/region and for the total (i.e., the results for the set of all 
+#' countries/regions).
 #'
 #' @seealso [ntrade()]
 #' 
@@ -111,7 +110,7 @@ pathway_model <- function(ntrade_data, IDs_col, values_col,
   if(!is.data.frame(ntrade_data)){
     stop("Error: 'ntrade_data' must be a data.frame.")
   }
-  # Check if the specified columns exist in the dataframe
+  # Check if the specified columns exist in the data frame
   if (!all(c(IDs_col, values_col) %in% names(ntrade_data))) {
     stop(paste(strwrap("Error: 'ntrade_data' must contain the columns specified 
                        in 'IDs_col' and 'values_col'."), collapse=" "))

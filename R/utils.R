@@ -44,17 +44,17 @@ summarise_data <- function(data, select_period = NULL, reporter = TRUE, partner 
 #' Identify and IDs without available data
 #'
 #' This internal function checks for time periods within the specified 
-#' dataframe where the `total_available` values are zero. It prints a warning 
+#' data frame where the `total_available` values are zero. It prints a warning 
 #' message for each ID that has zero values in the selected time periods, 
 #' advising the user to select other time periods if they want to include 
 #' these IDs in the analysis. The function then returns a vector of IDs that 
 #' have zero values in the specified time periods.
 #'
-#' @param df1 A dataframe containing columns `reporter`and `time_period`
+#' @param df1 A data frame containing columns `reporter`and `time_period`
 #' 
-#' @param df2 A dataframe containing columns `reporter`and `time_period`
+#' @param df2 A data frame containing columns `reporter`and `time_period`
 #' 
-#' @param df3 A dataframe containing columns `reporter`and `time_period`
+#' @param df3 A data frame containing columns `reporter`and `time_period`
 #' 
 #' @param IDs A vector specifying the time periods to be selected. 
 #' 
@@ -134,14 +134,14 @@ missing_intra <- function(data, IDs) {
 }
 
 
-#' Population data
+#' Human population data
 #' 
-#' This internal function download Eurostat population data
+#' This internal function download Eurostat human population data
 #'
-#' @param nuts_level Numeric, NUTS level to obtain population data
+#' @param nuts_level Numeric, NUTS level to obtain human population data
 #' @param nuts_filter Character, NUTS codes to filter
 #'
-#' @return A data frame with population data for each NUTS level
+#' @return A data frame with human population data for each NUTS level
 #' 
 #' @noRd
 #' @keywords internal

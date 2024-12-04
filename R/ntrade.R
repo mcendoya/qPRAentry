@@ -2,12 +2,11 @@
 #'
 #' This function calculates the quantity of potentially infested imported commodity
 #' (\eqn{N_{trade}}) from third countries where the pest is present, based on the 
-#' provided trade datasets (output of the [trade_data()] function). 
+#' provided trade data (\code{TradeData} object output of the [trade_data()] 
+#' function).
 #'
-#' The \eqn{N_{trade}} value represents the amount of potentially infested commodity left 
-#' within each country after adjusting for both direct imports from pest-affected 
-#' third countries and intra-country trade. The calculation of \eqn{N_{trade_i}} for each 
-#' country of interest \eqn{i} is based on the equation:
+#' The calculation of \eqn{N_{trade_i}} for each country of interest \eqn{i} 
+#' is based on the equation:
 #' \deqn{N_{trade_i} = ExtraPest_i - ExtraPest_i \sum_{j \neq i} R_{ij} + 
 #' \sum_{j \neq i} ExtraPest_j R_{ji},}
 #' where:

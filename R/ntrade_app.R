@@ -2,9 +2,8 @@
 #' 
 #' Interactive application for the calculation and redistribution of the potentially 
 #' infected/infested quantity of commodities imported by a country from third countries 
-#' where the pest is present (\eqn{N_{trade}}) for countries included in the NUTS 
-#' coding system. See 
-#' [NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
+#' where the pest is present (\eqn{N_{trade}}) using the NUTS coding system. See 
+#' [Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
 #' 
 #' @seealso [ntrade()], [redist_nuts()], [redist_iso()]
 #' 

@@ -7,18 +7,18 @@ utils::globalVariables(c(
 #'
 #' Redistribution of country-level (NUTS0) data value to smaller territories 
 #' (i.e., NUTS1, NUTS2 or NUTS3). See 
-#' [NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
+#' [Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
 #' 
 #' @details 
 #' This function enables redistribution of values from national-level NUTS0 
 #' to smaller territorial units (i.e., NUTS1, NUTS2, or NUTS3), either proportionally 
-#' based on 
-#' [population data from Eurostat](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3) 
+#' based on human population data from 
+#' [Eurostat](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3) 
 #' or using user-supplied redistribution proportions. 
-#' Population data for redistribution is automatically fetched for the specified time 
+#' Human population data for redistribution is automatically fetched for the specified time 
 #' period from the Eurostat database.
 #' 
-#' Note that more than one column of values provided in the dataframe \code{data} 
+#' Note that more than one column of values provided in the data frame \code{data} 
 #' can be redistributed at the same time. The values in columns \code{values_col} 
 #' and \code{redist_values_col} must be numeric and positive.
 #' 
@@ -27,7 +27,7 @@ utils::globalVariables(c(
 #' this function can be applied to redistribute the quantity of potentially infested 
 #' commodities (\eqn{N_{trade}}, see [ntrade()]) or the number of potential 
 #' founder populations (\eqn{NPFP}, see [pathway_model()]). For this purpose, 
-#' population or consumption data from subdivisions are often used for redistribution.
+#' human population or consumption data from subdivisions are often used for redistribution.
 #'
 #' @param data A data frame containing the data at the country-level to 
 #' redistribute.
@@ -39,8 +39,8 @@ utils::globalVariables(c(
 #' Default 2, indicating redistribution to NUTS2.
 #' @param redist_data A data frame containing values for each subdivision that will be 
 #' used as the basis for proportional redistribution. By default, this is set to 
-#' \code{"population"}, indicating redistribution based on 
-#' [population data from Eurostat](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3).
+#' \code{"population"}, indicating redistribution based on human population data from 
+#' [Eurostat](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3).
 #' @param redist_nuts_col A string specifying the column name in \code{redist_data} 
 #' that contains the destination NUTS codes. The NUTS level should correspond to the 
 #' value specified in  \code{to_nuts}. \code{NULL} (default) if a data frame is not 
@@ -52,13 +52,14 @@ utils::globalVariables(c(
 #' @param population_year A numeric value specifying the year(s) of the human population 
 #' data to be used for redistribution. Only necessary if \code{"population"} is specified in 
 #' \code{redist_data} (default is 2023). If multiple years are provided, the average 
-#' population across those years will be used. Available years can be found at
-#' [population data from Eurostat](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3).
+#' human population across those years will be used. Available years can be found at
+#' [Eurostat](https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3).
 #' @param nuts_year Year of NUTS classification. Accepted values are '2003','2006','2010','2013',
-#' '2016' (default),'2021', or '2024'. See [NUTS - History](https://ec.europa.eu/eurostat/web/nuts/history).
+#' '2016' (default),'2021', or '2024'. See 
+#' [NUTS - History](https://ec.europa.eu/eurostat/web/nuts/history).
 #'
 #' @return A data frame with the redistributed values across the specified NUTS 
-#' level. The dataframe contains the columns \code{NUTSX} with the codes at the 
+#' level. The data frame contains the columns \code{NUTSX} with the codes at the 
 #' selected NUTS level, \code{NUTS0} with the codes at country level, \code{proportion} with the 
 #' proportion according to which the values have been redistributed, and the columns 
 #' corresponding to the redistributed values with the same name specified in \code{values_col}.
@@ -68,7 +69,7 @@ utils::globalVariables(c(
 #' @export
 #'
 #' @examples
-#' ## Example of data redistribution to NUTS2 using population data
+#' ## Example of data redistribution to NUTS2 using human population data
 #' data("datatrade_EU")
 #' # extract NUTS0 codes (country level)
 #' nuts0 <- unique(datatrade_EU$internal_production$reporter)
@@ -128,9 +129,9 @@ redist_nuts <- function(data, nuts_col, values_col,
     stop("Error: 'data' must be data.frame.")
   }
   
-  # Check if the specified columns exist in the dataframe
+  # Check if the specified columns exist in the data frame
   if (!all(c(nuts_col, values_col) %in% names(data))) {
-    stop(paste(strwrap("Error: The dataframe 'data' must contain the columns 
+    stop(paste(strwrap("Error: The data frame 'data' must contain the columns 
                        specified in 'nuts_col' and 'values_col'."), collapse=" "))
   }
   
@@ -185,7 +186,7 @@ redist_nuts <- function(data, nuts_col, values_col,
   
   if(is.data.frame(redist_data)){
     if (!all(c(redist_nuts_col, redist_values_col) %in% names(redist_data))) {
-      stop(paste(strwrap("The dataframe 'redist_data' must contain the columns specified 
+      stop(paste(strwrap("The data frame 'redist_data' must contain the columns specified 
                          in 'redist_nuts_col' and 'redist_values_col'"), 
                  collapse=" "))
     }
@@ -222,7 +223,7 @@ redist_nuts <- function(data, nuts_col, values_col,
       stop(paste(
         paste(
           strwrap("Error: The years specified in population_year are not available.
-            Available years for population data are: "), collapse=" "),
+            Available years for human population data are: "), collapse=" "),
         paste(unique(redist_df$TIME_PERIOD), collapse=", "), collapse=" ")
       )
     }

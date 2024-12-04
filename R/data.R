@@ -1,12 +1,13 @@
 #' Example Trade Data for the European Union
 #'
-#' `datatrade_EU` simulated trade data for a commodity within the European Union (EU).
-#' This dataset illustrates the trade and production flow of a commodity that is a potential 
-#' pathway for the entry of a pest into EU countries in yearly time periods. It also 
-#' includes simulated consumption data of the commodity at NUTS1 level. 
-#' This dataset serves as a reference on how the data should be structured and as 
+#' Simulated trade data for a commodity within the European Union (EU).
+#' This dataset illustrates the trade and production flow of a commodity that could 
+#' serve as a potential pathway for the entry of a pest into EU countries, in yearly 
+#' time periods. It also includes simulated consumption data for the commodity at NUTS1 level. 
+#' This dataset serves as a reference for how the data should be structured and as 
 #' a basis for the examples included in the [qPRAentry] package to deal with the NUTS 
-#' code system.
+#' code system 
+#' ([Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts)).
 #'
 #' @format A list of four data frames:
 #' \itemize{
@@ -59,14 +60,16 @@
 
 #' Example Trade Data for Northern America
 #'
-#' `datatrade_NorthAm` simulated trade data for a commodity within Northern America.
-#' This dataset illustrates the trade and production flow of a commodity that is a potential 
-#' pathway for the entry of a pest into Northern American countries in a year expressed 
-#' in three-month periods. It also includes simulated consumption data of the commodity 
-#' at at the level of principal sub-national divisions (ISO 3166-2 codes). 
-#' This dataset serves as a reference on how the data should be structured and as 
-#' a basis for the examples included in the [qPRAentry] package to deal with the ISO 
-#' 3166 code system.
+#' Simulated trade data for a commodity within Northern America.
+#' This dataset illustrates the trade and production flow of a commodity that could 
+#' serve as a potential pathway for the entry of a pest into Northern American 
+#' countries. The data is organised in three-month periods within a year. 
+#' It also includes simulated consumption data of the commodity at at the level of 
+#' principal sub-national divisions (ISO 3166-2 codes). 
+#' This dataset serves as a reference on how the data should be structured and provides   
+#' the basis for the examples included in the [qPRAentry] package to deal with the ISO 
+#' 3166 code system 
+#' ([ISO 3166 Maintenance Agency](https://www.iso.org/iso-3166-country-codes.html)).
 #'
 #' @format A list of four data frames:
 #' \itemize{

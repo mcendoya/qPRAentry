@@ -56,12 +56,13 @@ and 2 columns:
 datatrade_EU
 }
 \description{
-\code{datatrade_EU} simulated trade data for a commodity within the European Union (EU).
-This dataset illustrates the trade and production flow of a commodity that is a potential
-pathway for the entry of a pest into EU countries in yearly time periods. It also
-includes simulated consumption data of the commodity at NUTS1 level.
-This dataset serves as a reference on how the data should be structured and as
+Simulated trade data for a commodity within the European Union (EU).
+This dataset illustrates the trade and production flow of a commodity that could
+serve as a potential pathway for the entry of a pest into EU countries, in yearly
+time periods. It also includes simulated consumption data for the commodity at NUTS1 level.
+This dataset serves as a reference for how the data should be structured and as
 a basis for the examples included in the \link{qPRAentry} package to deal with the NUTS
-code system.
+code system
+(\href{https://ec.europa.eu/eurostat/web/nuts}{Nomenclature of territorial units for statistics}).
 }
 \keyword{datasets}

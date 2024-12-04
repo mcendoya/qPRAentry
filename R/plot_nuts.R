@@ -1,11 +1,11 @@
 #' Plot NUTS region values on a map
 #'
-#' This function plots NUTS region values on a map using data provided and allows customization
-#' of the aesthetics such as colors, legend title, and title.
+#' This function plots NUTS region values on a map using the provided data and allows 
+#' customisation of various aesthetics, such as colors, legend title, and title.
 #' 
-#' This function extracts a [sf] object from the package [giscoR].
-#' It uses the [ggplot2] package for the representation. Supports adding 
-#' other [ggplot2] options (see examples).
+#' This function extracts an [sf] object from the [giscoR] package.
+#' It uses the [ggplot2] package for the representation. Also, it supports the addition  
+#' of other [ggplot2] options (see examples).
 #'
 #' @param data A data frame containing the values to be plotted on the map.
 #' @param nuts_col A string specifying the column name in \code{data} containing 
@@ -14,9 +14,9 @@
 #' values to be plotted.
 #' @param nuts_level A numeric value (0, 1, 2, or 3) specifying the NUTS level to plot. 
 #' Default is 2 indicating NUTS2. See 
-#' [NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
-#' @param nuts_year Year of NUTS classification. One of '2003','2006','2010','2013',
-#' '2016' (default),'2021', or '2024'. See 
+#' [Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
+#' @param nuts_year Year of NUTS classification. Accepted values are '2003','2006',
+#' '2010','2013','2016' (default),'2021', or '2024'. See 
 #' [NUTS - History](https://ec.europa.eu/eurostat/web/nuts/history).
 #' @param colors Optional vector of colors used in the gradient scale.
 #' @param na_value Color for missing values (default is "grey").
@@ -81,9 +81,9 @@ plot_nuts <- function(data, nuts_col, values_col,
   if (!is.data.frame(data)) {
     stop("Error: 'data' must be data.frame.")
   }
-  # Check if the specified columns exist in the dataframe
+  # Check if the specified columns exist in the data frame
   if (!all(c(nuts_col, values_col) %in% names(data))) {
-    stop(paste(strwrap("The dataframe 'data' must contain the columns specified 
+    stop(paste(strwrap("The data frame 'data' must contain the columns specified 
                        in 'nuts_col' and 'values_col'"), collapse=" "))
   }
   

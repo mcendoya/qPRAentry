@@ -53,7 +53,7 @@ test_that("data errors", {
                           redist_data = df_redist,
                           redist_iso_col = "iso_3166_2",
                           redist_values_col = "value"),
-               paste(strwrap("The dataframe 'data' must contain the columns specified 
+               paste(strwrap("The data frame 'data' must contain the columns specified 
                              in 'iso_col' and 'values_col'."), collapse=" "))
   
   test_data <- test_data %>% 
@@ -96,7 +96,7 @@ test_that("redist_data errors", {
                           redist_data = df_redist,
                           redist_iso_col = "iso",
                           redist_values_col = "value"),
-               paste(strwrap("The dataframe 'redist_data' must contain the columns 
+               paste(strwrap("The data frame 'redist_data' must contain the columns 
                              specified in 'redist_iso_col' and 'redist_values_col'."), 
                      collapse=" "))
   

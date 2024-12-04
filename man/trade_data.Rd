@@ -2,7 +2,7 @@
 % Please edit documentation in R/trade_data.R
 \name{trade_data}
 \alias{trade_data}
-\title{Prepare Trade Databases}
+\title{Prepare Trade Data}
 \usage{
 trade_data(
   extra_total,
@@ -31,10 +31,10 @@ countries of interest. It must contain the following columns:
 \code{reporter} (importing country), \code{partner} (exporting country),
 \code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).}
 
-\item{internal_production}{A data frame containing the quantity of the commodity
+\item{internal_production}{A data frame containing the quantity of commodity
 produced internally within each country of interest. It must contain the following columns:
 \code{reporter} (producing country), \code{value} (quantity of commodity) and
-\code{time_period} (time period of production).}
+\code{time_period} (time period of the production).}
 
 \item{filter_IDs}{A vector containing the country IDs to filter (identification codes
 of the countries of interest). By default, it is set to \code{NULL}, meaning all
@@ -45,7 +45,7 @@ the \code{time_period} column. By default, it is set to \code{NULL}, meaning
 all time periods in the data frames will be considered.}
 }
 \value{
-An object of class \code{TradeData} is returned containing the following list of dataframes:
+An object of class \code{TradeData} is returned containing the following list of data frames:
 
 \itemize{
 \item \code{total_trade} \verb{ } A data frame with one row for each ID and each time period with 9 variables:
@@ -107,22 +107,14 @@ The function combines external imports from third countries, internal trade betw
 the countries of interest and internal production data. It calculates the total amount
 of product available per country in each time period as the sum of external imports
 (from pest-free and pest-present countries) and internal production.
-\subsection{Data columns:}{
-
-Note that the data to be incorporated must contain the columns \code{reporter},
-\code{partner} (except for \code{internal_production}), \code{value}, and \code{time_period}.
-The trade flow is considered from partner to reporter, i.e., reporter as importer
-and partner as exporter.
-}
-
 \subsection{IDs - country identification codes:}{
 
-For the IDs of countries of interest (i.e., in the the columns
-\code{reporter} of the four trade dataframes and in the column \code{partner}
+For the IDs of the countries of interest (i.e., in the the columns
+\code{reporter} of the four trade data frames and in the column \code{partner}
 of \code{intra_trade}) it is recommended to use the the ISO 3166-1 (alpha-2) codes
 (\href{https://www.iso.org/iso-3166-country-codes.html}{ISO 3166 Maintenance Agency})
 or NUTS0 codes in case of European countries
-(\href{https://ec.europa.eu/eurostat/web/nuts}{NUTS - Nomenclature of territorial units for statistics})
+(\href{https://ec.europa.eu/eurostat/web/nuts}{Nomenclature of territorial units for statistics})
 for subsequent compatibility with other functions of the \link{qPRAentry} package.
 }
 

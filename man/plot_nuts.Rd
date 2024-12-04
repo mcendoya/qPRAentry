@@ -27,10 +27,10 @@ values to be plotted.}
 
 \item{nuts_level}{A numeric value (0, 1, 2, or 3) specifying the NUTS level to plot.
 Default is 2 indicating NUTS2. See
-\href{https://ec.europa.eu/eurostat/web/nuts}{NUTS - Nomenclature of territorial units for statistics}.}
+\href{https://ec.europa.eu/eurostat/web/nuts}{Nomenclature of territorial units for statistics}.}
 
-\item{nuts_year}{Year of NUTS classification. One of '2003','2006','2010','2013',
-'2016' (default),'2021', or '2024'. See
+\item{nuts_year}{Year of NUTS classification. Accepted values are '2003','2006',
+'2010','2013','2016' (default),'2021', or '2024'. See
 \href{https://ec.europa.eu/eurostat/web/nuts/history}{NUTS - History}.}
 
 \item{colors}{Optional vector of colors used in the gradient scale.}
@@ -46,13 +46,13 @@ Default is 2 indicating NUTS2. See
 A ggplot object with the plotted NUTS regions.
 }
 \description{
-This function plots NUTS region values on a map using data provided and allows customization
-of the aesthetics such as colors, legend title, and title.
+This function plots NUTS region values on a map using the provided data and allows
+customisation of various aesthetics, such as colors, legend title, and title.
 }
 \details{
-This function extracts a \link{sf} object from the package \link{giscoR}.
-It uses the \link{ggplot2} package for the representation. Supports adding
-other \link{ggplot2} options (see examples).
+This function extracts an \link{sf} object from the \link{giscoR} package.
+It uses the \link{ggplot2} package for the representation. Also, it supports the addition
+of other \link{ggplot2} options (see examples).
 }
 \examples{
 ## Example plot at NUTS0 level (country level)

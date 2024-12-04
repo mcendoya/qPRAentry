@@ -48,7 +48,7 @@ potential pathway for the pest under assessment. The data required include:
 
 This example uses the simulated trade data for Northern American countries, which 
 contains a list of data frames with the required data. These data use country identifiers 
-by ISO 3166-1 (alpha-2) codes. Trade data are arranged in four-months time periods.
+by ISO 3166-1 (alpha-2) codes. Trade data are arranged in three-months time periods.
 
 The `load_csv()` function included in the `qPRAentry` package can be used to import 
 the data from CSV files.

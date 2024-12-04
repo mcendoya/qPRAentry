@@ -1,11 +1,11 @@
 #' Plot values on a map at country level
 #'
-#' This function plots country values on a map using data provided and allows customization
-#' of the aesthetics such as colors, legend title, and title. 
+#' This function plots country values on a map using data provided and allows 
+#' customisation of various aesthetics, such as colors, legend title, and title. 
 #' 
-#' This function extracts a [sf] object from the package [giscoR].
-#' It uses the [ggplot2] package for the representation. Supports adding 
-#' other [ggplot2] options (see examples).
+#' This function extracts an [sf] object from the [giscoR] package.
+#' It uses the [ggplot2] package for the representation. Also, it supports the addition  
+#' of other [ggplot2] options (see examples).
 #'
 #' @param data A data frame containing the values to be plotted on the map.
 #' @param iso_col A string specifying the column name in \code{data} 
@@ -64,9 +64,9 @@ plot_countries <- function(data, iso_col, values_col,
   if (!is.data.frame(data)) {
     stop("Error: 'data' must be data.frame.")
   }
-  # Check if the specified columns exist in the dataframe
+  # Check if the specified columns exist in the data frame
   if (!all(c(iso_col, values_col) %in% names(data))) {
-    stop(paste(strwrap("The dataframe 'data' must contain the columns specified 
+    stop(paste(strwrap("The data frame 'data' must contain the columns specified 
                        in 'iso_col' and 'values_col'"), collapse=" "))
   }
 

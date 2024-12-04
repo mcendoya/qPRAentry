@@ -46,31 +46,31 @@ test_that("trade_data messages", {
                     is considered proportional to the total available."), 
           collapse=" "), 
     fixed=TRUE)
-  
+
   expect_message(
-    expect_message( #AL not available in 2020
-      trade_data(extra_total = test_data$extra_import %>% 
+    expect_message( #AT not available in 2020
+      trade_data(extra_total = test_data$extra_import %>%
                    filter(partner=="Extra_Total",
-                          !(reporter=="AL" & time_period==2020)),
-                 extra_pest = test_data$extra_import %>% 
+                          !(reporter=="AT" & time_period==2020)),
+                 extra_pest = test_data$extra_import %>%
                    filter(partner!="Extra_Total",
-                          !(reporter=="AL" & time_period==2020)),
-                 intra_trade = test_data$intra_trade %>% 
-                   filter(!(reporter=="AL" & time_period==2020)), 
-                 internal_production = test_data$internal_production %>% 
-                   filter(!(reporter=="AL" & time_period==2020))),
-      paste("Warning: No available data for:", 
-            paste("AL in time periods 2020", collapse = "; "),
-            ". Therefore,", paste("AL", collapse = ", "), 
-            paste(strwrap("will be excluded from the analysis.\nPlease select other 
+                          !(reporter=="AT" & time_period==2020)),
+                 intra_trade = test_data$intra_trade %>%
+                   filter(!(reporter=="AT" & time_period==2020)),
+                 internal_production = test_data$internal_production %>%
+                   filter(!(reporter=="AT" & time_period==2020))),
+      paste("Warning: No available data for:",
+            paste("AT in time periods 2020", collapse = "; "),
+            ". Therefore,", paste("AT", collapse = ", "),
+            paste(strwrap("will be excluded from the analysis.\nPlease select other
                           time periods if you want to include"), collapse=" "),
-            paste("AL", collapse = ", "), "in the analysis."),
+            paste("AT", collapse = ", "), "in the analysis."),
       fixed=TRUE
     ),
-    paste(strwrap("Note: For countries where intra-export is greater than total 
-                    available (extra-import + internal production), intra-export 
-                    is considered proportional to the total available."), 
-          collapse=" "), 
+    paste(strwrap("Note: For countries where intra-export is greater than total
+                    available (extra-import + internal production), intra-export
+                    is considered proportional to the total available."),
+          collapse=" "),
     fixed=TRUE)
 })
 
@@ -121,23 +121,23 @@ test_that("trade_data errors", {
   )
 })
 
-test_that("Error when entries are not dataframe", {
+test_that("Error when entries are not data frame", {
   skip_on_cran()
-  # 1. none is dataframe
+  # 1. none is data frame
   expect_error(
     trade_data(extra_total = list(), extra_pest = list(), 
                intra_trade = list(), internal_production = list()),
     "Error: extra_total, extra_pest, intra_trade, internal_production must be data.frame."
   )
   
-  # 2. only one is not dataframe
+  # 2. only one is not data frame
   expect_error(
     trade_data(extra_total = data.frame(), extra_pest = list(), 
                intra_trade = data.frame(), internal_production = data.frame()),
     "Error: extra_pest must be data.frame."
   )
   
-  # 3. several are dataframes
+  # 3. several are data frames
   expect_error(
     trade_data(extra_total = list(), extra_pest = data.frame(), 
                intra_trade = list(), internal_production = data.frame()),
@@ -193,7 +193,7 @@ test_that("filter IDs and period", {
   skip_on_cran()
   test_data <- datatrade_EU
   
-  filter_IDs <- c("AL","AT","BE")
+  filter_IDs <- c("AT","BE")
   res <- suppressMessages(
     trade_data(extra_total = test_data$extra_import %>% 
                  filter(partner=="Extra_Total"),

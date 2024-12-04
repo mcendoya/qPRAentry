@@ -23,8 +23,8 @@ with the ISO 3166-1 (alpha-2) country codes.}
 \item{values_col}{A string or vector specifying the column name(s) in
 \code{data} with the values to be redistributed.}
 
-\item{redist_data}{A data frame with values for each subdivision on which the
-redistribution is to be performed.}
+\item{redist_data}{A data frame with values for each subdivision that will be
+used as the basis for redistribution.}
 
 \item{redist_iso_col}{A string specifying the column name in \code{redist_data}
 that contains the destination ISO 3166-2 codes.}
@@ -35,14 +35,14 @@ used for the redistribution.}
 }
 \value{
 A data frame with the redistributed values across the specified subnational
-level. The dataframe contains the columns \code{ISO_1} with the codes at country
+level. The data frame contains the columns \code{ISO_1} with the codes at country
 level, \code{ISO_2} with the codes at subdivision level, \code{proportion} with the
 proportion according to which the values have been redistributed, and the columns
 corresponding to the redistributed values with the same name specified in \code{values_col}.
 }
 \description{
-Value redistribution from country-level (ISO 3166-1 alpha-2 codes) to principal
-subdivisions (ISO 3166-2 codes). See
+Value redistribution from country-level (i.e., ISO 3166-1 alpha-2 codes) to principal
+subdivisions (i.e., ISO 3166-2 codes). See
 \href{https://www.iso.org/iso-3166-country-codes.html}{ISO 3166 Maintenance Agency}.
 }
 \details{
@@ -50,7 +50,7 @@ This function enables redistribution of values from country-level
 to principal subdivisions (e.g., provinces or states), proportionally
 to user-supplied redistribution proportions.
 
-Note that more than one column of values provided in the dataframe data can be
+Note that more than one column of values provided in the data frame data can be
 redistributed at the same time. The values in columns \code{values_col} and
 \code{redist_values_col} must be numeric and positive.
 \subsection{Common uses}{
@@ -59,7 +59,7 @@ In the context of quantitative pest risk assessment (qPRA) at the entry step,
 this function can be applied to redistribute the quantity of potentially infested
 commodities (\eqn{N_{trade}}, see \code{\link[=ntrade]{ntrade()}}) or the number of potential
 founder populations (\eqn{NPFP}, see \code{\link[=pathway_model]{pathway_model()}}). For this purpose,
-population or consumption data from subdivisions are often used for redistribution.
+human population or consumption data from subdivisions are often used for redistribution.
 }
 }
 \examples{

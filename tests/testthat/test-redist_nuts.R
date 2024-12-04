@@ -35,7 +35,7 @@ test_that("data errors", {
   expect_error(redist_nuts(data=test_data,
                            nuts_col = "nuts_col",
                            values_col = "value"),
-               paste(strwrap("Error: The dataframe 'data' must contain the columns 
+               paste(strwrap("Error: The data frame 'data' must contain the columns 
                        specified in 'nuts_col' and 'values_col'."), collapse=" "))
   test_data <- test_data %>% mutate(neg_val = -value)
   expect_error(redist_nuts(data=test_data,
@@ -58,14 +58,13 @@ test_that("errors years", {
   test_data <- datatrade_EU$internal_production %>% 
     filter(time_period==2020) %>% 
     mutate(reporter = case_when(reporter == "EL" ~ "GR",
-                                reporter == "UK" ~ "GB",
                                 .default = reporter))
   res <- suppressMessages(
     redist_nuts(data=test_data,
                 nuts_col="reporter",
                 values_col="value",
                 population_year = 2016))
-  expect_true(all(c("EL", "UK") %in% res$NUTS0))
+  expect_true("EL" %in% res$NUTS0)
 })
 
 # errors years or population
@@ -88,8 +87,8 @@ test_that("errors years", {
                            to_nuts = 2,
                            population_year = c(2010, 2014)),
                paste(strwrap("Error: The years specified in population_year 
-                             are not available. Available years for population data 
-                             are: "), collapse=" "))
+                             are not available. Available years for human population 
+                             data are: "), collapse=" "))
   expect_error(redist_nuts(data=test_data,
                            nuts_col="reporter",
                            values_col="value",
@@ -128,7 +127,7 @@ test_that("redist_data errors", {
                            redist_data = df_redist,
                            redist_nuts_col = "otro", #
                            redist_values_col = "value"),
-               paste(strwrap("The dataframe 'redist_data' must contain the columns 
+               paste(strwrap("The data frame 'redist_data' must contain the columns 
                              specified in 'redist_nuts_col' and 'redist_values_col'"), 
                      collapse=" "))
   expect_error(redist_nuts(data=test_data,

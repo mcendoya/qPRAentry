@@ -15,8 +15,8 @@ pathway_model(
 }
 \arguments{
 \item{ntrade_data}{A data frame with the quantity of potentially infested commodities
-imported from third countries where the pest is present. It can be calculated
-using \code{\link[=ntrade]{ntrade()}} function.}
+imported from third countries where the pest is present (\eqn{N_{trade}}).
+It can be calculated using the \code{\link[=ntrade]{ntrade()}} function.}
 
 \item{IDs_col}{A string specifying the column name in \code{ntrade_data} with the
 country or region IDs of interest. See details on
@@ -28,7 +28,7 @@ to be used in the pathway model.}
 
 \item{expression}{A string of characters representing the equation for the pathway model.
 This expression must not include \eqn{N_{trade}}, since it is added multiplicatively to the
-entered equation by default. This equation is then added multiplicatively to:
+entered equation by default. The resulting equation will be of the form:
 \deqn{NPFP = N_{trade_i} \cdot \; ``expression"}}
 
 \item{parameters}{A named list specifying the distributions for each parameter
@@ -38,23 +38,22 @@ used in \code{expression}. Each element of the list must be another list contain
 \item Additional arguments required by the specified distribution (e.g., \code{mean},
 \code{sd} for "norm").
 }
-See the \strong{Parameter distributions} section for a list of available distributions
+See details on \strong{Parameter distributions} for a list of available distributions
 and examples on how to specify them.}
 
 \item{niter}{The number of iterations to generate random samples from the distributions.
-Default 100 iterations.}
+The default is 100 iterations.}
 }
 \value{
-A dataframe with the statistics (mean, SD, minimum, first quartile,
-median, third quartile, and maximum) resulting from the iterations of number of
-founder populations \eqn{NPFP} for each country/region and for the total (i.e.,
-the results for the set of all countries/regions).
+A data frame with the statistics (mean, SD, minimum, first quartile,
+median, third quartile, and maximum) resulting from the iterations of the \eqn{NPFP}
+for each country/region and for the total (i.e., the results for the set of all
+countries/regions).
 }
 \description{
-Estimate the amount of infested commodities that can enter into the
-countries of interest imported from third countries where the pest is present,
-and produce the number of potential founder populations (\eqn{NPFP}) that can establish
-and spread.
+Estimates the number of potential founder populations (\eqn{NPFP}) of a pest
+in different regions, using \eqn{N_{trade}} data combined with additional user-defined
+parameters.
 }
 \details{
 \subsection{IDs - country or region identification codes:}{
@@ -62,7 +61,7 @@ and spread.
 The use of ISO 3166 (alpha-2) codes
 (\href{https://www.iso.org/iso-3166-country-codes.html}{ISO 3166 Maintenance Agency}),
 or NUTS codes in the case of European countries
-\href{https://ec.europa.eu/eurostat/web/nuts}{NUTS - Nomenclature of territorial units for statistics},
+\href{https://ec.europa.eu/eurostat/web/nuts}{Nomenclature of territorial units for statistics},
 as country or region identifiers (\code{IDs_col}) is recommended
 for subsequent compatibility with other functions of the  \link{qPRAentry} package.
 }

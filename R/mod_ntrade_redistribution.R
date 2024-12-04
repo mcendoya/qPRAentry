@@ -15,15 +15,15 @@ mod_ntrade_redistribution_ui <- function(id){
                    style='background: #ffff;',
                    radioButtons(ns("output_NUTS2"), 
                                 "Data for proportional redistribution to NUTS2",
-                                choices=c("Population", "Custom Data"),
+                                choices=c("Human population", "Custom Data"),
                                 selected=character(0),
                                 inline=T),
-                   conditionalPanel(condition="input.output_NUTS2 == 'Population'",
+                   conditionalPanel(condition="input.output_NUTS2 == 'Human population'",
                                     ns = ns,
                                     shinyWidgets::pickerInput(
                                       ns("population_year"),
-                                      "Population data year(s)",
-                                      choices = c("Downloading population data..."),
+                                      "Human population data year(s)",
+                                      choices = c("Downloading human population data..."),
                                       multiple = TRUE,
                                       selected = character(0),
                                       width ="fit"),
@@ -104,7 +104,7 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
       } else {
         if(is.null(input$output_NUTS2)){
           text_DataRedistribution
-        }else if(input$output_NUTS2 == "Population"){
+        }else if(input$output_NUTS2 == "Human population"){
           text_PopulationYear
         }else if(input$output_NUTS2 == "Custom Data"){
           text_MyData
@@ -119,7 +119,7 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
     all_done <- reactiveVal(FALSE)
     observe({
       if(!is.null(input$output_NUTS2)){
-        if(input$output_NUTS2 == "Population" &&
+        if(input$output_NUTS2 == "Human population" &&
            !is.null(input$population_year)){
           all_done(TRUE)
         }else if(input$output_NUTS2 == "Custom Data" && 
@@ -152,9 +152,9 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
     }, ignoreInit = TRUE)
 
     observeEvent(input$output_NUTS2,{
-      if(input$output_NUTS2=="Population"){
+      if(input$output_NUTS2=="Human population"){
 
-        withProgress(message = 'Downloading population data...', value = 0, {
+        withProgress(message = 'Downloading human population data...', value = 0, {
           for (i in 1:5) {
             Sys.sleep(0.5) 
             incProgress(1/5)
@@ -184,7 +184,7 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
     Nt_redist <- eventReactive(input$redistribution_done,{
       output$message <- renderText({NULL})
       Nt <- Nt()
-      if(input$output_NUTS2=="Population"){
+      if(input$output_NUTS2=="Human population"){
         redist_data  <-  "population"
         redist_nuts_col <- NULL
         redist_values_col <- NULL

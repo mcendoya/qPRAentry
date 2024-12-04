@@ -29,10 +29,10 @@ with the values to be redistributed.}
 \item{to_nuts}{A numeric value (1, 2, or 3) specifying the NUTS level for redistribution.
 Default 2, indicating redistribution to NUTS2.}
 
-\item{redist_data}{A data frame with values for each subdivision on which the
-redistribution is to be performed. Default \code{"population"}, indicating redistribution
-based on
-\href{https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3}{population data from Eurostat}.}
+\item{redist_data}{A data frame containing values for each subdivision that will be
+used as the basis for proportional redistribution. By default, this is set to
+\code{"population"}, indicating redistribution based on human population data from
+\href{https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3}{Eurostat}.}
 
 \item{redist_nuts_col}{A string specifying the column name in \code{redist_data}
 that contains the destination NUTS codes. The NUTS level should correspond to the
@@ -40,42 +40,42 @@ value specified in  \code{to_nuts}. \code{NULL} (default) if a data frame is not
 incorporated in \code{redist_data} (i.e., \code{redist_data = "population"}).}
 
 \item{redist_values_col}{A string specifying the column name in \code{redist_data}
-with the values for proportional redistribution. This will define the weights
-used the redistribution. \code{NULL} (default) if a data frame is not incorporated
-in \code{redist_data} (i.e., \code{redist_data = "population"}).}
+with the values for proportional redistribution. These values will serve as the
+weights for the redistribution process. \code{NULL} (default) if a data frame
+is not incorporated in \code{redist_data} (i.e., \code{redist_data = "population"}).}
 
-\item{population_year}{A numeric value specifying the year of population data
-to use in the redistribution. Only necessary if \code{"population"} is specified in
+\item{population_year}{A numeric value specifying the year(s) of the human population
+data to be used for redistribution. Only necessary if \code{"population"} is specified in
 \code{redist_data} (default is 2023). If multiple years are provided, the average
-population across those years will be used. Available years can be found at
-\href{https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3}{population data from Eurostat}.}
+human population across those years will be used. Available years can be found at
+\href{https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3}{Eurostat}.}
 
-\item{nuts_year}{Year of NUTS classification. One of '2003','2006','2010','2013',
+\item{nuts_year}{Year of NUTS classification. Accepted values are '2003','2006','2010','2013',
 '2016' (default),'2021', or '2024'. See
 \href{https://ec.europa.eu/eurostat/web/nuts/history}{NUTS - History}.}
 }
 \value{
 A data frame with the redistributed values across the specified NUTS
-level. The dataframe contains the columns \code{NUTSX} with the codes at the
+level. The data frame contains the columns \code{NUTSX} with the codes at the
 selected NUTS level, \code{NUTS0} with the codes at country level, \code{proportion} with the
 proportion according to which the values have been redistributed, and the columns
 corresponding to the redistributed values with the same name specified in \code{values_col}.
 }
 \description{
-Redistribution of country-level (NUTS0) data value to smaller territores
-(NUTS1, NUTS2 or NUTS3). See
-\href{https://ec.europa.eu/eurostat/web/nuts}{NUTS - Nomenclature of territorial units for statistics}.
+Redistribution of country-level (NUTS0) data value to smaller territories
+(i.e., NUTS1, NUTS2 or NUTS3). See
+\href{https://ec.europa.eu/eurostat/web/nuts}{Nomenclature of territorial units for statistics}.
 }
 \details{
 This function enables redistribution of values from national-level NUTS0
-to smaller territorial units (NUTS1, NUTS2, or NUTS3), either proportionally
-based on
-\href{https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3}{population data from Eurostat}
+to smaller territorial units (i.e., NUTS1, NUTS2, or NUTS3), either proportionally
+based on human population data from
+\href{https://ec.europa.eu/eurostat/databrowser/product/page/demo_r_pjangrp3}{Eurostat}
 or using user-supplied redistribution proportions.
-Population data for redistribution is automatically fetched for the specified time
+Human population data for redistribution is automatically fetched for the specified time
 period from the Eurostat database.
 
-Note that more than one column of values provided in the dataframe \code{data}
+Note that more than one column of values provided in the data frame \code{data}
 can be redistributed at the same time. The values in columns \code{values_col}
 and \code{redist_values_col} must be numeric and positive.
 \subsection{Common uses}{
@@ -84,11 +84,11 @@ In the context of quantitative pest risk assessment (qPRA) at the entry step,
 this function can be applied to redistribute the quantity of potentially infested
 commodities (\eqn{N_{trade}}, see \code{\link[=ntrade]{ntrade()}}) or the number of potential
 founder populations (\eqn{NPFP}, see \code{\link[=pathway_model]{pathway_model()}}). For this purpose,
-population or consumption data from subdivisions are often used for redistribution.
+human population or consumption data from subdivisions are often used for redistribution.
 }
 }
 \examples{
-## Example of data redistribution to NUTS2 using population data
+## Example of data redistribution to NUTS2 using human population data
 data("datatrade_EU")
 # extract NUTS0 codes (country level)
 nuts0 <- unique(datatrade_EU$internal_production$reporter)

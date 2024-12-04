@@ -1,4 +1,4 @@
-#' Prepare Trade Databases
+#' Prepare Trade Data
 #'
 #' Prepares trade data for each country of interest based on the provided data.
 #' This function generates objects of class \code{TradeData} required to be used 
@@ -18,10 +18,10 @@
 #' countries of interest. It must contain the following columns: 
 #' \code{reporter} (importing country), \code{partner} (exporting country), 
 #' \code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).
-#' @param internal_production A data frame containing the quantity of the commodity 
+#' @param internal_production A data frame containing the quantity of commodity 
 #' produced internally within each country of interest. It must contain the following columns: 
 #' \code{reporter} (producing country), \code{value} (quantity of commodity) and 
-#' \code{time_period} (time period of production).
+#' \code{time_period} (time period of the production).
 #' @param filter_IDs A vector containing the country IDs to filter (identification codes 
 #' of the countries of interest). By default, it is set to \code{NULL}, meaning all 
 #' \code{reporter} countries in the data frames will be considered.
@@ -36,19 +36,13 @@
 #' of product available per country in each time period as the sum of external imports 
 #' (from pest-free and pest-present countries) and internal production. 
 #' 
-#' ### Data columns:
-#' Note that the data to be incorporated must contain the columns \code{reporter}, 
-#' \code{partner} (except for \code{internal_production}), \code{value}, and \code{time_period}.
-#' The trade flow is considered from partner to reporter, i.e., reporter as importer 
-#' and partner as exporter. 
-#' 
 #' ### IDs - country identification codes:
-#' For the IDs of countries of interest (i.e., in the the columns 
-#' \code{reporter} of the four trade dataframes and in the column \code{partner} 
+#' For the IDs of the countries of interest (i.e., in the the columns 
+#' \code{reporter} of the four trade data frames and in the column \code{partner} 
 #' of \code{intra_trade}) it is recommended to use the the ISO 3166-1 (alpha-2) codes 
 #' ([ISO 3166 Maintenance Agency](https://www.iso.org/iso-3166-country-codes.html)) 
 #' or NUTS0 codes in case of European countries 
-#' ([NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts)) 
+#' ([Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts)) 
 #' for subsequent compatibility with other functions of the [qPRAentry] package.
 #' 
 #' ### Time periods:
@@ -62,7 +56,7 @@
 #' Missing values are treated as zeros.
 #'
 #'
-#' @return An object of class \code{TradeData} is returned containing the following list of dataframes:
+#' @return An object of class \code{TradeData} is returned containing the following list of data frames:
 #'
 #'\itemize{
 #' \item \code{total_trade} \verb{ } A data frame with one row for each ID and each time period with 9 variables:
