@@ -20,12 +20,19 @@ library(qPRAentry)
 
 # Introduction
 
-`qPRAentry` is a package for...
+`qPRAentry` is a package designed for the quantitative pest risk assessment (PRA) 
+entry step, which is the initial phase of a PRA that evaluates the movement of a pest 
+into an area.
 
-Two application examples of the functions available in the `qPRAentry` package are 
-shown below. The example [A](#example-ISO) uses the functions applicable to any country in the world using ISO codes. The example [B](#example-NUTS) uses the functions designed for use with the NUTS code system.
+Two examples of the process flow in the PRA entry step, and the application of the 
+functions available in the `qPRAentry` package, are shown below. 
+The example [A](#example-ISO) uses the functions applicable to any country in the 
+world using ISO codes ([ISO 3166 Maintenance Agency](https://www.iso.org/iso-3166-country-codes.html)). 
+The example [B](#example-NUTS) uses the functions designed for use with the NUTS code system 
+([NUTS - Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts)).
 
-In both cases, trade data are required for the commodity that is considered to be a potential pathway for the pest under assessment. The data required include:
+In both cases, trade data are required for the commodity that is considered to be a 
+potential pathway for the pest under assessment. The data required include:
 
   - Import of the commodity from third countries to the countries of interest in 
   the study, both the total quantity and the quantity imported from third countries 
@@ -37,24 +44,37 @@ In both cases, trade data are required for the commodity that is considered to b
 
 ## 1. Trade data preparation
 
-### Trade data required
+### Structure of trade data
 
-CSV data files can be loaded via `load_csv()`
+This example uses the simulated trade data for Northern American countries, which 
+contains a list of data frames with the required data. These data use country identifiers 
+by ISO 3166-1 (alpha-2) codes. Trade data are arranged in four-months time periods.
+
+The `load_csv()` function included in the `qPRAentry` package can be used to import 
+the data from CSV files.
 
 ```{r}
 data("datatrade_NorthAm")
 ```
 
-Total quantity of commodity imported from third countries. Using the example data, 
-we select imports from all third countries (column partner):
+Total quantity of commodity imported from third countries. 
+This data frame must contain the columns: **reporter** (importing countries, 
+in this case by ISO codes), **partner** (exporting countries), **value** (quantity 
+of commodity), and **time_period** (time period of the trade activity).
+
+Using the example data, we select imports from all third countries (column partner):
 
 ```{r}
 extra_total <- datatrade_NorthAm$extra_import
 head(extra_total)
 ```
 
-Quantity of commodity imported from third countries where the pest is present. In 
-this case we assume that the pest is present in countries ``NTR_1" and ``CNTR_2":
+Quantity of commodity imported from third countries where the pest is present. 
+This data frame must contain the columns: **reporter** (importing countries, in this 
+case by ISO codes),  **partner** (exporting countries where the pest is present), 
+**value** (quantity of commodity), and **time_period** (time period of the trade activity).
+
+Here, we assume that the pest is present in countries "CNTR_1" and "CNTR_2":
 
 ```{r message=FALSE, warning=FALSE}
 library(dplyr)
@@ -63,27 +83,40 @@ extra_pest <- datatrade_NorthAm$extra_import %>% filter(partner%in%CNTR_pest)
 head(extra_pest)
 ```
 
-Quantity of commodity traded between countries of interest:
+Quantity of commodity traded between countries of interest. This data frame must contain 
+the columns: **reporter** (importing countries, in this case by ISO codes), **partner** 
+(exporting countries, in this case by ISO codes), **value** (quantity of commodity), 
+and **time_period** (time period of the trade activity):
 
 ```{r}
 intra_trade  <- datatrade_NorthAm$intra_trade
 head(intra_trade)
 ```
 
-Quantity of commodity produced internally in each country of interest:
+Quantity of commodity produced internally in each country of interest. This data frame 
+must contain the columns: **reporter** (producing countries, in this case by ISO codes), 
+**value** (quantity of commodity), and **time_period** (time period of production):
 
 ```{r}
 internal_production  <- datatrade_NorthAm$internal_production
 head(internal_production)
 ```
 
-### Generation of the `TradeData` object from data frames
+### Generation of the `TradeData` object from the above data frames
+
+Using the arguments `filter_IDs` and `filter_period` we can select the countries and 
+time periods of interest, respectively. If nothing is specified in these arguments, 
+by default all countries and time periods included in the data will be selected. 
+For this example, the United States (US) and Canada (CA) are selected, and for the 
+time periods January-March and April-June.
 
 ```{r}
 trade_NorthAm <- trade_data(extra_total = extra_total,
                             extra_pest = extra_pest,
                             intra_trade = intra_trade,
-                            internal_production = internal_production)
+                            internal_production = internal_production,
+                            filter_IDs = c("US", "CA"),
+                            filter_period = c("January-March", "April-June"))
 ```
 
 Total trade:
@@ -231,28 +264,80 @@ plot_countries(data = ntrade_NorthAm_summary,
 
 ## 1. Trade data preparation
 
+### Structure of trade data
+
+This example uses the simulated trade data for EU countries, which contains a list 
+of data frames with the required data. These data use country identifiers 
+by NUTS codes. Trade data are arranged in annual periods for 2020 and 2021.
+
+The `load_csv()` function included in the `qPRAentry` package can be used to import 
+the data from CSV files.
+
 ```{r}
-## Example with simulated trade data for Europe 
-# with selected countries and a specific time period
-# Load data
 data("datatrade_EU")
-# Total extra-import data: the total import is identified as partner "Extra_Total"
+```
+
+Total quantity of commodity imported from third countries, i.e., non-EU countries. 
+This data frame must contain the columns: **reporter** (importing countries, 
+in this case by NUTS0 codes), **partner** (exporting countries), **value** (quantity 
+of commodity), and **time_period** (time period of the trade activity).
+
+Using the example data, we select coded as "Extra_Total" in the column partner:
+
+```{r}
 extra_total <- datatrade_EU$extra_import %>% filter(partner=="Extra_Total")
-# Extra-import data from countries where the pest is present
+head(extra_total)
+```
+
+Quantity of commodity imported from third countries where the pest is present. 
+This data frame must contain the columns: **reporter** (importing countries, in this 
+case by NUTS0 codes),  **partner** (exporting countries where the pest is present), 
+**value** (quantity of commodity), and **time_period** (time period of the trade activity).
+
+Here, we assume that the pest is present in countries "CNTR_1", "CNTR_2", and 
+"CNTR_3", i.e., those that are not coded as "Extra_Total" in the column partner:
+
+```{r}
 extra_pest <- datatrade_EU$extra_import %>% filter(partner!="Extra_Total")
-# Intra-trade data
+head(extra_pest)
+```
+
+Quantity of commodity traded between EU countries. This data frame must contain 
+the columns: **reporter** (importing countries, in this case by NUTS0 codes), **partner** 
+(exporting countries, in this case by NUTS0 codes), **value** (quantity of commodity), 
+and **time_period** (time period of the trade activity):
+
+```{r}
 intra_trade  <- datatrade_EU$intra_trade
-# Internal production data
+head(intra_trade)
+```
+
+Quantity of commodity produced internally in each EU country of interest. This data frame 
+must contain the columns: **reporter** (producing countries, in this case by NUTS0 codes), 
+**value** (quantity of commodity), and **time_period** (time period of production):
+
+```{r}
 internal_production  <- datatrade_EU$internal_production
-# Sample 5 countries from data
-filter_IDs <- sample(unique(extra_total$reporter), 5)
-# Generate trade data (TradeData object)
+head(internal_production)
+```
+
+### Generation of the `TradeData` object from the above data frames
+
+The `trade_data()` function assembles the trade data to generate a `TradeData` object 
+needed to subsequently calculate the quantity of potentially infested/infected commodity 
+coming into each EU country.
+
+In this case nothing is specified for the arguments `filter_IDs` and `filter_period`, 
+so all countries and time periods included in the data are considered.
+
+```{r}
 trade_EU <- trade_data(extra_total = extra_total,
                        extra_pest = extra_pest,
                        intra_trade = intra_trade,
-                       internal_production = internal_production,
-                       filter_IDs = filter_IDs,
-                       filter_period = 2020)
+                       internal_production = internal_production)
+```
+
+```{r}
 # Plot the total available quantity of commodity available in each country
 plot_countries(data = trade_EU$total_trade, 
                iso_col = "country_IDs", 
@@ -265,43 +350,17 @@ plot_countries(data = trade_EU$total_trade,
 
 
 ```{r}
-## Example with simulated trade data for Europe 
-# Load data
-data("datatrade_EU")
-# Total extra-import data: the total import is identified as partner "Extra_Total"
-extra_total <- datatrade_EU$extra_import %>% filter(partner=="Extra_Total")
-# Extra-import data from countries where the pest is present
-extra_pest <- datatrade_EU$extra_import %>% filter(partner!="Extra_Total")
-# Intra-trade data
-intra_trade  <- datatrade_EU$intra_trade
-# Internal production data
-internal_production  <- datatrade_EU$internal_production
-# Generate trade data (TradeData object)
-trade_EU <- trade_data(extra_total = extra_total,
-                       extra_pest = extra_pest,
-                       intra_trade = intra_trade,
-                       internal_production = internal_production)
 # Ntrade mean and sd for the time periods
 ntrade_EU <- ntrade(trade_data = trade_EU,
                     summarise_result = c("mean", "sd"))
+```
+
+```{r}
 # Plot Ntrade mean
 plot_countries(data = ntrade_EU, 
                iso_col="country_IDs", 
                values_col="mean") +
   xlim(-40,50) + ylim(25,70)
-# Ntrade for selected countries and a specific time period
-# Sample 5 countries from trade data
-country_IDs <- sample(unique(trade_EU$total_trade$country_IDs), 5)
-ntrade_EU_s <- ntrade(trade_data = trade_EU,
-                      filter_IDs = country_IDs,
-                      filter_period = 2020)
-head(ntrade_EU_s)
-# Plot Ntrade result
-plot_countries(data = ntrade_EU_s, 
-               iso_col="country_IDs", 
-               values_col="Ntrade_2020") +
-  xlim(-40,50) + ylim(25,70)
-
 ```
 
 
@@ -389,6 +448,3 @@ plot_countries(data = ntrade_EU_s,
 # # plot
 # plot_countries(res_pathway, "IDs", "Median")
 ```
-
-
-
