@@ -5,36 +5,55 @@
 #' pathway for the entry of a pest into EU countries in yearly time periods. It also 
 #' includes simulated consumption data of the commodity at NUTS1 level. 
 #' This dataset serves as a reference on how the data should be structured and as 
-#' a basis for the examples included in the [qPRAentry] package.
+#' a basis for the examples included in the [qPRAentry] package to deal with the NUTS 
+#' code system.
 #'
-#' @format A list of three data frames:
-#' \describe{
-#'   \item{extra_import}{Data on imports from countries outside of the EU. 
-#'    A data frame with 296 rows and 4 columns:
-#'      \describe{
-#'        \item{reporter}{ID of the receiving country in NUTS0 code (country level).}
-#'        \item{partner}{ID of the exporting countries, coded as "Extra_Total" for all external countries, 
-#'        and "CNTR_1", "CNTR_2", "CNTR_3" to indicate individual non-EU countries where
-#'        the pest is present.}
-#'        \item{time_period}{Time period of trade, with values 2020 and 2021.}
-#'        \item{value}{Quantity of the commodity imported.}
+#' @format A list of four data frames:
+#' \itemize{
+#'   \item **extra_import** \verb{ } Data on imports from countries outside of the EU. 
+#'    A data frame with 216 rows and 4 columns:
+#'      \tabular{lll}{
+#'        \code{reporter} \tab \verb{ } \tab NUTS0 code of the importing country.\cr
+#'   \tab \cr
+#'        \code{partner} \tab \verb{ } \tab ID of the exporting countries, coded 
+#'        as "Extra_Total" for all external countries, and "CNTR_1", "CNTR_2", 
+#'        "CNTR_3" to indicate individual non-EU countries where the pest is present.\cr 
+#'        \tab \cr
+#'        \code{time_period} \tab \verb{ } \tab Time period of trade, with values 
+#'        2020 and 2021.\cr \tab \cr
+#'        \code{value} \tab \verb{ } \tab Quantity of the commodity imported.\cr
 #'      }}
-#'   \item{intra_trade}{Data on internal trade within EU member countries. 
-#'    A data frame with 2664 rows and 4 columns:
-#'      \describe{
-#'        \item{reporter}{ID of the receiving country in NUTS0 code.}
-#'        \item{partner}{ID of the exporting country in NUTS0 code.}
-#'        \item{time_period}{Time period of trade, with values 2020 and 2021.}
-#'        \item{value}{Quantity of the commodity imported.}
+#' \itemize{
+#'   \item **intra_trade** \verb{ } Data on internal trade within EU member countries. 
+#'    A data frame with 1404 rows and 4 columns:
+#'      \tabular{lll}{
+#'        \code{reporter} \tab \verb{ } \tab NUTS0 code of the importing country.\cr
+#'   \tab \cr
+#'        \code{partner} \tab \verb{ } \tab NUTS0 code of the exporting country.\cr
+#'   \tab \cr
+#'        \code{time_period} \tab \verb{ } \tab Time period of trade, with values 
+#'        2020 and 2021.\cr \tab \cr
+#'        \code{value} \tab \verb{ } \tab Quantity of the commodity imported.\cr
 #'      }}
-#'   \item{internal_production}{Data on the internal production of the commodity within the EU. 
-#'    A data frame with 74 rows and 3 columns:
-#'      \describe{
-#'        \item{reporter}{ID of the producing country in NUTS0 code.}
-#'        \item{time_period}{Time period of trade, in years (2020 and 2021).}
-#'        \item{value}{Quantity of the commodity produced.}
+#' \itemize{
+#'   \item **internal_production** \verb{ } Data on the internal production of 
+#'   the commodity within the EU. A data frame with 54 rows and 3 columns:
+#'      \tabular{lll}{
+#'        \code{reporter} \tab \verb{ } \tab NUTS0 code of the producing country.\cr
+#'   \tab \cr
+#'        \code{time_period} \tab \verb{ } \tab Time period of trade, in years 
+#'        (2020 and 2021).\cr \tab \cr
+#'        \code{value} \tab \verb{ } \tab Quantity of the commodity produced.\cr
 #'      }}
-#' }
+#' \itemize{
+#'      \item **consumption_nuts1** \verb{ } Data on the consumption of the commodity 
+#'      in the EU at NUTS1 level (administrative divisions). A data frame with 92 rows 
+#'      and 2 columns:
+#'      \tabular{lll}{
+#'        \code{NUTS_ID} \tab \verb{ } \tab NUTS1 code of the administrative division.\cr
+#'   \tab \cr
+#'        \code{value} \tab \verb{ } \tab Quantity of the commodity consumed.\cr
+#'      }}
 #' 
 "datatrade_EU"
 
@@ -46,36 +65,55 @@
 #' in three-month periods. It also includes simulated consumption data of the commodity 
 #' at at the level of principal sub-national divisions (ISO 3166-2 codes). 
 #' This dataset serves as a reference on how the data should be structured and as 
-#' a basis for the examples included in the [qPRAentry] package.
+#' a basis for the examples included in the [qPRAentry] package to deal with the ISO 
+#' 3166 code system.
 #'
-#' @format A list of three data frames:
-#' \describe{
-#'   \item{extra_import}{Data on imports from countries outside of Northern America. 
-#'    A data frame with 100 rows and 4 columns:
-#'      \describe{
-#'        \item{reporter}{ID of the receiving country in a two-letter country code (e.g., "US", "CA").}
-#'        \item{partner}{ID of the exporting country, coded as "CNTR_1" to "CNTR_5" to represent specific 
-#'        non-Northern American countries.}
-#'        \item{time_period}{Time period of trade, in three-month periods ("January-March",
-#'        "April-June", "July-September", "October-December").}
-#'        \item{value}{Quantity of the commodity imported.}
+#' @format A list of four data frames:
+#' \itemize{
+#'   \item **extra_import** \verb{ } Data on imports from countries outside of 
+#'   Northern America. A data frame with 100 rows and 4 columns:
+#'      \tabular{lll}{
+#'        \code{reporter} \tab \verb{ } \tab ISO 3166-1 alpha-2 code of the importing country.\cr
+#'   \tab \cr
+#'        \code{partner} \tab \verb{ } \tab ID of the exporting country, coded as 
+#'        "CNTR_1" to "CNTR_5" to represent specific  non-Northern American countries.\cr
+#'   \tab \cr
+#'        \code{time_period} \tab \verb{ } \tab Time period of trade, in three-month 
+#'        periods ("January-March", "April-June", "July-September", "October-December").\cr
+#'   \tab \cr
+#'        \code{value} \tab \verb{ } \tab Quantity of the commodity imported.\cr
 #'      }}
-#'   \item{intra_trade}{Data on internal trade within Northern American countries. 
+#'   \itemize{
+#'   \item **intra_trade** \verb{ } Data on internal trade within Northern American countries. 
 #'    A data frame with 80 rows and 4 columns:
-#'      \describe{
-#'        \item{reporter}{ID of the receiving country in a two-letter code (e.g., "US", "CA").}
-#'        \item{partner}{ID of the exporting country in a two-letter code (e.g., "US", "CA").}
-#'        \item{time_period}{Time period of trade, in three-month periods ("January-March",
-#'        "April-June", "July-September", "October-December").}
-#'        \item{value}{Quantity of the commodity imported.}
+#'      \tabular{lll}{
+#'        \code{reporter} \tab \verb{ } \tab ISO 3166-1 alpha-2 code of the importing 
+#'        country.\cr \tab \cr
+#'        \code{partner} \tab \verb{ } \tab ISO 3166-1 alpha-2 code  of the exporting 
+#'        country.\cr \tab \cr
+#'        \code{time_period} \tab \verb{ } \tab Time period of trade, in three-month 
+#'        periods ("January-March", "April-June", "July-September", "October-December").\cr 
+#'        \tab \cr
+#'        \code{value} \tab \verb{ } \tab Quantity of the commodity imported.\cr
 #'      }}
-#'   \item{internal_production}{Data on the internal production of the commodity within Northern America. 
-#'    A data frame with 20 rows and 3 columns:
-#'      \describe{
-#'        \item{reporter}{ID of the producing country in a two-letter code (e.g., "US", "CA").}
-#'        \item{time_period}{Time period of trade, in three-month periods ("January-March",
-#'        "April-June", "July-September", "October-December").}
-#'        \item{value}{Quantity of the commodity produced.}
+#'   \itemize{
+#'   \item **internal_production** \verb{ } Data on the internal production of the commodity 
+#'   within Northern America. A data frame with 20 rows and 3 columns:
+#'      \tabular{lll}{
+#'        \code{reporter} \tab \verb{ } \tab ISO 3166-1 alpha-2 code of the producing 
+#'        country.\cr \tab \cr
+#'        \code{time_period} \tab \verb{ } \tab Time period of trade, in three-month 
+#'        periods ("January-March", "April-June", "July-September", "October-December").\cr 
+#'        \tab \cr
+#'        \code{value} \tab \verb{ } \tab Quantity of the commodity produced.\cr
+#'   }}
+#'    \itemize{
+#'    \item **consumption_iso2** \verb{ } Data on the consumption of the commodity in 
+#'    Northern America at ISO 3166-2 level (principal subdivisions of countries). 
+#'    A data frame with 83 rows and 2 columns:
+#'      \tabular{lll}{
+#'        \code{iso_3166_2} \tab \verb{ } \tab ISO 3166-2 code of the subdivision.\cr 
+#'        \tab \cr
+#'        \code{value} \tab \verb{ } \tab Quantity of the commodity consumed.\cr
 #'      }}
-#' }
 "datatrade_NorthAm"

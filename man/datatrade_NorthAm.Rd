@@ -5,36 +5,54 @@
 \alias{datatrade_NorthAm}
 \title{Example Trade Data for Northern America}
 \format{
-A list of three data frames:
-\describe{
-\item{extra_import}{Data on imports from countries outside of Northern America.
-A data frame with 100 rows and 4 columns:
-\describe{
-\item{reporter}{ID of the receiving country in a two-letter country code (e.g., "US", "CA").}
-\item{partner}{ID of the exporting country, coded as "CNTR_1" to "CNTR_5" to represent specific
-non-Northern American countries.}
-\item{time_period}{Time period of trade, in three-month periods ("January-March",
-"April-June", "July-September", "October-December").}
-\item{value}{Quantity of the commodity imported.}
+A list of four data frames:
+\itemize{
+\item \strong{extra_import} \verb{ } Data on imports from countries outside of
+Northern America. A data frame with 100 rows and 4 columns:
+\tabular{lll}{
+\code{reporter} \tab \verb{ } \tab ISO 3166-1 alpha-2 code of the importing country.\cr
+\tab \cr
+\code{partner} \tab \verb{ } \tab ID of the exporting country, coded as
+"CNTR_1" to "CNTR_5" to represent specific  non-Northern American countries.\cr
+\tab \cr
+\code{time_period} \tab \verb{ } \tab Time period of trade, in three-month
+periods ("January-March", "April-June", "July-September", "October-December").\cr
+\tab \cr
+\code{value} \tab \verb{ } \tab Quantity of the commodity imported.\cr
 }}
-\item{intra_trade}{Data on internal trade within Northern American countries.
+\itemize{
+\item \strong{intra_trade} \verb{ } Data on internal trade within Northern American countries.
 A data frame with 80 rows and 4 columns:
-\describe{
-\item{reporter}{ID of the receiving country in a two-letter code (e.g., "US", "CA").}
-\item{partner}{ID of the exporting country in a two-letter code (e.g., "US", "CA").}
-\item{time_period}{Time period of trade, in three-month periods ("January-March",
-"April-June", "July-September", "October-December").}
-\item{value}{Quantity of the commodity imported.}
+\tabular{lll}{
+\code{reporter} \tab \verb{ } \tab ISO 3166-1 alpha-2 code of the importing
+country.\cr \tab \cr
+\code{partner} \tab \verb{ } \tab ISO 3166-1 alpha-2 code  of the exporting
+country.\cr \tab \cr
+\code{time_period} \tab \verb{ } \tab Time period of trade, in three-month
+periods ("January-March", "April-June", "July-September", "October-December").\cr
+\tab \cr
+\code{value} \tab \verb{ } \tab Quantity of the commodity imported.\cr
 }}
-\item{internal_production}{Data on the internal production of the commodity within Northern America.
-A data frame with 20 rows and 3 columns:
-\describe{
-\item{reporter}{ID of the producing country in a two-letter code (e.g., "US", "CA").}
-\item{time_period}{Time period of trade, in three-month periods ("January-March",
-"April-June", "July-September", "October-December").}
-\item{value}{Quantity of the commodity produced.}
+\itemize{
+\item \strong{internal_production} \verb{ } Data on the internal production of the commodity
+within Northern America. A data frame with 20 rows and 3 columns:
+\tabular{lll}{
+\code{reporter} \tab \verb{ } \tab ISO 3166-1 alpha-2 code of the producing
+country.\cr \tab \cr
+\code{time_period} \tab \verb{ } \tab Time period of trade, in three-month
+periods ("January-March", "April-June", "July-September", "October-December").\cr
+\tab \cr
+\code{value} \tab \verb{ } \tab Quantity of the commodity produced.\cr
 }}
-}
+\itemize{
+\item \strong{consumption_iso2} \verb{ } Data on the consumption of the commodity in
+Northern America at ISO 3166-2 level (principal subdivisions of countries).
+A data frame with 83 rows and 2 columns:
+\tabular{lll}{
+\code{iso_3166_2} \tab \verb{ } \tab ISO 3166-2 code of the subdivision.\cr
+\tab \cr
+\code{value} \tab \verb{ } \tab Quantity of the commodity consumed.\cr
+}}
 }
 \usage{
 datatrade_NorthAm
@@ -46,6 +64,7 @@ pathway for the entry of a pest into Northern American countries in a year expre
 in three-month periods. It also includes simulated consumption data of the commodity
 at at the level of principal sub-national divisions (ISO 3166-2 codes).
 This dataset serves as a reference on how the data should be structured and as
-a basis for the examples included in the \link{qPRAentry} package.
+a basis for the examples included in the \link{qPRAentry} package to deal with the ISO
+3166 code system.
 }
 \keyword{datasets}

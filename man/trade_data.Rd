@@ -32,7 +32,7 @@ countries of interest. It must contain the following columns:
 \code{value} (quantity of commodity) and \code{time_period} (time period of the trade activity).}
 
 \item{internal_production}{A data frame containing the quantity of the commodity
-produced domestically within each country of interest. It must contain the following columns:
+produced internally within each country of interest. It must contain the following columns:
 \code{reporter} (producing country), \code{value} (quantity of commodity) and
 \code{time_period} (time period of production).}
 
