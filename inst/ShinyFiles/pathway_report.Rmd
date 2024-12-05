@@ -72,15 +72,12 @@ It provides an estimation of the number of potential founder populations
 $(\mathit{NPFP})$ of a pest in different regions, using $N_{trade}$ data combined 
 with additional user-defined parameters.
 
-The European Food Safety Authority (EFSA) utilises pathway models to evaluate the 
-risk of pests entering the EU territories. The complexity of the pathway model 
-can vary based on factors such as the specific pest under consideration and the 
-availability of detailed data.
-
 The pathway model combines trade data on potentially infested commodities with 
-other parameters that are involved in the risk of pest entry, from the source country of 
-origin to the EU. Additional information can be found in the EFSA Guidance on 
-quantitative pest risk assessment [@efsa2018guidance].
+other parameters that are involved in the risk of pest entry, from the source country of origin to the countries of interest. Its complexity can vary based on factors 
+such as the specific pest under consideration and the availability of detailed data. 
+As the approach used is based on the work of the European Food Safety Authority
+(EFSA), additional information can be found in the EFSA Guidance on quantitative 
+pest risk assessment [@efsa2018guidance].
 
 
 
@@ -132,7 +129,7 @@ for (i in seq_along(param_names)) {
 
 ## $\mathit{NPFP}$ results
 
-As a result of the pathway model the number of potential founder populations $(\mathit{NPFP})$ 
+As a result of the pathway model the number of $(\mathit{NPFP})$ 
 is estimated for each NUTS `r NUTS_lev` level.
 The summary of the overall results for all the selected NUTS are shown below.
 
@@ -163,7 +160,8 @@ plot_nuts(Ninf, "NUTS_ID", "Median",
 
 ```
 \begin{center}
-Figure 1: $\mathit{NPFP}$ at the NUTS`r NUTS_lev` level.
+Figure 1: Number of potential founder populations ($\mathit{NPFP}$)
+at the NUTS`r NUTS_lev` level.
 \end{center}
 
 

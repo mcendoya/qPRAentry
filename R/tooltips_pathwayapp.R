@@ -15,7 +15,7 @@ text_pathwaymodel <-
       <code>p_{inf}</code>).</li>
       <li>If using subscripted parameters, use <code>_</code> between braces for 
       more than one character (e.g., <code>p_{inf}</code>).</li>
-      <li>Avoid using spaces or symbols other than those indicated above in parameter 
+      <li>Avoid using spaces or symbols other than those indicated above in the parameter 
       names.</li>
     </ul>
     </li>

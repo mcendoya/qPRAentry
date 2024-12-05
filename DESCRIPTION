@@ -16,7 +16,8 @@ Description: Supports risk  assessors in performing the entry step of
     functionalities of the package are included, that simplify the process of 
     assessing the risk of entry of plant pests. The approach is based on 
     the work of the European Food Safety Authority
-    (EFSA PLH Panel et al., 2018) <doi:10.2903/J.EFSA.2018.5350>.
+    (EFSA PLH Panel et al., 2018)
+    <doi:10.2903/j.efsa.2018.5350>.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

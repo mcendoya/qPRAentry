@@ -39,7 +39,7 @@ used in EFSA's quantitative Pest Risk Assessments
 However, users can deselect these default parameters and/or add new ones.
 When adding a new parameter, the user must specify how it should be incorporated 
 into the equation, including the symbol for their incorporation into the model 
-e.g., as a multiplying factor) and whether they require transformation.
+(e.g., as a multiplying factor) and whether they require transformation.
 
 
 Once the equation has been established, the following inputs are required:
