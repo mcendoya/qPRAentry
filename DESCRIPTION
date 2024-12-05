@@ -8,7 +8,7 @@ Authors@R: c(
     person("Maria Chiara", "Rosace", email = "mariachiara.rosace@unicatt.it", role = c("aut"),
            comment = c(ORCID = "0000-0002-7263-8228")))
 Description: Supports risk  assessors in performing the entry step of 
-    the quantitative Pest Risk Assessments. It allows the estimation 
+    the quantitative Pest Risk Assessment. It allows the estimation 
     of the amount of a plant pest entering a risk assessment area 
     (in terms of founder populations) through the calculation of the imported 
     commodities that could be potential pathways of pest entry, 
