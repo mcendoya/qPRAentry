@@ -595,7 +595,7 @@ mod_ntrade_data_server <- function(id){
                        HTML('<p class="custom-text">Use the buttons <strong>
                             "Plot Extra Import"</strong>, <strong>"Plot Intra 
                             Trade"</strong>, or <strong>"Plot Internal Production"</strong> 
-                            to change the trade data visualization.<br> 
+                            to change the trade data visualisation.<br> 
                             Place your cursor over the bars to to view mean and 
                             standard deviation for each country.<br> 
                             Click on the bars to view the values for each country 

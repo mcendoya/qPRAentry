@@ -24,12 +24,12 @@ the `ntrade` function from the `qPRAentry` package.
 For the use of this application, trade data of the commodities of interest, i.e., 
 potential carriers of the pests under assessment, are required. The required trade data are: 
 
-- $ExtraTotal$: Total quantity of commodity from third countries imported by the 
+- $ExtraTotal Import$: Total quantity of commodity from third countries imported by the 
 countries of interest.
-- $ExtraPest$: Quantity of commodity from third countries where the pest under 
-assessment is present imported by the countries of interest.
-- $Intra$: Quantity of commodity traded between the countries of interest.
-- $IP$: Quantity of commodity produced in the countries of interest.
+- $ExtraPest Import$: Quantity of commodity from third countries where the pest under 
+assessment is present, imported by the countries of interest.
+- $Intra Trade$: Quantity of commodity traded between the countries of interest.
+- $Internal Production$: Quantity of commodity produced in the countries of interest.
 
 All the trade data required can be accessed 
 through the [Eurostat database](https://ec.europa.eu/eurostat/data/database).

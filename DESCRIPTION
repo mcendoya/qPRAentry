@@ -1,25 +1,22 @@
 Package: qPRAentry
 Type: Package
-Title: quantitative Pest Risk Assessment at the entry step
+Title: Quantitative Pest Risk Assessment at the Entry Step
 Version: 0.1.0
 Authors@R: c(
     person("Martina", "Cendoya", email = "cendoya_marmar@gva.es", role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-0134-7781")),
     person("Maria Chiara", "Rosace", email = "mariachiara.rosace@unicatt.it", role = c("aut"),
            comment = c(ORCID = "0000-0002-7263-8228")))
-Description: The package is meant to support risk  assessors in performing the entry step of 
-    the quantitative Pest Risk Assessments. It encompasses functions for calculating 
-    and redistributing the quantity of commodities imported from countries 
-    where a plant pest of interest is present and estimating the amount of a pest 
-    entering a risk assessment area (in terms of founder populations 
-    landing in each country/area/region). 
-    The package comprises two Shiny apps, one for computing the potentially 
-    infected/infested quantity of commodities imported by a country of interest 
-    from third-countries where a plant pest is present and redistributing this 
-    quantity across regions, and the other for executing the pathway model.
-    The package and functions used are based on the work of the European Food 
-    Safety Authority (EFSA PLH Panel et al., 2018) 
-    <https://doi.org/10.2903/J.EFSA.2018.5350>.
+Description: Supports risk  assessors in performing the entry step of 
+    the quantitative Pest Risk Assessments. It allows the estimation 
+    of the amount of a plant pest entering a risk assessment area 
+    (in terms of founder populations) through the calculation of the imported 
+    commodities that could be potential pathways of pest entry, 
+    and the development of a pathway model. Two Shiny apps based on the 
+    functionalities of the package are included, that simplify the process of 
+    assessing the risk of entry of plant pests. The approach is based on 
+    the work of the European Food Safety Authority
+    (EFSA PLH Panel et al., 2018) <doi:10.2903/J.EFSA.2018.5350>.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

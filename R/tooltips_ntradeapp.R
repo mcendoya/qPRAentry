@@ -122,7 +122,7 @@ data_errors <- list(
                              as quantities. Please review and correct these values."), 
                      collapse=" "),
   extra_partner = paste(strwrap("Error: You must select at least one partner for 
-                                extra trade."), collapse=" ")
+                                Extra Import."), collapse=" ")
   )
 
 # Redistribution tab
