@@ -117,8 +117,8 @@ redistributing these quantities to NUTS2 regions.
 
 ```{r}
 
-if(data_redistribution=="Population"){
-  data_text <- "population data from Eurostat"
+if(data_redistribution=="Human population"){
+  data_text <- "human population data from Eurostat"
 }else{
   data_text <- "user custom data"
 }
@@ -132,16 +132,16 @@ proportionally to `r data_text`.
 
 # population year/s:
 
-if(data_redistribution=="Population"){
+if(data_redistribution=="Human population"){
   data_text <- "human population data from Eurostat"
   if(length(population_year)==1){
     population_year_text <- paste0("The selected year for human population data is ",
-                                   population_year)
+                                   population_year, ".")
   }else{
     population_year_text <- 
       paste0("The selected years for which the average human population will be 
              used as the basis for redistribution are: ", 
-             paste0(population_year, collapse=", "))
+             paste0(population_year, collapse=", "), ".")
   }
 }else{
   data_text <- "user custom data"
@@ -149,7 +149,7 @@ if(data_redistribution=="Population"){
 }
 ```
 
-`r population_year_text`.
+`r population_year_text`
 
 ```{r, fig.width=8, fig.height=8}
 

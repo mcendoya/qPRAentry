@@ -5,8 +5,8 @@ utils::globalVariables(c(
 ))
 #' Data redistribution to NUTS subdivisions
 #'
-#' Redistribution of country-level (NUTS0) data value to smaller territories 
-#' (i.e., NUTS1, NUTS2 or NUTS3). See 
+#' Value redistribution from country-level (NUTS0) to smaller territories (i.e., 
+#' NUTS1, NUTS2 or NUTS3). See 
 #' [Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
 #' 
 #' @details 

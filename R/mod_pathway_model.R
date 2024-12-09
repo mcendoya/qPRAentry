@@ -173,9 +173,9 @@ mod_pathway_model_server <- function(id){
       tryCatch({
       if(input$extra_parameters>0 & length(wrong_pars>0)){
         stop(paste(
-        paste(strwrap("Error: The parameter name in the equation does not 
-                           exactly match the one entered under 'Parameter Name' 
-                           in the parameters:"), collapse=" "), 
+        paste(strwrap("Error: The parameter name specified in the equation does not 
+                           exactly match the corresponding 'Parameter Name'. The 
+                           mismatch occurs in parameter(s):"), collapse=" "), 
         paste(wrong_pars, collapse = ", ")
       ))
       }

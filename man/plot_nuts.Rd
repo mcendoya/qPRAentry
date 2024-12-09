@@ -46,11 +46,11 @@ Default is 2 indicating NUTS2. See
 A ggplot object with the plotted NUTS regions.
 }
 \description{
-This function plots NUTS region values on a map using the provided data and allows
+Plots NUTS region values on a map using the provided data and allows
 customisation of various aesthetics, such as colors, legend title, and title.
 }
 \details{
-This function extracts an \link{sf} object from the \link{giscoR} package.
+Extracts an \link{sf} object from the \link{giscoR} package.
 It uses the \link{ggplot2} package for the representation. Also, it supports the addition
 of other \link{ggplot2} options (see examples).
 }

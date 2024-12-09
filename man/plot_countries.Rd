@@ -38,11 +38,11 @@ values to be plotted.}
 A \code{ggplot} object with the plotted countries.
 }
 \description{
-This function plots country values on a map using data provided and allows
+Plots country values on a map using data provided and allows
 customisation of various aesthetics, such as colors, legend title, and title.
 }
 \details{
-This function extracts an \link{sf} object from the \link{giscoR} package.
+Extracts an \link{sf} object from the \link{giscoR} package.
 It uses the \link{ggplot2} package for the representation. Also, it supports the addition
 of other \link{ggplot2} options (see examples).
 }

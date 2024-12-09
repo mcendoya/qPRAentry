@@ -1,6 +1,6 @@
 #' Ntrade calculation
 #'
-#' This function calculates the quantity of potentially infested imported commodity
+#' Calculates the quantity of potentially infested imported commodity
 #' (\eqn{N_{trade}}) from third countries where the pest is present, based on the 
 #' provided trade data (\code{TradeData} object output of the [trade_data()] 
 #' function).

@@ -1,9 +1,9 @@
 #' Plot values on a map at country level
 #'
-#' This function plots country values on a map using data provided and allows 
+#' Plots country values on a map using data provided and allows 
 #' customisation of various aesthetics, such as colors, legend title, and title. 
 #' 
-#' This function extracts an [sf] object from the [giscoR] package.
+#' Extracts an [sf] object from the [giscoR] package.
 #' It uses the [ggplot2] package for the representation. Also, it supports the addition  
 #' of other [ggplot2] options (see examples).
 #'

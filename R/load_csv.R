@@ -1,6 +1,6 @@
 #' Load a CSV file with automatic separator detection
 #' 
-#' This function is designed to read CSV files containing more than one column of 
+#' Reads CSV files containing more than one column of 
 #' data. It automatically detects common separators (i.e., comma, semicolon, tab), 
 #' while allowing users to specify encoding and decimal separators as required.
 #'

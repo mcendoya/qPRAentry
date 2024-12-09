@@ -121,8 +121,8 @@ data_errors <- list(
                              contains negative values, which are not interpretable 
                              as quantities. Please review and correct these values."), 
                      collapse=" "),
-  extra_partner = paste(strwrap("Error: You must select at least one partner for 
-                                Extra Import."), collapse=" ")
+  extra_partner = paste(strwrap("Error: You must select at least one partner from 
+                                the drop-down list 'Partner countries'."), collapse=" ")
   )
 
 # Redistribution tab

@@ -62,8 +62,8 @@ proportion according to which the values have been redistributed, and the column
 corresponding to the redistributed values with the same name specified in \code{values_col}.
 }
 \description{
-Redistribution of country-level (NUTS0) data value to smaller territories
-(i.e., NUTS1, NUTS2 or NUTS3). See
+Value redistribution from country-level (NUTS0) to smaller territories (i.e.,
+NUTS1, NUTS2 or NUTS3). See
 \href{https://ec.europa.eu/eurostat/web/nuts}{Nomenclature of territorial units for statistics}.
 }
 \details{

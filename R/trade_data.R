@@ -1,7 +1,7 @@
 #' Prepare Trade Data
 #'
 #' Prepares trade data for each country of interest based on the provided data.
-#' This function generates objects of class \code{TradeData} required to be used 
+#' Generates objects of class \code{TradeData} required to be used 
 #' in the [ntrade()] function of the [qPRAentry] package.
 #' 
 #' @param extra_total A data frame containing the total quantity of commodity imported
@@ -311,9 +311,9 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
     distinct()
   
   if (nrow(error_ExtraPest) > 0) {
-    stop(paste(strwrap("Error: There are cases where the extra-pest import is higher 
-                       than the extra-total import. The extra-total import must include 
-                       the extra-pest import."), collapse=" "))
+    stop(paste(strwrap("Error: There are cases where the Extra Pest import is higher 
+                       than the Extra Total import. The Extra Total import must include 
+                       the Extra Pest import."), collapse=" "))
   }
   
   warning_cases <- total_trade %>%
@@ -324,8 +324,8 @@ trade_data <- function(extra_total, extra_pest, intra_trade, internal_production
   
   if (nrow(warning_cases) > 0) {
     message(
-      paste(strwrap("Note: For countries where intra-export is greater than total 
-                    available (extra-import + internal production), intra-export 
+      paste(strwrap("Note: For countries where Intra Export is greater than total 
+                    available (Extra Total + Internal Production), Intra Export 
                     is considered proportional to the total available."), 
             collapse=" "))
   }

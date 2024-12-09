@@ -149,7 +149,7 @@ plot_dataUpload <- function(df, dfName, timePeriod, yLab,
         geom_errorbar(aes(ymin=Mean-SD, ymax=Mean+SD),
                       data = Pest, width=.2, color="#6D6C6C")
     }
-  }else if(dfName == "IntraEU"){
+  }else if(dfName == "Intra"){
     if(length(timePeriod)==1){
       intraEU <- df %>%
         select(country_IDs, intra_import, intra_export) %>%
@@ -246,7 +246,7 @@ plot_byCountry <- function(df, dfName, idx, yLab, plotTitle, legendTitle=NULL){
     pl <- ggplot(NULL, aes(as.factor(time_period), value)) +
       geom_col(aes(fill = "Total"), data = Total, alpha = 0.5) +
       geom_col(aes(fill="Pest present"), data = Pest, alpha = 0.7)
-  }else if(dfName=="IntraEU"){
+  }else if(dfName=="Intra"){
     intraEU <- df %>%
       select(country_IDs, time_period, intra_import, intra_export) %>%
       rename(Import = intra_import,

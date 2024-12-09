@@ -12,7 +12,7 @@ test_that("ntrade should return a data frame", {
 
   expect_no_error(
     nt <- ntrade(trade, 
-                 filter_IDs = c("AL", "ES", "IT"), 
+                 filter_IDs = c("AT", "ES", "IT"), 
                  filter_period=NULL, 
                  summarise_result = NULL)
   )
@@ -40,7 +40,7 @@ test_that("ntrade errors", {
   )
   expect_no_error(
     nt <- ntrade(trade, 
-                 filter_IDs = c("AL", "ES", "IT"), 
+                 filter_IDs = c("AT", "ES", "IT"), 
                  filter_period=NULL, 
                  summarise_result = NULL)
   )
@@ -93,3 +93,4 @@ test_that("ntrade errors", {
                   summarise_result = c("median"))
     expect_false(all(c("q0.5", "median") %in% names(res)))
 })
+

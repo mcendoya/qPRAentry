@@ -8,9 +8,9 @@ test_that("trade_data should return a list of data frames", {
                            filter(partner!="Extra_Total"),
                          intra_trade = test_data$intra_trade, 
                          internal_production = test_data$internal_production),
-    paste(strwrap("Note: For countries where intra-export is greater than total 
-                    available (extra-import + internal production), intra-export 
-                    is considered proportional to the total available."), 
+    paste(strwrap("Note: For countries where Intra Export is greater than total 
+                  available (Extra Total + Internal Production), Intra Export is 
+                  considered proportional to the total available."), 
           collapse=" "), 
     fixed=TRUE
   )
@@ -41,9 +41,9 @@ test_that("trade_data messages", {
                  internal_production = internal_production),
       "Note: The input data contains missing values, these will be considered as zeros."
     ),
-    paste(strwrap("Note: For countries where intra-export is greater than total 
-                    available (extra-import + internal production), intra-export 
-                    is considered proportional to the total available."), 
+    paste(strwrap("Note: For countries where Intra Export is greater than total 
+                  available (Extra Total + Internal Production), Intra Export is 
+                  considered proportional to the total available."), 
           collapse=" "), 
     fixed=TRUE)
 
@@ -67,9 +67,9 @@ test_that("trade_data messages", {
             paste("AT", collapse = ", "), "in the analysis."),
       fixed=TRUE
     ),
-    paste(strwrap("Note: For countries where intra-export is greater than total
-                    available (extra-import + internal production), intra-export
-                    is considered proportional to the total available."),
+    paste(strwrap("Note: For countries where Intra Export is greater than total 
+                  available (Extra Total + Internal Production), Intra Export is 
+                  considered proportional to the total available."),
           collapse=" "),
     fixed=TRUE)
 })
@@ -115,9 +115,9 @@ test_that("trade_data errors", {
                extra_pest = test_data$extra_import,
                intra_trade = test_data$intra_trade,
                internal_production = test_data$internal_production),
-    paste(strwrap("Error: There are cases where the extra-pest import is higher 
-                  than the extra-total import. The extra-total import must include 
-                  the extra-pest import."), collapse=" ")
+    paste(strwrap("Error: There are cases where the Extra Pest import is higher 
+                  than the Extra Total import. The Extra Total import must include 
+                  the Extra Pest import."), collapse=" ")
   )
 })
 

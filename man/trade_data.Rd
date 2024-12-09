@@ -99,7 +99,7 @@ each partner (\code{export_prop} in \code{total_trade}).\cr
 }
 \description{
 Prepares trade data for each country of interest based on the provided data.
-This function generates objects of class \code{TradeData} required to be used
+Generates objects of class \code{TradeData} required to be used
 in the \code{\link[=ntrade]{ntrade()}} function of the \link{qPRAentry} package.
 }
 \details{

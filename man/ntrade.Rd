@@ -37,7 +37,7 @@ is returned for each time period if \code{summarise_result} is not specified
 summarised accordingly.
 }
 \description{
-This function calculates the quantity of potentially infested imported commodity
+Calculates the quantity of potentially infested imported commodity
 (\eqn{N_{trade}}) from third countries where the pest is present, based on the
 provided trade data (\code{TradeData} object output of the \code{\link[=trade_data]{trade_data()}}
 function).

@@ -1,9 +1,9 @@
 #' Plot NUTS region values on a map
 #'
-#' This function plots NUTS region values on a map using the provided data and allows 
+#' Plots NUTS region values on a map using the provided data and allows 
 #' customisation of various aesthetics, such as colors, legend title, and title.
 #' 
-#' This function extracts an [sf] object from the [giscoR] package.
+#' Extracts an [sf] object from the [giscoR] package.
 #' It uses the [ggplot2] package for the representation. Also, it supports the addition  
 #' of other [ggplot2] options (see examples).
 #'
