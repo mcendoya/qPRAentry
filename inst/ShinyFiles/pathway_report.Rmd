@@ -134,7 +134,7 @@ The summary of the overall results for all the selected NUTS are shown below.
 ```{r}
 
 # Display the table
-knitr::kable(Ninf_EU, caption = "NPFP results for all the selected NUTS", digits = 4) 
+knitr::kable(Ninf_EU, caption = "Number of potential founder populations (NPFP) results for all the selected NUTS", digits = 4) 
 
 ```
 
