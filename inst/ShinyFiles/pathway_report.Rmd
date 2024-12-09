@@ -71,10 +71,8 @@ the Pathway model app of the \texttt{qPRAentry} package.
 It provides an estimation of the number of potential founder populations 
 $(\mathit{NPFP})$ of a pest in different regions, using $N_{trade}$ data combined 
 with additional user-defined parameters.
-
-The pathway model combines trade data on potentially infested commodities with 
-other parameters that are involved in the risk of pest entry, from the source country of origin to the countries of interest. Its complexity can vary based on factors 
-such as the specific pest under consideration and the availability of detailed data. 
+The pathway model complexity can vary based on factors such as the specific pest 
+under consideration and the availability of detailed data. 
 As the approach used is based on the work of the European Food Safety Authority
 (EFSA), additional information can be found in the EFSA Guidance on quantitative 
 pest risk assessment [@efsa2018guidance].
@@ -129,7 +127,7 @@ for (i in seq_along(param_names)) {
 
 ## $\mathit{NPFP}$ results
 
-As a result of the pathway model the number of $(\mathit{NPFP})$ 
+As a result of the pathway model the $\mathit{NPFP}$ 
 is estimated for each NUTS `r NUTS_lev` level.
 The summary of the overall results for all the selected NUTS are shown below.
 
