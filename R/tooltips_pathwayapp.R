@@ -39,7 +39,8 @@ text_pathwaymodel <-
     </li>
   </ul>
   <br>
-  Once the parameters have been set, click on <strong>Done</strong> to update the equation.
+  Once the parameters have been set, click on <strong style="color: #1E68BA;">Done</strong> 
+  to update the equation.
   </p>'
   )
 
@@ -47,7 +48,8 @@ text_pathwaymodel <-
 text_model_done <- 
   HTML('<p class="custom-text">
   Note: If you modify the pathway model parameters, you must 
-  press <strong>Done</strong> again to apply and update these changes.<br><br>
+  press <strong style="color: #1E68BA;">Done</strong> again to apply and update these 
+  changes.<br><br>
   <i class="fa-solid fa-star" style="color: #63E6BE;"></i>
   Once you have completed the equation, you can go to the 
   <strong style="color: #1E68BA;"><i>N<sub>trade</sub></i> data</strong> 
@@ -75,8 +77,8 @@ text_ntrade_data <-
 text_data_done <- 
   HTML('<p class="custom-text">Note: If you make any changes to the trade data 
   (such as uploading new data, selecting different columns, or making adjustments 
-  to existing columns), you must press <strong>Done</strong> again to apply and 
-  update these changes.<br><br>
+  to existing columns), you must press <strong style="color: #1E68BA;">Done</strong> 
+  again to apply and update these changes.<br><br>
   <i class="fa-solid fa-star" style="color: #63E6BE;"></i>
   Once you have verified the data, you can go to the <strong style="color: #1E68BA;">
        Parameters</strong> tab.<br></p>')
@@ -112,16 +114,16 @@ text_parameters <-
   distribution for each parameter, representing a sample for that iteration.</li>
   <li><strong>Parameters distribution:</strong> The distribution for each parameter 
   needs to be defined. Set the most appropriate distribution for each parameter.</li>
-  <li>Once all parameters have been set, you can click on the <strong>Done</strong> 
-  button to save the current configuration. After clicking, for each parameter, 
+  <li>Once all parameters have been set, you can click on the <strong style="color: #1E68BA;">
+  Done</strong> button to save the current configuration. After clicking, for each parameter, 
   the distribution histograms will be displayed next to the parameter.</li>
   </ul></li>
   </ul></p>')
 
 text_parametersDone <- 
   HTML('<p class="custom-text">Note: If you make any changes to the number of iterations 
-  or the parameter distribution, please press <strong>Done</strong> again to apply 
-  the changes.<br><br>
+  or the parameter distribution, please press <strong style="color: #1E68BA;">Done</strong> 
+  again to apply the changes.<br><br>
   <i class="fa-solid fa-star" style="color: #63E6BE;"></i> After checking the distributions, 
   you can go to the <strong style="color: #1E68BA;">Results</strong> tab.<br></p>'
   )

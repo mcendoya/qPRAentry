@@ -197,14 +197,14 @@ mod_ntrade_data_server <- function(id){
     })
     
     # Extra Partners List
-    observeEvent(input$partner_ExtraTotal,{
+    observeEvent(c(session$userData$ExtraTotal_reactive(), input$partner_ExtraTotal),{
       df <- session$userData$ExtraTotal_reactive()
       shinyWidgets::updatePickerInput(session = session,
                                       inputId = "extra_partner_ExtraTotal",
                                       choices = unique(df[,input$partner_ExtraTotal]))
     }, ignoreInit = TRUE)
     
-    observeEvent(input$partner_ExtraPest,{
+    observeEvent(c(session$userData$ExtraPest_reactive(), input$partner_ExtraPest),{
       df <- session$userData$ExtraPest_reactive()
       shinyWidgets::updatePickerInput(session = session,
                                       inputId = "extra_partner_ExtraPest",
@@ -497,12 +497,18 @@ mod_ntrade_data_server <- function(id){
         }else{
           all_time_periods$data <- unique(time_df[time_df%in%all_time_periods$data])
         }
-        updatePickerInput(session = session,
-                          inputId = "time_period",
-                          choices = sort(all_time_periods$data),
-                          selected = sort(all_time_periods$data))
+        if(length(all_time_periods$data)==0){
+          stop(paste(strwrap("Error: No common time period has been found in the data files. 
+                            Please check the column for 'Time period' in the data."),
+                     collapse=" "))
+          runjs("window.scrollTo({ top: 0, behavior: 'smooth' });")
+        }else{
+          updatePickerInput(session = session,
+                            inputId = "time_period",
+                            choices = sort(all_time_periods$data),
+                            selected = sort(all_time_periods$data))
+        }
       }else{NULL}
-      
     }
     
     # when Done
@@ -520,7 +526,13 @@ mod_ntrade_data_server <- function(id){
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
                            </i></p>') #check icon
         output$message <- renderText({NULL})  # Clear message
-        update_time_periods("ExtraTotal", session)
+        
+        tryCatch({
+          update_time_periods("ExtraTotal", session)
+        }, error = function(e) {
+          output$message <- renderText({e$message})
+          return(NULL)
+        })
       }
     })
     observeEvent(input$done_ExtraPest, {
@@ -537,7 +549,12 @@ mod_ntrade_data_server <- function(id){
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
                            </i></p>')#check icon
         output$message <- renderText({NULL})  # Clear message
-        update_time_periods("ExtraPest", session)
+        tryCatch({
+          update_time_periods("ExtraPest", session)
+        }, error = function(e) {
+          output$message <- renderText({e$message})
+          return(NULL)
+        })
       }
     })
     observeEvent(input$done_Intra, {
@@ -554,7 +571,12 @@ mod_ntrade_data_server <- function(id){
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
                            </i></p>')#check icon
         output$message <- renderText({NULL})  # Clear message
-        update_time_periods("Intra", session)
+        tryCatch({
+          update_time_periods("Intra", session)
+        }, error = function(e) {
+          output$message <- renderText({e$message})
+          return(NULL)
+        })
       }
     })
     observeEvent(input$done_IP, {
@@ -571,7 +593,12 @@ mod_ntrade_data_server <- function(id){
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
                            </i></p>')#check icon
         output$message <- renderText({NULL})  # Clear message
-        update_time_periods("IP", session)
+        tryCatch({
+          update_time_periods("IP", session)
+        }, error = function(e) {
+          output$message <- renderText({e$message})
+          return(NULL)
+        })
       }
     })
     
@@ -592,10 +619,11 @@ mod_ntrade_data_server <- function(id){
         
         output$plot_buttons <- renderUI({
           sidebarPanel(width = 11,
-                       HTML('<p class="custom-text">Use the buttons <strong>
-                            "Plot Extra Import"</strong>, <strong>"Plot Intra 
-                            Trade"</strong>, or <strong>"Plot Internal Production"</strong> 
-                            to change the trade data visualisation.<br> 
+                       HTML('<p class="custom-text">Use the buttons <strong style="color: #1E68BA;">
+                            Plot Extra Import</strong>, <strong style="color: #1E68BA;">
+                            Plot Intra Trade</strong>, or <strong style="color: #1E68BA;">
+                            Plot Internal Production</strong> to change the trade data 
+                            visualisation.<br> 
                             Place your cursor over the bars to to view mean and 
                             standard deviation for each country.<br> 
                             Click on the bars to view the values for each country 

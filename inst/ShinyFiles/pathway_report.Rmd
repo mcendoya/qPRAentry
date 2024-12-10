@@ -1,7 +1,7 @@
 ---
 title: "Pathway model report"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: pdf_document
+output: html_document
 bibliography: references.bib
 params:
   nuts_yr: NA
@@ -91,7 +91,7 @@ The defined pathway model and its corresponding parameters are presented below:
 A total of `r n_iter` iterations were performed to randomly generate parameter 
 values based on the specified distribution.
 
-### Parameters: 
+### Parameter distributions: 
 
 
 ```{r, results='asis'}
@@ -134,7 +134,10 @@ The summary of the overall results for all the selected NUTS are shown below.
 ```{r}
 
 # Display the table
-knitr::kable(Ninf_EU, caption = "Number of potential founder populations (NPFP) results for all the selected NUTS", digits = 4) 
+knitr::kable(Ninf_EU, 
+             caption = "Table 1: Number of potential founder populations (NPFP) results for 
+             all the selected NUTS", 
+             digits = 4) 
 
 ```
 
@@ -144,7 +147,7 @@ Based on the median NPFP, there would be 1 entry event in the whole territory ev
 
 The map below shows the median $\mathit{NPFP}$ values by NUTS`r NUTS_lev`.
 
-```{r, fig.width=8, fig.height=8}
+```{r, fig.width=8, fig.height=8, fig.cap = paste0("Figure 1: Number of potential founder populations (NPFP) at the NUTS", NUTS_lev, " level")}
 
 plot_nuts(Ninf, "NUTS_ID", "Median", 
           nuts_level = NUTS_lev, nuts_year = nuts_yr,
@@ -157,10 +160,6 @@ plot_nuts(Ninf, "NUTS_ID", "Median",
    )
 
 ```
-\begin{center}
-Figure 1: Number of potential founder populations ($\mathit{NPFP}$)
-at the NUTS`r NUTS_lev` level.
-\end{center}
 
 
 ## References

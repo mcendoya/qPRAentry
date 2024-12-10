@@ -69,8 +69,8 @@ text_trade_data <- function(data, partner=TRUE){
           time period (e.g., year, month, season) for each entry.</li>
           </ul></li>',
       partner_countries,
-      '<li>Finally, click on <strong>Done</strong> to complete the process.</li>
-          </ul></p>'
+      '<li>Finally, click on <strong style="color: #1E68BA;">Done</strong> to complete 
+      the process.</li></ul></p>'
     )
   )
 }
@@ -78,9 +78,11 @@ text_trade_data <- function(data, partner=TRUE){
 text_dataDone <- HTML(
   '<p class="custom-text">Note: If you make any changes to the trade data
   (such as updating data, selecting different columns, adjusting units, or modifying 
-  partners), please press <strong>Done</strong> again to apply the changes.<br><br> 
-  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on <strong>"See 
-  <i>N<sub>trade</sub></i> results"</strong> to go to the Results tab.<br></p>'
+  partners), please press <strong style="color: #1E68BA;">Done</strong> again to apply 
+  the changes.<br><br> 
+  <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on <strong style="color: #1E68BA;">
+  See <i>N<sub>trade</sub></i> results</strong> to go to the <strong style="color: #1E68BA;">
+  Results</strong> tab.<br></p>'
 )
 
 # units info
@@ -146,8 +148,8 @@ text_PopulationYear <- HTML('<p class="custom-text">Select one or more years of
                             years are selected, the redistribution will be based on the 
                             average human population across those years. 
                             <ul class="custom-text" style="margin-right:10px;">
-                            <li>Once the years are selected, click on <strong>"See 
-                            <i>N<sub>trade</sub></i> redistribution"</strong> to 
+                            <li>Once the years are selected, click on <strong style="color: #1E68BA;">
+                            See <i>N<sub>trade</sub></i> redistribution</strong> to 
                             proceed.</li></ul></p>')
 
 text_MyData <- HTML('<p class="custom-text">Upload the data in CSV format by following 

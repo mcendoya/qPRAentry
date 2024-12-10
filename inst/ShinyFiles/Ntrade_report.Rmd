@@ -1,7 +1,7 @@
 ---
 title: "$N_{trade}$ report"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: pdf_document
+output: html_document
 params:
   time_period: NA
   units: NA
@@ -82,7 +82,7 @@ $i$ is estimated as $\sum_{j \neq i} ExtraPest_j R_{ji}$.
   
 $N_{trade}$ has been calculated in `r units` for the following time-period: `r time_period`.
 
-```{r, fig.width=8, fig.height=8}
+```{r, fig.width=8, fig.height=8, fig.cap="Figure 1: N~trade~ values by country (NUTS0 level)"}
 if(length(time_period)>1){
   col_plot <- title_plot <- "Median"
 }else{
@@ -104,10 +104,6 @@ p <- plot_nuts(Nt, "NUTS0", col_plot,
 print(p)
 
 ```
-\begin{center}
-Figure 1: $N_{trade}$ values by country (NUTS0 level).
-\end{center}
-
 
 
 ## $N_{trade}$ redistribution to NUTS2
@@ -151,7 +147,7 @@ if(data_redistribution=="Human population"){
 
 `r population_year_text`
 
-```{r, fig.width=8, fig.height=8}
+```{r, fig.width=8, fig.height=8, fig.cap="Figure 2: N~trade~ values redistributed at the NUTS2 level"}
 
 plot_nuts(Nt_redist, "NUTS2", col_plot, 
           nuts_level = 2, nuts_year = nuts_yr,
@@ -164,6 +160,4 @@ plot_nuts(Nt_redist, "NUTS2", col_plot,
      legend.title = element_text(size = 12)
    ) 
 ```
-\begin{center}
-Figure 2: $N_{trade}$ values redistributed at the NUTS2 level.
-\end{center}
+

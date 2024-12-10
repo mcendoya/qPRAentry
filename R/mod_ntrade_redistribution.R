@@ -93,14 +93,14 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
       button_state <- button_pressed()
       if (button_state) {
         HTML('<p class="custom-text">Note: If you make any changes to the redistribution 
-        data, please, press on <strong>"See <i>N<sub>trade</sub></i> redistribution"</strong> 
-        to apply the changes.<br><br>
+        data, please, press on <strong style="color: #1E68BA;">See <i>N<sub>trade</sub></i> 
+        redistribution</strong> to apply the changes.<br><br>
         <i class="fa-solid fa-star" style="color: #63E6BE;"></i> Click on the 
-        <strong>"Download results"</strong> button to proceed to download the 
+        <strong style="color: #1E68BA;">Download results</strong> button to proceed to download the 
         <i>N<sub>trade</sub></i> data at NUTS0 and NUTS2 level and the final report.
         <br><br>
-        You can also return to the "Data" tab to review or change the input data.
-        <br></p>')
+        You can also return to the <strong style="color: #1E68BA;">Data</strong> 
+        tab to review or change the input data.<br></p>')
       } else {
         if(is.null(input$output_NUTS2)){
           text_DataRedistribution
@@ -379,7 +379,7 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
         tempDir <- tempdir()
         setwd(tempDir)
         # PDF report
-        tempReport <- file.path(tempDir, "Ntrade_report.pdf")
+        tempReport <- file.path(tempDir, "Ntrade_report.html")
         rmdPath <- system.file("ShinyFiles", "Ntrade_report.Rmd", 
                                package = "qPRAentry")
         file.copy(rmdPath, tempReport, overwrite = TRUE)
@@ -408,7 +408,7 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
         write.csv(Nt_redist(), tempCsv2, row.names = FALSE)
         
         # Create ZIP file
-        fs <- c("Ntrade_report.pdf", "Ntrade_NUTS0.csv", "Ntrade_NUTS2.csv")
+        fs <- c("Ntrade_report.html", "Ntrade_NUTS0.csv", "Ntrade_NUTS2.csv")
         utils::zip(zipfile = fname, files = fs)
         setwd(userDir)
         

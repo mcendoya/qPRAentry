@@ -16,7 +16,7 @@ mod_pathway_results_ui <- function(id){
              HTML('<p class="custom-text"><br>View the pathway model results 
                   (<i>NPFP</i>) in table or map format.<br><br> 
                   <i class="fa-solid fa-star" style="color: #63E6BE;"></i> 
-                  Click on the <strong>"Download results"</strong> button to download 
+                  Click on the <strong style="color: #1E68BA;">Download results</strong> button to download 
                   a zip folder including the <i>NPFP</i> data and the final report.
                   <br><br> 
                   You can also return to the previous tabs to review or change 
@@ -170,7 +170,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
                             shinycssloaders::withSpinner(type=5, color = "#327FB0", size=0.8)
                    ),
                    column(12, style='margin-top:10em;',
-                          p("Total EU:", style="font-weight: bold;"),
+                          p("Total NPFP (for all the included NUTS):", style="font-weight: bold;"),
                           DT::dataTableOutput(ns("NinfEU_table")),
                    )
           )
@@ -222,7 +222,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
     })
 
     output$NinfEU_table <- DT::renderDataTable({
-      DT::datatable(Ninf_EU(), rownames = c("EU"),
+      DT::datatable(Ninf_EU(), rownames = c("Total"),
                     options = list(dom = 't', pageLength = -1)) %>%
         DT::formatRound(columns = 1:length(Ninf_EU()), digits=4)
     })
@@ -294,7 +294,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         tempDir <- tempdir()
         setwd(tempDir)
         # PDF report
-        tempReport <- file.path(tempDir, "pathway_report.pdf")
+        tempReport <- file.path(tempDir, "pathway_report.html")
         rmdPath <- system.file("ShinyFiles", "pathway_report.Rmd", package = "qPRAentry")
         file.copy(rmdPath, tempReport, overwrite = TRUE)
         # Set up parameters to pass to Rmd document
@@ -322,14 +322,13 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         write.csv(Ninf_solve(), tempCsv, row.names = FALSE)
         
         # Create ZIP file
-        fs <- c("pathway_report.pdf", "NPFP.csv")
+        fs <- c("pathway_report.html", "NPFP.csv")
         utils::zip(zipfile = fname, files = fs)
         setwd(userDir)
         }) #withProgress
       },
       contentType = "application/zip"
     )
-    
   })
 }
 

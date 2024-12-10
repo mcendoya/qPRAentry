@@ -96,6 +96,7 @@ nuts0 <- unique(datatrade_EU$internal_production$reporter)
 nuts0_data <- data.frame(nuts0 = nuts0,
                          value = abs(rnorm(length(nuts0), 30000, 10000)))
 
+\dontrun{
 # Redistribution
 data_redist <- redist_nuts(data = nuts0_data,
                            nuts_col = "nuts0",
@@ -110,6 +111,7 @@ plot_nuts(data = data_redist,
           nuts_level = 2,
           nuts_col = "NUTS2", 
           values_col = "value")
+}
 
 ## Example of data redistribution to NUTS1 using custom data
 # consumption data at NUTS1 level
