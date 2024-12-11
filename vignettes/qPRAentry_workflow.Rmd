@@ -145,16 +145,16 @@ plot_countries(data = trade_NorthAm$total_trade,
   xlim(-180,-20) + ylim(0,90)
 ```
 
-## 2. Ntrade
+## 2. Quantity of potentially infested imported commodity ($N_{trade}$)
 
-### Calculation of the Ntrade for each time period
+### Calculation of the $N_{trade}$ for each time period
 
 ```{r}
 ntrade_NorthAm <- ntrade(trade_data = trade_NorthAm)
 head(ntrade_NorthAm)
 ```
 
-### Ntrade summary for the time periods
+### $N_{trade}$ summary for the time periods
 
 ```{r}
 ntrade_NorthAm_summary <- ntrade(trade_data = trade_NorthAm,
@@ -165,6 +165,7 @@ ntrade_NorthAm_summary <- ntrade(trade_data = trade_NorthAm,
 head(ntrade_NorthAm_summary)
 ```
 
+The results can be represented as follows:
 
 ```{r}
 plot_countries(data = ntrade_NorthAm_summary,
@@ -174,13 +175,13 @@ plot_countries(data = ntrade_NorthAm_summary,
 ```
 
 
-## 3. Ntrade redistribution
+## 3. $N_{trade}$ redistribution from country level to principal subdivisions
+
+The `redist_iso()` function requires an additional data frame with values for each subdivision according to which the redistribution is performed proportionally. The redistribution is shown below using simulated commodity consumption data for each territorial subdivision using ISO codes.
 
 ```{r}
-# consumption data at sub-national level
 redist_data <- datatrade_NorthAm$consumption_iso2
 
-# Redistribution
 data_redist <- redist_iso(data = ntrade_NorthAm_summary,
                           iso_col = "country_IDs",
                           values_col = "median",
@@ -196,7 +197,6 @@ Note: The `qPRAentry` package currently does not include a built-in function to 
 ## 4. Pathway model
 
 ```{r}
-
 # # Expression for the pathway model using 3 parameters
 # eq <- "(1/P1)*P2*P3"
 # # Distribution for each parameter
@@ -286,8 +286,7 @@ The `trade_data()` function assembles the trade data to generate a `TradeData` o
 needed to subsequently calculate the quantity of potentially infested/infected commodity 
 coming into each EU country.
 
-In this case nothing is specified for the arguments `filter_IDs` and `filter_period`, 
-so all countries and time periods included in the data are considered.
+In this case, all countries and periods included in the data are taken into account, as the default values are used for the `filter_IDs` and `filter_period` arguments (see example [A](#example-ISO) for other specifications)
 
 ```{r}
 trade_EU <- trade_data(extra_total = extra_total,
@@ -296,114 +295,136 @@ trade_EU <- trade_data(extra_total = extra_total,
                        internal_production = internal_production)
 ```
 
+See total trade:
+
 ```{r}
-# Plot the total available quantity of commodity available in each country
-plot_countries(data = trade_EU$total_trade, 
-               iso_col = "country_IDs", 
-               values_col = "total_available") +
+head(trade_EU$total_trade)
+```
+
+See trade between EU countries:
+
+```{r}
+head(trade_EU$intra_trade)
+```
+
+Below is an example of how to visualise data using NUTS codes, displaying the total quantity of commodity available in each country. The `plot_nuts()` function can be used to display other data organised by NUTS codes. This function allows to incorporate other utilities of the `ggplot2` package.
+
+```{r}
+plot_nuts(data = trade_EU$total_trade, 
+          nuts_col = "country_IDs", 
+          values_col = "total_available",
+          nuts_level = 0) +
   xlim(-30,50) + ylim(25,70)
 ```
 
 
-## 2. Ntrade
+## 2. Quantity of potentially infested imported commodity ($N_{trade}$)
 
+$N_{trade}$ summary for the time periods (see example [A](#example-ISO) for other specifications).
 
 ```{r}
-# Ntrade mean and sd for the time periods
 ntrade_EU <- ntrade(trade_data = trade_EU,
                     summarise_result = c("mean", "sd"))
+head(ntrade_EU)
 ```
 
+The results can be represented as follows:
+
 ```{r}
-# Plot Ntrade mean
-plot_countries(data = ntrade_EU, 
-               iso_col="country_IDs", 
-               values_col="mean") +
+plot_nuts(data = ntrade_EU, 
+          nuts_col="country_IDs", 
+          values_col="mean",
+          nuts_level = 0) +
   xlim(-40,50) + ylim(25,70)
 ```
 
 
-## 3. Ntrade redistribution
+## 3. $N_{trade}$ redistribution from country level (NUTS0) to smaller territorial subdivisions
+
+The `redist_nuts()` function can be used with human population data from Eurotat or from an additional data frame with values for each territorial subdivision according to which the redistribution is performed proportionally. 
+
+### Redistribution using Eurostat human population data from NUTS0 to NUTS2
+
+The redistribution of the $N_{trade} mean obtained above from NUTS0 to NUTS2, based on the human population of the years 2020 and 2021 in each NUTS2, is shown below.
 
 ```{r}
-# 
-# #' ## Example of data redistribution to NUTS2 using population data
-# data("datatrade_EU")
-# # extract NUTS0 codes (country level)
-# nuts0 <- unique(datatrade_EU$internal_production$reporter)
-# # simulate values for each country
-# nuts0_data <- data.frame(nuts0 = nuts0,
-#                          values = abs(rnorm(length(nuts0), 30000, 10000)))
-# 
-# data_redist <- redist_nuts(data = nuts0_data,
-#                            nuts_col = "nuts0",
-#                            values_col = "values",
-#                            to_nuts = 2,
-#                            redist_data = "population",
-#                            population_year = c(2017, 2018, 2019))
-# head(data_redist)
-# 
-# # Plot
-# plot_nuts(data = data_redist,
-#           nuts_level = 2,
-#           nuts_col = "NUTS2", 
-#           values_col = "values")
-# 
-# ## Example of data redistribution of two value columns to NUTS1 using custom data
-# nuts0_data$values2 <- abs(rnorm(length(nuts0), 2000, 500))
-# # NUTS1 codes extracted from 'giscoR' package
-# library(dplyr)
-# library(giscoR)
-# nuts1_data <- gisco_get_nuts(nuts_level=1) %>% 
-#   select(NUTS_ID) %>% 
-#   # simulate values for each NUTS1
-#   mutate(values = abs(rnorm(nrow(.), 0, 1000)))
-# 
-# data_redist <- redist_nuts(data = nuts0_data,
-#                            nuts_col = "nuts0",
-#                            values_col = c("values", "values2"),
-#                            to_nuts = 1,
-#                            redist_data = nuts1_data,
-#                            redist_nuts_col = "NUTS_ID",
-#                            redist_values_col = "values")
-# 
-# head(data_redist)
-# 
-# # Plot
-# plot_nuts(data = data_redist,
-#           nuts_level = 1,
-#           nuts_col = "NUTS1", 
-#           values_col = "values2")
+ntrade_redist_pop <- redist_nuts(data = ntrade_EU,
+                                 nuts_col = "country_IDs",
+                                 values_col = "mean",
+                                 to_nuts = 2,
+                                 redist_data = "population",
+                                 population_year = c(2020, 2021))
+head(ntrade_redist_pop)
+```
+
+The results can be represented as follows:
+
+```{r}
+plot_nuts(data = ntrade_redist_pop,
+          nuts_col = "NUTS2",
+          values_col = "mean",
+          nuts_level = 2) +
+   xlim(-40,50) + ylim(25,70)
+```
+
+### Redistribution providing values from NUTS0 to NUTS1
+
+The redistribution of the $N_{trade} mean obtained above from NUTS0 to NUTS1 using simulated consumption data for each NUTS1 is shown below.
+
+```{r}
+nuts1_data <- datatrade_EU$consumption_nuts1
+
+ntrade_redist_df <- redist_nuts(data = ntrade_EU,
+                           nuts_col = "country_IDs",
+                           values_col = "mean",
+                           to_nuts = 1,
+                           redist_data = nuts1_data,
+                           redist_nuts_col = "NUTS_ID",
+                           redist_values_col = "value")
+
+head(ntrade_redist_df)
+```
+
+The results can be represented as follows:
+
+```{r}
+plot_nuts(data = ntrade_redist_df,
+          nuts_level = 1,
+          nuts_col = "NUTS1",
+          values_col = "mean") +
+   xlim(-40,50) + ylim(25,70)
 ```
 
 
 ## 4. Pathway model
 
 ```{r}
-# ## Example using Northern American countries and ntrade simulated data
-# data("datatrade_NorthAm")
-# # Extract country IDs and simulate ntrade data
-# IDs <- datatrade_NorthAm$internal_production$reporter
-# df <- data.frame(IDs = IDs,
-#                  ntrade_values = abs(rnorm(length(IDs), 10000, 2000)))
-# # Expression for the pathway model using 3 parameters
-# eq <- "(1/P1)*P2*P3"
-# # Distribution for each parameter
-# parameters <- list(
-#   P1 = list(dist = "beta", shape1 = 0.5, shape2 = 1),
-#   P2 = list(dist = "gamma", shape = 1.5, scale = 100),
-#   P3 = list(dist = "lnorm", mean = 5, sd = 2)
-# )
-# # Run pathway_model()
-# res_pathway <- pathway_model(ntrade_data = df,
-#                              IDs_col = "IDs",
-#                              values_col = "ntrade_values",
-#                              expression = eq,
-#                              parameters = parameters,
-#                              niter = 100)
-# head(res_pathway)
-# # summary of the total for all countries
-# res_pathway[res_pathway$IDs == "Total",]
-# # plot
-# plot_countries(res_pathway, "IDs", "Median")
+# Expression for the pathway model using 3 parameters
+eq <- "(1/P1)*P2*P3"
+# Distribution for each parameter
+parameters <- list(
+  P1 = list(dist = "beta", shape1 = 0.5, shape2 = 1),
+  P2 = list(dist = "gamma", shape = 1.5, scale = 100),
+  P3 = list(dist = "lnorm", mean = 5, sd = 2)
+)
+# Run pathway_model()
+res_pathway <- pathway_model(ntrade_data = ntrade_redist_pop,
+                             IDs_col = "NUTS2",
+                             values_col = "mean",
+                             expression = eq,
+                             parameters = parameters,
+                             niter = 100)
+head(res_pathway)
+```
+
+```{r}
+res_pathway[res_pathway$NUTS2 == "Total",]
+```
+
+```{r}
+plot_nuts(data = res_pathway,
+          nuts_level = 2,
+          nuts_col = "NUTS2",
+          values_col = "Mean") +
+   xlim(-40,50) + ylim(25,70)
 ```
