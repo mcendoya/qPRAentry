@@ -113,7 +113,7 @@ Users have two options for redistributing $N_{trade}$ data to NUTS2 regions:
 
 Upon completion of the analysis, the user will have the option to download a ZIP file containing:
 
-- A comprehensive PDF report summarising the analysis results (Ntrade_report.pdf)
+- A comprehensive report summarising the analysis results (Ntrade_report.html)
 - A CSV file with the $N_{trade}$ table results at NUTS0 level (Ntrade_NUTS0.csv)
 - A CSV file with the $N_{trade}$ table redistribution results at NUTS2 level (Ntrade_NUTS2.csv)
 

@@ -142,8 +142,7 @@ knitr::kable(Ninf_EU,
 ```
 
 Based on the median NPFP, there would be 1 entry event in the whole territory every 
-`r round(1/Ninf_EU["Median"])` years, with a 90% interval between 
-`r round(1/Ninf_EU["Q0.05"])` and `r round(1/Ninf_EU["Q0.95"])` years.
+`r round(1/Ninf_EU["Median"])` years (90% interval: `r round(1/Ninf_EU["Q0.05"])` - `r round(1/Ninf_EU["Q0.95"])` years).
 
 The map below shows the median $\mathit{NPFP}$ values by NUTS`r NUTS_lev`.
 
