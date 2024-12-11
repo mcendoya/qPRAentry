@@ -104,6 +104,10 @@ head(internal_production)
 
 ### Generation of the `TradeData` object from the above data frames
 
+The `trade_data()` function assembles the trade data to generate a `TradeData` object 
+needed to subsequently calculate the quantity of potentially infested/infected commodity 
+coming into each country of interest.
+
 Using the arguments `filter_IDs` and `filter_period` we can select the countries and 
 time periods of interest, respectively. If nothing is specified in these arguments, 
 by default all countries and time periods included in the data will be selected. 
@@ -119,21 +123,19 @@ trade_NorthAm <- trade_data(extra_total = extra_total,
                             filter_period = c("January-March", "April-June"))
 ```
 
-Total trade:
+See total trade:
 
 ```{r}
 head(trade_NorthAm$total_trade)
 ```
 
-Trade between countries:
+See trade between countries:
 
 ```{r}
 head(trade_NorthAm$intra_trade)
 ```
 
-### Plot
-
-Plot the total available quantity of commodity available in each country
+Below is an example of how to visualise data using ISO 3166-1 (alpha-2) country codes, displaying the total quantity of commodity available in each country. The `plot_countries()` function can be used to display other data organised by using ISO 3166-1 (alpha-2) country codes. This function allows to incorporate other utilities of the `ggplot2` package.
 
 ```{r}
 library(ggplot2)
@@ -163,11 +165,8 @@ ntrade_NorthAm_summary <- ntrade(trade_data = trade_NorthAm,
 head(ntrade_NorthAm_summary)
 ```
 
-### Plot 
 
 ```{r}
-# Plot the median of Ntrade
-library(ggplot2)
 plot_countries(data = ntrade_NorthAm_summary,
                iso_col = "country_IDs", 
                values_col = "median") +
@@ -178,66 +177,26 @@ plot_countries(data = ntrade_NorthAm_summary,
 ## 3. Ntrade redistribution
 
 ```{r}
-# ## Example of data redistribution in Northern American countries
-# data(datatrade_NorthAm)
-# # extract ISO codes at country level
-# iso_3166_1 <- unique(datatrade_NorthAm$internal_production$reporter)
-# # simulate values for each country
-# iso1_data <- data.frame(iso_3166_1 = iso_3166_1,
-#                         values = abs(rnorm(length(iso_3166_1), 30000, 10000)))
-# # simulate values for each subdivision
-# # ISO 3166_2 codes extracted from 'rnaturalearth' package
-# library(dplyr)
-# library(rnaturalearth)
-# iso2_data <- ne_states() %>% 
-#   # subdivisions of the countries selected above
-#   filter(substr(iso_3166_2, 1, 2) %in% iso_3166_1) %>% 
-#   distinct(iso_3166_2) %>%
-#   select(iso_3166_2) %>% 
-#   # simulate values for each subdivision
-#   mutate(values = abs(rnorm(nrow(.), 0, 1000)))
-# 
-# data_redist <- redist_iso(data = iso1_data,
-#                           iso_col = "iso_3166_1",
-#                           values_col = "values",
-#                           redist_data = iso2_data,
-#                           redist_iso_col = "iso_3166_2",
-#                           redist_values_col = "values")
-# 
-# head(data_redist)
-# 
-# # Plot using the 'sf' object from 'rnaturalearth' package
-# iso2_plot <- ne_states() %>% 
-#   filter(substr(iso_3166_2, 1, 2) %in% iso_3166_1) %>% 
-#   left_join(data_redist, by = join_by(iso_3166_2 == ISO_2))
-# 
-# library(ggplot2)
-# ggplot(iso2_plot, aes(fill = values)) + 
-#   geom_sf()
-#   
-# ## Example of redistribution of two columns
-# # simulate values for each country
-# iso1_data$values2 <- abs(rnorm(nrow(iso1_data), 1000, 500))
-# data_redist <- redist_iso(data = iso1_data,
-#                           iso_col = "iso_3166_1",
-#                           values_col = c("values", "values2"),
-#                           redist_data = iso2_data,
-#                           redist_iso_col = "iso_3166_2",
-#                           redist_values_col = "values")
-# 
-# head(data_redist)
+# consumption data at sub-national level
+redist_data <- datatrade_NorthAm$consumption_iso2
+
+# Redistribution
+data_redist <- redist_iso(data = ntrade_NorthAm_summary,
+                          iso_col = "country_IDs",
+                          values_col = "median",
+                          redist_data = redist_data,
+                          redist_iso_col = "iso_3166_2",
+                          redist_values_col = "value")
+
+head(data_redist)
 ```
 
+Note: The `qPRAentry` package currently does not include a built-in function to plot data at subdivision level using ISO 3166-2 codes, although it is available using NUTS codes (see example [B](#example-NUTS)). However, users can easily combine the output with other packages, such as `rnaturalearth` and `ggplot2`, to create maps representing these data.
 
 ## 4. Pathway model
 
 ```{r}
-# ## Example using Northern American countries and ntrade simulated data
-# data("datatrade_NorthAm")
-# # Extract country IDs and simulate ntrade data
-# IDs <- datatrade_NorthAm$internal_production$reporter
-# df <- data.frame(IDs = IDs,
-#                  ntrade_values = abs(rnorm(length(IDs), 10000, 2000)))
+
 # # Expression for the pathway model using 3 parameters
 # eq <- "(1/P1)*P2*P3"
 # # Distribution for each parameter
