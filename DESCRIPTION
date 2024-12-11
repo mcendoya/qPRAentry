@@ -30,11 +30,9 @@ Imports:
     eurostat (>= 4.0.0),
     ggiraph,
     ggplot2,
-    giscoR,
-    knitr,
+    giscoR (>= 0.6.0),
     memoise,
     purrr,
-    rmarkdown,
     sf,
     shiny,
     shinycssloaders,
@@ -43,8 +41,9 @@ Imports:
     stats,
     tidyr
 Suggests: 
+    knitr,
+    rmarkdown,
     rnaturalearth,
-    rnaturalearthhires,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: 

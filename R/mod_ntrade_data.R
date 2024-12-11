@@ -485,31 +485,7 @@ mod_ntrade_data_server <- function(id){
       }
     })
     
-    # Update time periods from all data frames
-    all_time_periods <- reactiveValues(data = NULL)
-    update_time_periods <- function(x, session){
-      reactive_function <- get(paste0(x, "_reactive"), envir = session$userData)
-      df <- reactive_function()
-      if(!is.null(input[[paste0("time_period_",x)]])){
-        time_df <- df[, input[[paste0("time_period_",x)]]]
-        if(is.null(all_time_periods$data)){
-          all_time_periods$data <- unique(time_df)
-        }else{
-          all_time_periods$data <- unique(time_df[time_df%in%all_time_periods$data])
-        }
-        if(length(all_time_periods$data)==0){
-          stop(paste(strwrap("Error: No common time period has been found in the data files. 
-                            Please check the column for 'Time period' in the data."),
-                     collapse=" "))
-          runjs("window.scrollTo({ top: 0, behavior: 'smooth' });")
-        }else{
-          updatePickerInput(session = session,
-                            inputId = "time_period",
-                            choices = sort(all_time_periods$data),
-                            selected = sort(all_time_periods$data))
-        }
-      }else{NULL}
-    }
+    all_time_periods <- reactiveValues()
     
     # when Done
     observeEvent(input$done_ExtraTotal, {
@@ -526,13 +502,7 @@ mod_ntrade_data_server <- function(id){
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
                            </i></p>') #check icon
         output$message <- renderText({NULL})  # Clear message
-        
-        tryCatch({
-          update_time_periods("ExtraTotal", session)
-        }, error = function(e) {
-          output$message <- renderText({e$message})
-          return(NULL)
-        })
+        all_time_periods$ExtraTotal <- unique(df$time_period)
       }
     })
     observeEvent(input$done_ExtraPest, {
@@ -549,12 +519,7 @@ mod_ntrade_data_server <- function(id){
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
                            </i></p>')#check icon
         output$message <- renderText({NULL})  # Clear message
-        tryCatch({
-          update_time_periods("ExtraPest", session)
-        }, error = function(e) {
-          output$message <- renderText({e$message})
-          return(NULL)
-        })
+        all_time_periods$ExtraPest <- unique(df$time_period)
       }
     })
     observeEvent(input$done_Intra, {
@@ -571,12 +536,7 @@ mod_ntrade_data_server <- function(id){
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
                            </i></p>')#check icon
         output$message <- renderText({NULL})  # Clear message
-        tryCatch({
-          update_time_periods("Intra", session)
-        }, error = function(e) {
-          output$message <- renderText({e$message})
-          return(NULL)
-        })
+        all_time_periods$Intra <- unique(df$time_period)
       }
     })
     observeEvent(input$done_IP, {
@@ -593,12 +553,7 @@ mod_ntrade_data_server <- function(id){
                            <i class="fa-solid fa-circle-check" style="color: #63E6BE;">
                            </i></p>')#check icon
         output$message <- renderText({NULL})  # Clear message
-        tryCatch({
-          update_time_periods("IP", session)
-        }, error = function(e) {
-          output$message <- renderText({e$message})
-          return(NULL)
-        })
+        all_time_periods$IP <- unique(df$time_period)
       }
     })
     
@@ -611,9 +566,42 @@ mod_ntrade_data_server <- function(id){
         all_btns("all")
       }
     })
+    
+    # Time periods
+    observeEvent(reactiveValuesToList(all_time_periods),{
+      if(all_btns()=="all"){
+        output$message <- renderText({NULL})
+        list_periods <- list(
+          all_time_periods$ExtraTotal,
+          all_time_periods$ExtraPest,
+          all_time_periods$Intra,
+          all_time_periods$IP
+        )
+        common_periods <- Reduce(intersect, list_periods)
+        tryCatch({
+          if (length(common_periods) > 0) {
+            updatePickerInput(session = session,
+                              inputId = "time_period",
+                              choices = sort(common_periods),
+                              selected = sort(common_periods))
+            all_btns("OK")
+          } else {
+            all_btns("all")
+            runjs("window.scrollTo({ top: 0, behavior: 'smooth' });")
+            stop(paste(strwrap("Error: No common time periods found across the data. 
+                               Please verify the 'Time period' column in the uploaded 
+                               data."), collapse = " "))
+            
+          }
+        }, error = function(e) {
+          output$message <- renderText({e$message})
+        })
+      }
+    })
+    
     # Enable plot buttons
     observe({
-      if(all_btns()=="all"){
+      if(all_btns()=="OK"){
         shinyjs::enable("trade_done")
         addClass("trade_done", class="enable")
         
@@ -647,14 +635,17 @@ mod_ntrade_data_server <- function(id){
                        )
           )
         })
-        
+      }else{
+        shinyjs::disable("trade_done")
+        removeClass("trade_done", class="enable")
+        output$plot_buttons <- renderUI({NULL})
       }
     })
     
     # trade data
     TradeData <- eventReactive(c(input$done_ExtraTotal, input$done_ExtraPest, 
                                  input$done_Intra, input$done_IP, input$time_period),{
-                                   if(all_btns()=="all"){
+                                   if(all_btns()=="OK"){
                                      tryCatch({
                                        withCallingHandlers({
                                          shinyjs::html("message", "")
