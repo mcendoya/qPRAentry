@@ -9,5 +9,5 @@ test_that("summarise_data error", {
 test_that("missing_intra IDs", {
     res <- missing_intra(datatrade_EU$intra_trade[-1,],
                          datatrade_EU$intra_trade$reporter)
-    expect_true("AL" %in% res$reporter[res$partner=="AT"])
+    expect_true("BE" %in% res$reporter[res$partner=="AT"])
 })

@@ -1,6 +1,4 @@
 #' @import dplyr
-#' @import rmarkdown
-#' @import knitr
 #' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
 #' @importFrom utils globalVariables read.csv write.csv zip
 #' @importFrom DT datatable formatRound formatStyle
