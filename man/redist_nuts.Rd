@@ -96,7 +96,7 @@ nuts0 <- unique(datatrade_EU$internal_production$reporter)
 nuts0_data <- data.frame(nuts0 = nuts0,
                          value = abs(rnorm(length(nuts0), 30000, 10000)))
 
-\dontrun{
+\donttest{
 # Redistribution
 data_redist <- redist_nuts(data = nuts0_data,
                            nuts_col = "nuts0",

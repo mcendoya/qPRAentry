@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Supports risk assessors in performing the entry step of the quantitative Pest Risk Assessment. It allows the estimation of the amount of a plant pest entering a risk assessment area (in terms of founder populations) through the calculation of the imported commodities that could be potential pathways of pest entry, and the development of a pathway model. Two Shiny apps based on the functionalities of the package are included, that simplify the process of assessing the risk of entry of plant pests. The approach is based on the work of the European Food Safety Authority (EFSA PLH Panel et al., 2018) \doi{10.2903/j.efsa.2018.5350}.
+Supports risk assessors in performing the entry step of the quantitative Pest Risk Assessment. It allows the estimation of the amount of a plant pest entering a risk assessment area (in terms of founder populations) through the calculation of the imported commodities that could be potential pathways of pest entry, and the development of a pathway model. Two 'Shiny' apps based on the functionalities of the package are included, that simplify the process of assessing the risk of entry of plant pests. The approach is based on the work of the European Food Safety Authority (EFSA PLH Panel et al., 2018) \doi{10.2903/j.efsa.2018.5350}.
 }
 \author{
 \strong{Maintainer}: Martina Cendoya \email{cendoya_marmar@gva.es} (\href{https://orcid.org/0000-0002-0134-7781}{ORCID})

@@ -18,7 +18,7 @@ Description: Supports risk  assessors in performing the entry step of
     of the amount of a plant pest entering a risk assessment area 
     (in terms of founder populations) through the calculation of the imported 
     commodities that could be potential pathways of pest entry, 
-    and the development of a pathway model. Two Shiny apps based on the 
+    and the development of a pathway model. Two 'Shiny' apps based on the 
     functionalities of the package are included, that simplify the process of 
     assessing the risk of entry of plant pests. The approach is based on 
     the work of the European Food Safety Authority
