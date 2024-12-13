@@ -53,8 +53,8 @@ potential pathway for the pest under assessment. The data required include:
 
 ### Structure of trade data
 
-This example uses the simulated trade data for Northern American countries, which 
-contains a list of data frames with the required data. These data use country identifiers 
+This example uses simulated trade data for Northern American countries, consisting 
+of a list of data frames with the required data. These data use country identifiers 
 by ISO 3166-1 (alpha-2) codes. Trade data are arranged in three-months time periods.
 
 The `load_csv()` function included in the `qPRAentry` package can be used to import 
@@ -64,7 +64,8 @@ the data from CSV files.
 data("datatrade_NorthAm")
 ```
 
-Total quantity of commodity imported from third countries. 
+*Total quantity of commodity imported from third countries*. 
+
 This data frame must contain the columns: **reporter** (importing countries, 
 in this case by ISO codes), **partner** (exporting countries), **value** (quantity 
 of commodity), and **time_period** (time period of the trade activity).
@@ -76,7 +77,8 @@ extra_total <- datatrade_NorthAm$extra_import
 head(extra_total)
 ```
 
-Quantity of commodity imported from third countries where the pest is present. 
+*Quantity of commodity imported from third countries where the pest is present*. 
+
 This data frame must contain the columns: **reporter** (importing countries, in this 
 case by ISO codes),  **partner** (exporting countries where the pest is present), 
 **value** (quantity of commodity), and **time_period** (time period of the trade activity).
@@ -90,7 +92,9 @@ extra_pest <- datatrade_NorthAm$extra_import %>% filter(partner%in%CNTR_pest)
 head(extra_pest)
 ```
 
-Quantity of commodity traded between countries of interest. This data frame must contain 
+*Quantity of commodity traded between countries of interest*. 
+
+This data frame must contain 
 the columns: **reporter** (importing countries, in this case by ISO codes), **partner** 
 (exporting countries, in this case by ISO codes), **value** (quantity of commodity), 
 and **time_period** (time period of the trade activity):
@@ -100,7 +104,9 @@ intra_trade  <- datatrade_NorthAm$intra_trade
 head(intra_trade)
 ```
 
-Quantity of commodity produced internally in each country of interest. This data frame 
+*Quantity of commodity produced internally in each country of interest*. 
+
+This data frame 
 must contain the columns: **reporter** (producing countries, in this case by ISO codes), 
 **value** (quantity of commodity), and **time_period** (time period of production):
 
@@ -113,7 +119,7 @@ head(internal_production)
 
 The `trade_data()` function assembles the trade data to generate a `TradeData` object 
 needed to subsequently calculate the quantity of potentially infested/infected commodity 
-coming into each country of interest.
+entering each country of interest.
 
 Using the arguments `filter_IDs` and `filter_period` we can select the countries and 
 time periods of interest, respectively. If nothing is specified in these arguments, 
@@ -174,7 +180,7 @@ ntrade_NorthAm_summary <- ntrade(trade_data = trade_NorthAm,
 head(ntrade_NorthAm_summary)
 ```
 
-Plot $N_{trade}$ median for each country:
+Plot the $N_{trade}$ median for each country:
 
 ```{r}
 plot_countries(data = ntrade_NorthAm_summary,
@@ -205,16 +211,16 @@ data_redist <- redist_iso(data = ntrade_NorthAm_summary,
 head(data_redist)
 ```
 
-Note: The `qPRAentry` package currently does not include a built-in function to plot data at subdivision level using ISO 3166-2 codes, although it is available using NUTS codes (see [B.3](#redist-NUTS)). However, users can easily combine the output with other packages, such as `rnaturalearth` and `ggplot2`, to create maps representing these data.
+Note: The `qPRAentry` package currently does not include a built-in function to plot data at the subdivision level using ISO 3166-2 codes, although it is available using NUTS codes (see [B.3](#redist-NUTS)). However, users can easily combine the output with other packages, such as `rnaturalearth` and `ggplot2`, to create maps representing these data.
 
 ## A.4. Pathway model {#pathway-ISO}
 
-The number of potential founder populations ($NPFP$) of a pest entering a country or region can be estimated using a pathway model. This model combines the $N_{trade}$ data with the parameters that are relevant in the estimation of the entry of the pest under assessment. Each of these parameters must be assigned a suitable probability distribution. The following shows how the $N_{trade}$ data obtained above at the country level are combined with other parameters to set up the pathway model and estimate the $NPFP$.
+The number of potential founder populations ($NPFP$) of a pest entering a country or region can be estimated using a pathway model. This model combines the $N_{trade}$ data with parameters that are relevant in the estimation of the entry of the pest under assessment. Each of these parameters must be assigned a suitable probability distribution. The following shows how the $N_{trade}$ data obtained above at the country level are combined with other parameters to set up the pathway model and estimate the $NPFP$.
 
 First, the conceptual model is designed. Here, three parameters have been added in different ways as an illustrative demonstration:
 $$NPFP = N_{trade} \cdot (1/P1) \cdot ((P2 \cdot 1000) + P3)$$
 
-A distribution is then assigned to each parameter and all the information, with the desired number of iterations, is incorporated in the `pathway_model()` function. Note that $N_{trade}$ should not be included in the model expression.
+A distribution is then assigned to each parameter and all relevant information, along with the desired number of iterations, is incorporated into the `pathway_model()` function. Note that $N_{trade}$ should not be included in the model expression.
 
 ```{r}
 # pathway model (excluding ntrade)
@@ -241,7 +247,7 @@ The result also includes the total $NPFP$ for the set of countries considered:
 res_pathway[res_pathway$country_IDs == "Total",]
 ```
 
-Plot $NPFP$ median for each country:
+Plot the $NPFP$ median for each country:
 
 ```{r}
 plot_countries(data = res_pathway,
@@ -259,9 +265,9 @@ plot_countries(data = res_pathway,
 
 ### Structure of trade data
 
-This example uses the simulated trade data for EU countries, which contains a list 
-of data frames with the required data. These data use country identifiers 
-by NUTS codes. Trade data are arranged in annual periods for 2020 and 2021.
+This example uses simulated trade data for EU countries, consisting of a list 
+of data frames containing the required data. These data use country identifiers 
+by NUTS codes. Trade data are arranged into annual periods for 2020 and 2021.
 
 The `load_csv()` function included in the `qPRAentry` package can be used to import 
 the data from CSV files.
@@ -270,19 +276,21 @@ the data from CSV files.
 data("datatrade_EU")
 ```
 
-Total quantity of commodity imported from third countries, i.e., non-EU countries. 
+*Total quantity of commodity imported from third countries, i.e., non-EU countries*.
+
 This data frame must contain the columns: **reporter** (importing countries, 
 in this case by NUTS0 codes), **partner** (exporting countries), **value** (quantity 
 of commodity), and **time_period** (time period of the trade activity).
 
-Using the example data, we select coded as "Extra_Total" in the column partner:
+Using the example data, we select entries where the column partner is coded as "Extra_Total":
 
 ```{r}
 extra_total <- datatrade_EU$extra_import %>% filter(partner=="Extra_Total")
 head(extra_total)
 ```
 
-Quantity of commodity imported from third countries where the pest is present. 
+*Quantity of commodity imported from third countries where the pest is present*.
+
 This data frame must contain the columns: **reporter** (importing countries, in this 
 case by NUTS0 codes),  **partner** (exporting countries where the pest is present), 
 **value** (quantity of commodity), and **time_period** (time period of the trade activity).
@@ -295,7 +303,9 @@ extra_pest <- datatrade_EU$extra_import %>% filter(partner!="Extra_Total")
 head(extra_pest)
 ```
 
-Quantity of commodity traded between EU countries. This data frame must contain 
+*Quantity of commodity traded between EU countries*. 
+
+This data frame must contain 
 the columns: **reporter** (importing countries, in this case by NUTS0 codes), **partner** 
 (exporting countries, in this case by NUTS0 codes), **value** (quantity of commodity), 
 and **time_period** (time period of the trade activity):
@@ -305,7 +315,9 @@ intra_trade  <- datatrade_EU$intra_trade
 head(intra_trade)
 ```
 
-Quantity of commodity produced internally in each EU country of interest. This data frame 
+*Quantity of commodity produced internally in each EU country of interest*. 
+
+This data frame 
 must contain the columns: **reporter** (producing countries, in this case by NUTS0 codes), 
 **value** (quantity of commodity), and **time_period** (time period of production):
 
@@ -318,7 +330,7 @@ head(internal_production)
 
 The `trade_data()` function assembles the trade data to generate a `TradeData` object 
 needed to subsequently calculate the quantity of potentially infested/infected commodity 
-coming into each EU country.
+entering each EU country.
 
 In this case, all countries and periods included in the data are taken into account, as the default values are used for the `filter_IDs` and `filter_period` arguments (see [A.1](#data-ISO) for other specifications)
 
@@ -363,7 +375,7 @@ ntrade_EU <- ntrade(trade_data = trade_EU,
 head(ntrade_EU)
 ```
 
-Plot $N_{trade}$ mean for each country:
+Plot the $N_{trade}$ mean for each country:
 
 ```{r}
 plot_nuts(data = ntrade_EU, 
@@ -378,7 +390,7 @@ plot_nuts(data = ntrade_EU,
 
 ## B.3. $N_{trade}$ redistribution from country level (NUTS0) to smaller territorial subdivisions {#redist-NUTS}
 
-The `redist_nuts()` function can be used with human population data from Eurostat or from an additional data frame with values for each territorial subdivision according to which the redistribution is performed proportionally. 
+The `redist_nuts()` function can be used with human population data from Eurostat or with an alternative data frame containing values for each territorial subdivision according to which the redistribution will be performed proportionally. 
 
 ### Redistribution using Eurostat human population data from NUTS0 to NUTS2
 
@@ -394,7 +406,7 @@ ntrade_redist_pop <- redist_nuts(data = ntrade_EU,
 head(ntrade_redist_pop)
 ```
 
-Plot $N_{trade}$ mean for each NUTS2 region:
+Plot the $N_{trade}$ mean for each NUTS2 region:
 
 ```{r}
 plot_nuts(data = ntrade_redist_pop,
@@ -408,7 +420,7 @@ plot_nuts(data = ntrade_redist_pop,
 
 ### Redistribution providing values from NUTS0 to NUTS1
 
-The redistribution of the $N_{trade} mean obtained above from NUTS0 to NUTS1 using simulated consumption data for each NUTS1 is shown below.
+The redistribution of the $N_{trade}$ mean obtained above from NUTS0 to NUTS1 using simulated consumption data for each NUTS1 is shown below.
 
 ```{r}
 # read data for redistribution
@@ -425,7 +437,7 @@ ntrade_redist_df <- redist_nuts(data = ntrade_EU,
 head(ntrade_redist_df)
 ```
 
-Plot $N_{trade}$ mean for each NUTS1:
+Plot the $N_{trade}$ mean for each NUTS1:
 
 ```{r}
 plot_nuts(data = ntrade_redist_df,
@@ -443,7 +455,9 @@ plot_nuts(data = ntrade_redist_df,
 As shown in [A.4](#pathway-ISO), the pathway model allows the $NPFP$ to be estimated. The following shows its use with $N_{trade}$ data obtained at NUTS2 level and a pathway model defined as:
 $$NPFP = N_{trade} \cdot (1/P1) \cdot P2 \cdot P3$$
 
-After assigning a distribution to each parameter and specifying the desired number of iterations, it is incorporated along with the model in the `pathway_model()` function. Note that $N_{trade}$ must not be included in the model expression.
+A distribution is then assigned to each parameter and all relevant information, 
+along with the desired number of iterations, is incorporated into 
+the `pathway_model()` function. Note that $N_{trade}$ must not be included in the model expression.
 
 ```{r}
 # pathway model (excluding ntrade)
@@ -469,7 +483,7 @@ The result also includes the total $NPFP$ for the set of NUTS2 considered:
 res_pathway[res_pathway$NUTS2 == "Total",]
 ```
 
-Plot $NPFP$ mean for each NUTS2:
+Plot the $NPFP$ mean for each NUTS2:
 
 ```{r}
 plot_nuts(data = res_pathway,
