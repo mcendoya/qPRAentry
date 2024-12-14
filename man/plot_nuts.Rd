@@ -50,9 +50,9 @@ Plots NUTS region values on a map using the provided data and allows
 customisation of various aesthetics, such as colors, legend title, and title.
 }
 \details{
-Extracts an \link[=sf]{sf} object from the \link[=giscoR]{giscoR} package.
-It uses the \link[=ggplot2]{ggplot2} package for the representation. Also, it supports the addition
-of other \link[=ggplot2]{ggplot2} options (see examples).
+Extracts an \code{\link[sf:sf]{sf}} object from the \code{\link[giscoR:giscoR-package]{giscoR}} package.
+It uses the \code{\link[ggplot2:ggplot2-package]{ggplot2}} package for the representation. Also, it supports the addition
+of other \code{\link[ggplot2:ggplot2-package]{ggplot2}} options (see examples).
 }
 \examples{
 ## Example plot at NUTS0 level (country level)

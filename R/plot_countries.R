@@ -3,9 +3,9 @@
 #' Plots country values on a map using data provided and allows 
 #' customisation of various aesthetics, such as colors, legend title, and title. 
 #' 
-#' Extracts an \link[=sf]{sf} object from the \link[=giscoR]{giscoR} package.
-#' It uses the \link[=ggplot2]{ggplot2} package for the representation. Also, it supports the addition  
-#' of other \link[=ggplot2]{ggplot2} options (see examples).
+#' Extracts an [`sf`][sf::st_sf] object from the [`giscoR`][giscoR::giscoR] package.
+#' It uses the [`ggplot2`][ggplot2::ggplot2] package for the representation. Also, it supports the addition  
+#' of other [`ggplot2`][ggplot2::ggplot2] options (see examples).
 #'
 #' @param data A data frame containing the values to be plotted on the map.
 #' @param iso_col A string specifying the column name in \code{data} 
