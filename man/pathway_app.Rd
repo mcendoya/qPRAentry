@@ -6,6 +6,9 @@
 \usage{
 pathway_app()
 }
+\value{
+No return value, called for side effects
+}
 \description{
 Interactive application to estimate the number of potential founder populations (\eqn{NPFP})
 of a pest in different regions or countries using the NUTS
@@ -13,7 +16,7 @@ coding system. See
 \href{https://ec.europa.eu/eurostat/web/nuts}{Nomenclature of territorial units for statistics}.
 }
 \examples{
-\dontrun{
+if (interactive()) {
 pathway_app()
 }
 }

@@ -1,34 +1,26 @@
-Package: qPRAentry
 Type: Package
+Package: qPRAentry
 Title: Quantitative Pest Risk Assessment at the Entry Step
 Version: 0.1.0
 Authors@R: c(
-    person(given = "Martina",
-           family = "Cendoya",
-           email = "cendoya_marmar@gva.es",
-           role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-0134-7781")),
-    person(given = "Maria Chiara",
-           family = "Rosace",
-           email = "mariachiara.rosace@unicatt.it",
-           role = c("aut"),
-           comment = c(ORCID = "0000-0002-7263-8228")))
-Description: Supports risk  assessors in performing the entry step of 
-    the quantitative Pest Risk Assessment. It allows the estimation 
-    of the amount of a plant pest entering a risk assessment area 
-    (in terms of founder populations) through the calculation of the imported 
-    commodities that could be potential pathways of pest entry, 
-    and the development of a pathway model. Two 'Shiny' apps based on the 
-    functionalities of the package are included, that simplify the process of 
-    assessing the risk of entry of plant pests. The approach is based on 
-    the work of the European Food Safety Authority
-    (EFSA PLH Panel et al., 2018)
-    <doi:10.2903/j.efsa.2018.5350>.
+    person(given = "Martina", family = "Cendoya", email = "cendoya_marmar@gva.es",
+    role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0134-7781")),
+    person(given = "Maria Chiara", family = "Rosace", email = "mariachiara.rosace@unicatt.it",
+    role = "aut", comment = c(ORCID = "0000-0002-7263-8228"))
+  )
+Description: Supports risk assessors in performing the entry step of the
+    quantitative Pest Risk Assessment. It allows the estimation of the
+    amount of a plant pest entering a risk assessment area (in terms of
+    founder populations) through the calculation of the imported
+    commodities that could be potential pathways of pest entry, and the
+    development of a pathway model. Two 'Shiny' apps based on the
+    functionalities of the package are included, that simplify the process
+    of assessing the risk of entry of plant pests. The approach is based
+    on the work of the European Food Safety Authority (EFSA PLH Panel et
+    al., 2018) <doi:10.2903/j.efsa.2018.5350>.
 License: GPL (>= 3)
-Encoding: UTF-8
-LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+Depends:
+    R (>= 2.10)
 Imports: 
     bsplus,
     dplyr,
@@ -50,7 +42,10 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
 Config/testthat/edition: 3
-Depends: 
-    R (>= 2.10)
-VignetteBuilder: knitr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

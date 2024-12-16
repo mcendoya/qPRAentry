@@ -5,12 +5,14 @@
 #' where the pest is present (\eqn{N_{trade}}) using the NUTS coding system. See 
 #' [Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
 #' 
+#' @return No return value, called for side effects
+#' 
 #' @seealso [ntrade()], [redist_nuts()], [redist_iso()]
 #' 
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' ntrade_app()
 #' }
 #' @importFrom shiny runApp shinyApp

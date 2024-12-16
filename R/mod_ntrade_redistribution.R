@@ -376,6 +376,7 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
           }
         # temporary directory before processing
         userDir <- getwd()
+        on.exit(setwd(userDir))
         tempDir <- tempdir()
         setwd(tempDir)
         # PDF report
@@ -410,8 +411,6 @@ mod_ntrade_redistribution_server <- function(id, nuts_yr, Nt, time_period, units
         # Create ZIP file
         fs <- c("Ntrade_report.html", "Ntrade_NUTS0.csv", "Ntrade_NUTS2.csv")
         utils::zip(zipfile = fname, files = fs)
-        setwd(userDir)
-        
         }) #withProgress
       },
       contentType = "application/zip"

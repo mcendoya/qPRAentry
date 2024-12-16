@@ -291,6 +291,7 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
           }
         # temporary directory before processing
         userDir <- getwd()
+        on.exit(setwd(userDir))
         tempDir <- tempdir()
         setwd(tempDir)
         # PDF report
@@ -324,7 +325,6 @@ mod_pathway_results_server <- function(id, dist_done, n_iter, model_def,
         # Create ZIP file
         fs <- c("pathway_report.html", "NPFP.csv")
         utils::zip(zipfile = fname, files = fs)
-        setwd(userDir)
         }) #withProgress
       },
       contentType = "application/zip"

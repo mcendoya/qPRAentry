@@ -5,12 +5,14 @@
 #' coding system. See 
 #' [Nomenclature of territorial units for statistics](https://ec.europa.eu/eurostat/web/nuts).
 #' 
+#' @return No return value, called for side effects
+#' 
 #' @seealso [pathway_model()]
 #'
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' pathway_app()
 #' }
 #' @importFrom shiny runApp shinyApp

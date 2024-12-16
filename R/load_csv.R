@@ -14,12 +14,13 @@
 #' @return A data frame containing the data from the CSV file.
 #' 
 #' @examples
-#' \dontrun{
+#' # file path
+#' fpath <- system.file("extdata", "data_ex.csv", package="qPRAentry")
 #' # Load a CSV file
-#' df <- load_csv("data.csv")
+#' df <- load_csv(fpath) 
+#' head(df) # value as character
 #' # Load a CSV file with comma separated decimals
-#' df <- load_csv("data.csv", dec = ",")
-#' }
+#' df <- load_csv(fpath, dec = ",") # value as numeric
 #' 
 #' @export
 load_csv <- function(filepath, dec = ".", encoding = getOption("encoding")) {

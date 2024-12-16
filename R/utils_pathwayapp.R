@@ -124,7 +124,6 @@ distribution_panel <- function(ns, id_dist){
 #' @noRd
 #' @keywords internal
 n_from_dist <- function(dist, input_pars, n_iter){
-  set.seed(123)
   #character comma separated to numeric
   pars <- as.numeric((unlist(strsplit(input_pars, ","))))
   if(dist == 'beta'){
@@ -178,7 +177,6 @@ n_from_dist <- function(dist, input_pars, n_iter){
 #' @noRd
 #' @keywords internal
 q_from_dist <- function(dist, input_pars){
-  set.seed(123)
   p <- c(0.05, 0.25, 0.5, 0.75, 0.95)
   #character comma separated to numeric
   pars <- as.numeric((unlist(strsplit(input_pars, ","))))
