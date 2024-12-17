@@ -1,8 +1,7 @@
 # qPRAentry <img src="man/figures/logo.png" align="right" width="150" />
 
 <!-- badges: start -->
-<!--[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/qPRAentry?color=blue)](https://cran.r-project.org/package=qPRAentry)
-<!--[![Downloads](https://cranlogs.r-pkg.org/badges/qPRAentry?color=blue)](https://cran.rstudio.com/package=qPRAentry)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/qPRAentry)](https://cran.r-project.org/package=qPRAentry)
 <!--[![R-CMD-check](https://github.com/mcendoya/qPRAentry/workflows/R-CMD-check/badge.svg)](https://github.com/stan-dev/qPRAentry/actions)
 <!-- badges: end -->
 ### Quantitative Pest Risk Assessment at the Entry Step
