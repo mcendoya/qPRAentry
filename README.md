@@ -10,7 +10,7 @@ The package comprises two Shiny apps: one for computing $N_{trade}$ and redistri
 
 The latest version of `qPRAentry` can be installed and loaded as follows:
 
-install.packages("qPRAentry")
+`install.packages("qPRAentry")`
 
 Upload then the `qPRAentry` library and check the help function for the documentation:
 
