@@ -14,10 +14,10 @@ install.packages("qPRAentry")
 
 Upload then the `qPRAentry` library and check the help function for the documentation:
 
-library(qPRAentry)
+`library(qPRAentry)`
 
-?qPRAentry
+`?qPRAentry`
 
-```
+
 
 
